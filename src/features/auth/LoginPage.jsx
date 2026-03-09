@@ -1,0 +1,101 @@
+import { Button, Heading, Text, TextInput } from "@primer/react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../app/providers/AuthProvider.jsx";
+import { loginWithEmailPassword } from "./authService.js";
+
+export function LoginPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [email, setEmail] = useState("ana@braillebooks.com");
+  const [password, setPassword] = useState("123456");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const user = await loginWithEmailPassword({ email, password });
+      login(user);
+      navigate("/home");
+    } catch (submitError) {
+      setError(submitError.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "grid",
+        placeItems: "center",
+        padding: 16,
+      }}
+    >
+      <section
+        style={{
+          width: "100%",
+          maxWidth: 460,
+          border: "1px solid #d0d7de",
+          borderRadius: 8,
+          padding: 16,
+        }}
+      >
+        <Heading as="h1" sx={{ mb: 2 }}>
+          Entrar na Braille Bookstore
+        </Heading>
+        <Text as="p" sx={{ color: "fg.muted", mb: 3 }}>
+          Use um usuario de teste para acessar o catalogo com comandos de voz.
+        </Text>
+
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
+          <div>
+            <Text as="label" htmlFor="email-input">
+              E-mail
+            </Text>
+            <TextInput
+              id="email-input"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              block
+              required
+              aria-label="Campo de e-mail"
+            />
+          </div>
+
+          <div>
+            <Text as="label" htmlFor="password-input">
+              Senha
+            </Text>
+            <TextInput
+              id="password-input"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              block
+              required
+              aria-label="Campo de senha"
+            />
+          </div>
+
+          {error ? (
+            <Text as="p" sx={{ color: "danger.fg" }}>
+              {error}
+            </Text>
+          ) : null}
+
+          <Button type="submit" variant="primary" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar"}
+          </Button>
+        </form>
+      </section>
+    </div>
+  );
+}
