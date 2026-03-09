@@ -221,7 +221,11 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
-  if (/(pedido anterior|anterior pedido|pedido passado)/.test(normalizedTranscript)) {
+  if (
+    /(pedido anterior|anterior pedido|pedido passado)/.test(
+      normalizedTranscript,
+    )
+  ) {
     return {
       intent: VOICE_INTENTS.OPEN_PREVIOUS_ORDER,
       entity: null,
