@@ -1,6 +1,9 @@
 export const VOICE_INTENTS = {
   SEARCH_BOOK: "SEARCH_BOOK",
   OPEN_BOOK_DETAILS: "OPEN_BOOK_DETAILS",
+  OPEN_VOICE_HELP: "OPEN_VOICE_HELP",
+  CLOSE_MODAL: "CLOSE_MODAL",
+  LOGOUT: "LOGOUT",
   OPEN_ORDER: "OPEN_ORDER",
   READ_ORDER_DETAILS: "READ_ORDER_DETAILS",
   OPEN_NEXT_ORDER: "OPEN_NEXT_ORDER",
@@ -100,6 +103,70 @@ function extractOrderNumberFromReadCommand(normalizedTranscript) {
   return match?.[1] ?? null;
 }
 
+function isNextOrderCommand(normalizedTranscript) {
+  const hasOrderContext = /(pedido|pedidos|compra|compras)/.test(
+    normalizedTranscript,
+  );
+
+  const hasNextSignal =
+    /(proxim[oa]|seguinte|depois|avancar|avanca|prossim[oa]|proxmo)/.test(
+      normalizedTranscript,
+    ) ||
+    /(ir|vai|mostrar|abrir|trocar).*(proxim[oa]|seguinte)/.test(
+      normalizedTranscript,
+    );
+
+  return hasOrderContext && hasNextSignal;
+}
+
+function isPreviousOrderCommand(normalizedTranscript) {
+  const hasOrderContext = /(pedido|pedidos|compra|compras)/.test(
+    normalizedTranscript,
+  );
+
+  const hasPreviousSignal =
+    /(anterior|passad[oa]|antes|atras|retroceder|retrocede)/.test(
+      normalizedTranscript,
+    ) ||
+    /(voltar|retornar).*(pedido|compra).*(anterior|antes|atras|passad[oa])/.test(
+      normalizedTranscript,
+    );
+
+  return hasOrderContext && hasPreviousSignal;
+}
+
+function isVoiceHelpCommand(normalizedTranscript) {
+  return (
+    /(me ajud[ea]|me ajudem|me ajuda|pode me ajudar|preciso(?: de)? ajuda|quero ajuda)/.test(
+      normalizedTranscript,
+    ) ||
+    /(comandos? de voz|ajuda de voz|ajuda do assistente)/.test(
+      normalizedTranscript,
+    ) ||
+    /(ajuda|help|socorro).*(voz|comandos|assistente)?/.test(
+      normalizedTranscript,
+    ) ||
+    /(abrir|mostrar|ver).*(ajuda|comandos de voz)/.test(normalizedTranscript)
+  );
+}
+
+function isCloseModalCommand(normalizedTranscript) {
+  return (
+    /^(fechar|fechar modal|fechar ajuda|fechar pedido|cancelar)$/.test(
+      normalizedTranscript,
+    ) ||
+    /(fechar|cancelar).*(modal|janela|ajuda|pedido)/.test(normalizedTranscript)
+  );
+}
+
+function isLogoutCommand(normalizedTranscript) {
+  return (
+    /(deslogar|deslogue|logout)/.test(normalizedTranscript) ||
+    /(faca|faça|efetue).*(logout)/.test(normalizedTranscript) ||
+    /(saia|sair).*(do sistema|da conta)/.test(normalizedTranscript)
+  );
+}
+
 export function parseVoiceIntent(transcript) {
   const normalizedTranscript = normalizeText(transcript);
 
@@ -145,6 +212,15 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
+  if (isCloseModalCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.CLOSE_MODAL,
+      entity: null,
+      confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
   if (
     /(finalizar|concluir|fechar).*(compra|pedido)|checkout/.test(
       normalizedTranscript,
@@ -154,6 +230,42 @@ export function parseVoiceIntent(transcript) {
       intent: VOICE_INTENTS.CHECKOUT,
       entity: null,
       confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isVoiceHelpCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.OPEN_VOICE_HELP,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isLogoutCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.LOGOUT,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isNextOrderCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.OPEN_NEXT_ORDER,
+      entity: null,
+      confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isPreviousOrderCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.OPEN_PREVIOUS_ORDER,
+      entity: null,
+      confidence: 0.9,
       transcript: normalizedTranscript,
     };
   }
@@ -203,32 +315,6 @@ export function parseVoiceIntent(transcript) {
     return {
       intent: VOICE_INTENTS.READ_ORDER_DETAILS,
       entity: extractOrderNumberFromReadCommand(normalizedTranscript),
-      confidence: 0.9,
-      transcript: normalizedTranscript,
-    };
-  }
-
-  if (
-    /(proximo pedido|pedido proximo|pedido seguinte|seguinte pedido)/.test(
-      normalizedTranscript,
-    )
-  ) {
-    return {
-      intent: VOICE_INTENTS.OPEN_NEXT_ORDER,
-      entity: null,
-      confidence: 0.9,
-      transcript: normalizedTranscript,
-    };
-  }
-
-  if (
-    /(pedido anterior|anterior pedido|pedido passado)/.test(
-      normalizedTranscript,
-    )
-  ) {
-    return {
-      intent: VOICE_INTENTS.OPEN_PREVIOUS_ORDER,
-      entity: null,
       confidence: 0.9,
       transcript: normalizedTranscript,
     };

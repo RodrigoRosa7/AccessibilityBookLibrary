@@ -1,6 +1,7 @@
 import { Heading, Text } from "@primer/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../app/providers/AuthProvider.jsx";
 import { useCart } from "../app/providers/CartProvider.jsx";
 import { getBookById, getBooks } from "../features/books/bookService.js";
 import { handleVoiceCommand } from "../features/voice/voiceCommands.js";
@@ -34,6 +35,7 @@ function formatMoneyForSpeech(value) {
 export function GlobalVoiceAssistant() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
   const { addToCart } = useCart();
   const { speak } = useSpeechSynthesis();
   const [feedback, setFeedback] = useState("");
@@ -170,6 +172,36 @@ export function GlobalVoiceAssistant() {
           speak(message);
         }
       },
+      openVoiceHelp: () => {
+        window.dispatchEvent(new CustomEvent("voice-help:open"));
+        const message = "Abrindo ajuda de comandos de voz.";
+        setFeedback(message);
+        speak(message);
+      },
+      closeModal: () => {
+        const hasOpenModal =
+          typeof document !== "undefined" &&
+          document.querySelector('[role="dialog"][aria-modal="true"]');
+
+        if (!hasOpenModal) {
+          const message = "Nao ha nenhuma modal aberta para fechar.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        window.dispatchEvent(new CustomEvent("app-modal:close"));
+        const message = "Fechando modal aberta.";
+        setFeedback(message);
+        speak(message);
+      },
+      logout: () => {
+        logout();
+        const message = "Saindo do sistema.";
+        setFeedback(message);
+        speak(message);
+        navigate("/login");
+      },
       openCart: () => navigate("/cart"),
       openCheckout: () => navigate("/checkout"),
       openOrder: (orderId) => {
@@ -287,6 +319,7 @@ export function GlobalVoiceAssistant() {
       isBookDetailsRoute,
       location.pathname,
       location.search,
+      logout,
       navigate,
       openOrderByOffset,
       speak,

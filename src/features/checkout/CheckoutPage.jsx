@@ -1,5 +1,5 @@
 import { Heading, Text } from "@primer/react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/currency.js";
 
@@ -84,6 +84,22 @@ export function CheckoutPage() {
   const closeOrderModal = () => {
     navigate("/checkout", { replace: true, state: location.state });
   };
+
+  useEffect(() => {
+    function handleKeydown(event) {
+      if (event.key === "Escape") {
+        closeOrderModal();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeydown);
+    window.addEventListener("app-modal:close", closeOrderModal);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("app-modal:close", closeOrderModal);
+    };
+  }, [location.state, navigate]);
 
   return (
     <section

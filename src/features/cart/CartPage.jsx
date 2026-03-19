@@ -64,6 +64,26 @@ export function CartPage() {
     [detailedItems],
   );
 
+  useEffect(() => {
+    function closeCheckoutDialog() {
+      setIsCheckoutDialogOpen(false);
+    }
+
+    function handleKeydown(event) {
+      if (event.key === "Escape") {
+        closeCheckoutDialog();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeydown);
+    window.addEventListener("app-modal:close", closeCheckoutDialog);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("app-modal:close", closeCheckoutDialog);
+    };
+  }, []);
+
   async function handleCheckout() {
     if (!user || detailedItems.length === 0) {
       return;

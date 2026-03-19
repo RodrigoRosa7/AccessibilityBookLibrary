@@ -22,6 +22,18 @@ export function handleVoiceCommand(intentResult, actions = {}) {
       actions.openBookDetails?.(entity);
       return `Buscando detalhes de ${entity}.`;
 
+    case VOICE_INTENTS.OPEN_VOICE_HELP:
+      actions.openVoiceHelp?.();
+      return "";
+
+    case VOICE_INTENTS.CLOSE_MODAL:
+      actions.closeModal?.();
+      return "";
+
+    case VOICE_INTENTS.LOGOUT:
+      actions.logout?.();
+      return "";
+
     case VOICE_INTENTS.OPEN_ORDER:
       if (!entity) {
         return "Não entendi o número do pedido.";
