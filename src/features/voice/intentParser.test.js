@@ -3,7 +3,16 @@ import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
 
 describe("parseVoiceIntent core commands", () => {
   it("recognizes open books commands", () => {
-    const cases = ["abrir livros", "mostrar catalogo", "listar livros"];
+    const cases = [
+      "abrir livros",
+      "mostrar catalogo",
+      "listar livros",
+      "ir para livros",
+      "ir para o catalogo",
+      "quero ir para livros",
+      "acessar o catalogo de livros",
+      "me leve para os livros",
+    ];
 
     cases.forEach((transcript) => {
       const result = parseVoiceIntent(transcript);
@@ -12,7 +21,16 @@ describe("parseVoiceIntent core commands", () => {
   });
 
   it("recognizes open cart commands", () => {
-    const cases = ["abrir carrinho", "mostrar carrinho", "ver o carrinho"];
+    const cases = [
+      "abrir carrinho",
+      "mostrar carrinho",
+      "ver o carrinho",
+      "ir para carrinho",
+      "ir para o carrinho",
+      "quero ir para o carrinho",
+      "acessar o carrinho",
+      "me leve para o carrinho",
+    ];
 
     cases.forEach((transcript) => {
       const result = parseVoiceIntent(transcript);
@@ -109,6 +127,52 @@ describe("parseVoiceIntent core commands", () => {
       const result = parseVoiceIntent(transcript);
       expect(result.intent).toBe(VOICE_INTENTS.ADD_TO_CART);
     });
+  });
+
+  it("recognizes clear cart commands", () => {
+    const cases = ["limpar carrinho", "esvaziar carrinho", "zerar carrinho"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.CLEAR_CART);
+    });
+  });
+
+  it("recognizes read cart items count commands", () => {
+    const cases = [
+      "quantos itens ha no carrinho",
+      "qual a quantidade de itens no carrinho",
+      "total de itens do carrinho",
+      "quantos itens",
+      "quantidade de itens",
+      "total de itens",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.READ_CART_ITEMS_COUNT);
+    });
+  });
+
+  it("recognizes remove last cart item commands", () => {
+    const cases = ["remover", "tirar item do carrinho", "remover ultimo item"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.REMOVE_CART_ITEM);
+    });
+  });
+
+  it("recognizes remove specific book from cart command", () => {
+    const result = parseVoiceIntent("remover livro clean code");
+    expect(result.intent).toBe(VOICE_INTENTS.REMOVE_BOOK_FROM_CART);
+    expect(result.entity).toBe("clean code");
+  });
+
+  it("recognizes short remove specific book command", () => {
+    const result = parseVoiceIntent("remover clean code");
+    expect(result.intent).toBe(VOICE_INTENTS.REMOVE_BOOK_FROM_CART);
+    expect(result.entity).toBe("clean code");
   });
 
   it("recognizes search commands and extracts entity", () => {

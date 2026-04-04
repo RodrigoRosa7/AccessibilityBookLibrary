@@ -16,18 +16,22 @@ Este documento centraliza os comandos de voz disponiveis no projeto.
 
 ### Todas as rotas
 
-| Intencao                 | Exemplos de frase                                             |
-| ------------------------ | ------------------------------------------------------------- |
-| Abrir catalogo de livros | "abrir livros", "mostrar catalogo", "listar livros"           |
-| Abrir ajuda de voz       | "me ajude", "help", "preciso de ajuda", "comandos de voz"     |
-| Fechar modal aberta      | "fechar", "fechar modal", "fechar ajuda", "fechar pedido"     |
-| Logout                   | "deslogar", "faca logout", "saia do sistema", "efetue logout" |
-| Buscar livro             | "buscar livro clean code", "procurar livro javascript"        |
-| Abrir detalhes por nome  | "abrir detalhes de clean code", "ver detalhes de clean code"  |
-| Abrir carrinho           | "abrir carrinho", "ver carrinho", "mostrar carrinho"          |
-| Ir para checkout         | "finalizar compra", "concluir pedido", "checkout"             |
-| Voltar pagina            | "voltar", "pagina anterior", "retornar"                       |
-| Ir para inicio           | "abrir inicio", "mostrar home"                                |
+| Intencao                    | Exemplos de frase                                                                  |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| Abrir catalogo de livros    | "abrir livros", "mostrar catalogo", "listar livros", "ir para livros"              |
+| Abrir ajuda de voz          | "me ajude", "help", "preciso de ajuda", "comandos de voz"                          |
+| Fechar modal aberta         | "fechar", "fechar modal", "fechar ajuda", "fechar pedido"                          |
+| Logout                      | "deslogar", "faca logout", "saia do sistema", "efetue logout"                      |
+| Buscar livro                | "buscar livro clean code", "procurar livro javascript"                             |
+| Abrir detalhes por nome     | "abrir detalhes de clean code", "ver detalhes de clean code"                       |
+| Abrir carrinho              | "abrir carrinho", "ver carrinho", "mostrar carrinho", "ir para carrinho"           |
+| Consultar itens no carrinho | "quantos itens", "quantidade de itens", "total de itens"                           |
+| Limpar carrinho             | "limpar carrinho", "esvaziar carrinho", "zerar carrinho"                           |
+| Remover ultimo item         | "remover", "tirar item do carrinho", "remover ultimo item"                         |
+| Remover livro do carrinho   | "remover livro clean code", "remover clean code do carrinho", "remover clean code" |
+| Ir para checkout            | "finalizar compra", "concluir pedido", "checkout"                                  |
+| Voltar pagina               | "voltar", "pagina anterior", "retornar"                                            |
+| Ir para inicio              | "abrir inicio", "mostrar home"                                                     |
 
 ### Rota /books/:id (detalhes do livro)
 
@@ -51,7 +55,9 @@ Use esta secao para tooltip, modal de ajuda ou onboarding rapido. Sao frases cur
 
 | Contexto                   | Frases recomendadas                                                          |
 | -------------------------- | ---------------------------------------------------------------------------- |
-| Navegacao global           | "abrir livros", "abrir carrinho", "finalizar compra", "voltar"               |
+| Navegacao global           | "abrir livros", "ir para carrinho", "finalizar compra", "voltar"             |
+| Carrinho por voz           | "limpar carrinho", "remover", "remover livro clean code"                     |
+| Consulta do carrinho       | "quantos itens", "quantidade de itens", "total de itens"                     |
 | Ajuda e controle de modal  | "me ajude", "fechar modal", "fechar ajuda"                                   |
 | Sessao do usuario          | "deslogar", "saia do sistema"                                                |
 | Busca e detalhes de livros | "buscar livro clean code", "abrir detalhes de clean code"                    |
@@ -64,12 +70,18 @@ Sugestao de uso na interface: mostrar de 3 a 5 frases por tela, evitando listar 
 
 Comandos abaixo sao aceitos para aumentar tolerancia de reconhecimento, mas nao precisam ser exibidos para o usuario final:
 
-| Tipo                     | Variacoes aceitas                                            |
-| ------------------------ | ------------------------------------------------------------ |
-| Alias de proximo pedido  | "pedido prossimo", "pedido proxmo", "mostrar proxima compra" |
-| Alias de pedido anterior | "retornar pedido atras", "pedido de antes"                   |
-| Alias de ajuda           | "me ajuda", "pode me ajudar", "quero ajuda", "socorro"       |
-| Alias de logout          | "deslogue", "logout"                                         |
+| Tipo                       | Variacoes aceitas                                                                |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| Alias de abrir livros      | "quero ir para livros", "acessar o catalogo de livros", "me leve para os livros" |
+| Alias de abrir carrinho    | "quero ir para o carrinho", "acessar o carrinho", "me leve para o carrinho"      |
+| Alias de consulta carrinho | "quantidade de itens no carrinho", "total de itens do carrinho", "quantos itens" |
+| Alias de limpar carrinho   | "esvaziar carrinho", "zerar carrinho"                                            |
+| Alias de remover item      | "tirar item do carrinho", "remover ultimo item"                                  |
+| Alias de remover livro     | "remover livro <nome>", "remover <nome> do carrinho", "remover <nome>"           |
+| Alias de proximo pedido    | "pedido prossimo", "pedido proxmo", "mostrar proxima compra"                     |
+| Alias de pedido anterior   | "retornar pedido atras", "pedido de antes"                                       |
+| Alias de ajuda             | "me ajuda", "pode me ajudar", "quero ajuda", "socorro"                           |
+| Alias de logout            | "deslogue", "logout"                                                             |
 
 Sugestao para UX: priorizar os exemplos da tabela principal na interface e manter os aliases apenas nesta documentacao tecnica.
 

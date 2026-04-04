@@ -6,7 +6,15 @@ const GLOBAL_UI_COMMANDS = [
   "abrir livros",
   "abrir carrinho",
   "finalizar compra",
+  "me ajude",
   "voltar",
+];
+
+const SESSION_MODAL_COMMANDS = [
+  "fechar modal",
+  "fechar ajuda",
+  "deslogar",
+  "saia do sistema",
 ];
 
 function getRouteCommandSuggestions(pathname) {
@@ -136,7 +144,7 @@ export function VoiceHelpPanel() {
             </Text>
 
             <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
-              Atalho: pressione ? para abrir esta ajuda rapidamente.
+              Atalhos: ? para abrir e Esc para fechar a modal atual.
             </Text>
 
             <section className="voice-help-section">
@@ -145,6 +153,19 @@ export function VoiceHelpPanel() {
               </Heading>
               <ul className="voice-help-list">
                 {GLOBAL_UI_COMMANDS.map((command) => (
+                  <li key={command}>
+                    <Text as="p">{command}</Text>
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="voice-help-section">
+              <Heading as="h4" sx={{ fontSize: 1 }}>
+                Sessão e modais
+              </Heading>
+              <ul className="voice-help-list">
+                {SESSION_MODAL_COMMANDS.map((command) => (
                   <li key={command}>
                     <Text as="p">{command}</Text>
                   </li>

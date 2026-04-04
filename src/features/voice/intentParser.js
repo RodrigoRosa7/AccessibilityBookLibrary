@@ -9,6 +9,10 @@ export const VOICE_INTENTS = {
   OPEN_NEXT_ORDER: "OPEN_NEXT_ORDER",
   OPEN_PREVIOUS_ORDER: "OPEN_PREVIOUS_ORDER",
   ADD_TO_CART: "ADD_TO_CART",
+  READ_CART_ITEMS_COUNT: "READ_CART_ITEMS_COUNT",
+  CLEAR_CART: "CLEAR_CART",
+  REMOVE_CART_ITEM: "REMOVE_CART_ITEM",
+  REMOVE_BOOK_FROM_CART: "REMOVE_BOOK_FROM_CART",
   OPEN_CART: "OPEN_CART",
   OPEN_BOOKS: "OPEN_BOOKS",
   CHECKOUT: "CHECKOUT",
@@ -81,6 +85,50 @@ function extractBookDetailsEntity(normalizedTranscript) {
         .replace(/^(de|do|da|sobre)\s+/, "")
         .replace(/\s+(por favor)?$/, "")
         .trim();
+    }
+  }
+
+  return null;
+}
+
+function extractRemoveBookEntity(normalizedTranscript) {
+  const genericTargets = new Set([
+    "item",
+    "itens",
+    "um item",
+    "o item",
+    "ultimo",
+    "ultima",
+    "ultimo item",
+    "ultima item",
+    "livro",
+    "carrinho",
+    "item do carrinho",
+    "itens do carrinho",
+  ]);
+
+  const patterns = [
+    /(?:remover|remova|tirar|tire|excluir|apagar)\s+(?:o\s+)?(?:livro\s+)(.+)$/,
+    /(?:remover|remova|tirar|tire|excluir|apagar)\s+(.+)\s+(?:do|de)\s+carrinho$/,
+    /(?:remover|remova|tirar|tire|excluir|apagar)\s+(.+)$/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = normalizedTranscript.match(pattern);
+    const rawEntity = match?.[1]?.trim();
+
+    if (rawEntity) {
+      const normalizedEntity = rawEntity
+        .replace(/^(de|do|da)\s+/, "")
+        .replace(/\s+(do|de)\s+carrinho$/, "")
+        .replace(/\s+(por favor)?$/, "")
+        .trim();
+
+      if (!normalizedEntity || genericTargets.has(normalizedEntity)) {
+        continue;
+      }
+
+      return normalizedEntity;
     }
   }
 
@@ -167,6 +215,55 @@ function isLogoutCommand(normalizedTranscript) {
   );
 }
 
+function isOpenCartCommand(normalizedTranscript) {
+  return (
+    /(abrir|abra|ver|veja|mostrar|mostre).*(carrinho)/.test(
+      normalizedTranscript,
+    ) ||
+    /(?:(?:quero\s+)?(?:ir|va|vai|acessar|acesse|entrar|entre)|me leve).*(?:para\s+o|para\s+a|para|o|a)?\s*carrinho/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
+function isOpenBooksCommand(normalizedTranscript) {
+  return (
+    /(abrir|abra|ver|veja|mostrar|mostre|listar|liste).*(livros|catalogo(?:\s+de\s+livros)?)/.test(
+      normalizedTranscript,
+    ) ||
+    /(?:(?:quero\s+)?(?:ir|va|vai|acessar|acesse|entrar|entre)|me leve).*(?:para\s+o|para\s+a|para|o|a)?\s*(livros|catalogo(?:\s+de\s+livros)?)/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
+function isClearCartCommand(normalizedTranscript) {
+  return /(limpar|esvaziar|zerar).*(carrinho)/.test(normalizedTranscript);
+}
+
+function isRemoveCartItemCommand(normalizedTranscript) {
+  return (
+    /^(remover|remova|tirar|tire|excluir|apagar)$/.test(normalizedTranscript) ||
+    /(remover|remova|tirar|tire|excluir|apagar).*(item|ultimo|ultima|carrinho)/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
+function isReadCartItemsCountCommand(normalizedTranscript) {
+  return (
+    /(quantos?|quantidade|total).*(itens?|livros?).*(carrinho)/.test(
+      normalizedTranscript,
+    ) ||
+    /(carrinho).*(quantos?|quantidade|total).*(itens?|livros?)/.test(
+      normalizedTranscript,
+    ) ||
+    /^(quantos?\s+itens?|quantidade\s+de\s+itens?|total\s+de\s+itens?)$/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
 export function parseVoiceIntent(transcript) {
   const normalizedTranscript = normalizeText(transcript);
 
@@ -192,7 +289,44 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
-  if (/(abrir|ver|mostrar).*(carrinho)/.test(normalizedTranscript)) {
+  const removeBookEntity = extractRemoveBookEntity(normalizedTranscript);
+  if (removeBookEntity) {
+    return {
+      intent: VOICE_INTENTS.REMOVE_BOOK_FROM_CART,
+      entity: removeBookEntity,
+      confidence: 0.93,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isClearCartCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.CLEAR_CART,
+      entity: null,
+      confidence: 0.93,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isReadCartItemsCountCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.READ_CART_ITEMS_COUNT,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isRemoveCartItemCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.REMOVE_CART_ITEM,
+      entity: null,
+      confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isOpenCartCommand(normalizedTranscript)) {
     return {
       intent: VOICE_INTENTS.OPEN_CART,
       entity: null,
@@ -201,9 +335,7 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
-  if (
-    /(abrir|ver|mostrar|listar).*(livros|catalogo)/.test(normalizedTranscript)
-  ) {
+  if (isOpenBooksCommand(normalizedTranscript)) {
     return {
       intent: VOICE_INTENTS.OPEN_BOOKS,
       entity: null,

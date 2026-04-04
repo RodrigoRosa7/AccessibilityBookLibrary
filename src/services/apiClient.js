@@ -16,6 +16,12 @@ async function request(path, options = {}) {
     throw new Error(message);
   }
 
+  if (data === null) {
+    throw new Error(
+      "Falha ao processar resposta do servidor. Tente novamente.",
+    );
+  }
+
   return data;
 }
 

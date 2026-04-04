@@ -37,7 +37,7 @@ export function Layout() {
               Loja Online de Livros em Braille
             </Heading>
             <Text as="p" sx={{ color: "fg.muted" }}>
-              Demonstracao academica de acessibilidade com Web Speech API
+              Demonstração acadêmica de acessibilidade com Web Speech API
             </Text>
           </div>
 

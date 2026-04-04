@@ -65,6 +65,22 @@ export function handleVoiceCommand(intentResult, actions = {}) {
       }
       return "Este comando funciona na página de detalhes do livro.";
 
+    case VOICE_INTENTS.CLEAR_CART:
+      actions.clearCartItems?.();
+      return "";
+
+    case VOICE_INTENTS.READ_CART_ITEMS_COUNT:
+      actions.readCartItemsCount?.();
+      return "";
+
+    case VOICE_INTENTS.REMOVE_CART_ITEM:
+      actions.removeLastCartItem?.();
+      return "";
+
+    case VOICE_INTENTS.REMOVE_BOOK_FROM_CART:
+      actions.removeBookFromCart?.(entity ?? "");
+      return "";
+
     case VOICE_INTENTS.CHECKOUT:
       actions.openCheckout?.();
       return "Abrindo checkout para finalizar a compra.";
@@ -76,9 +92,10 @@ export function handleVoiceCommand(intentResult, actions = {}) {
     case VOICE_INTENTS.READ_DESCRIPTION:
       if (actions.readDescription) {
         actions.readDescription();
-        return "Lendo descrição do livro.";
+      } else {
+        actions.onDescriptionUnavailable?.();
       }
-      return "Abra os detalhes de um livro para ouvir a descrição.";
+      return "";
 
     case VOICE_INTENTS.OPEN_HOME:
       actions.openHome?.();

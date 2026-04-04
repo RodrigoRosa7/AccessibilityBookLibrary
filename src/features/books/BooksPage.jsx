@@ -16,6 +16,7 @@ export function BooksPage() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [retryCount, setRetryCount] = useState(0);
 
   const cartQuantitiesByBookId = useMemo(() => {
     const quantityMap = new Map();
@@ -59,7 +60,7 @@ export function BooksPage() {
     return () => {
       active = false;
     };
-  }, [query]);
+  }, [query, retryCount]);
 
   return (
     <section style={{ display: "grid", gap: 16 }}>
@@ -115,8 +116,18 @@ export function BooksPage() {
         </Button>
       </form>
 
-      {loading ? <Spinner size="large" aria-label="Carregando livros" /> : null}
-      {error ? <Text sx={{ color: "danger.fg" }}>{error}</Text> : null}
+      {loading ? <Spinner size="large" srText="Carregando livros" /> : null}
+      {error ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <Text sx={{ color: "danger.fg" }}>{error}</Text>
+          <Button
+            onClick={() => setRetryCount((c) => c + 1)}
+            style={{ alignSelf: "flex-start" }}
+          >
+            Tentar novamente
+          </Button>
+        </div>
+      ) : null}
       {!loading && !error && books.length === 0 ? (
         <Text sx={{ color: "fg.muted" }}>
           Nenhum livro encontrado para a busca informada.

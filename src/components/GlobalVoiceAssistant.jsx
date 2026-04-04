@@ -36,7 +36,8 @@ export function GlobalVoiceAssistant() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const { addToCart } = useCart();
+  const { items, addToCart, decreaseFromCart, removeFromCart, clearCart } =
+    useCart();
   const { speak } = useSpeechSynthesis();
   const [feedback, setFeedback] = useState("");
   const [currentDetailBook, setCurrentDetailBook] = useState(null);
@@ -131,9 +132,24 @@ export function GlobalVoiceAssistant() {
   const voiceActions = useMemo(
     () => ({
       openBooks: () => navigate("/books"),
-      searchBook: (term) => {
-        const search = term ? `?q=${encodeURIComponent(term)}` : "";
-        navigate(`/books${search}`);
+      searchBook: async (term) => {
+        if (!term) {
+          navigate("/books");
+          return;
+        }
+
+        try {
+          const results = await getBooks(term);
+
+          if (results.length === 1) {
+            navigate(`/books/${results[0].id}`);
+            return;
+          }
+        } catch {
+          // fall through to list with query
+        }
+
+        navigate(`/books?q=${encodeURIComponent(term)}`);
       },
       openBookDetails: async (term) => {
         const normalizedTerm = String(term ?? "").trim();
@@ -201,6 +217,106 @@ export function GlobalVoiceAssistant() {
         setFeedback(message);
         speak(message);
         navigate("/login");
+      },
+      clearCartItems: () => {
+        if (items.length === 0) {
+          const message = "O carrinho já está vazio.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        clearCart();
+        const message = "Carrinho limpo com sucesso.";
+        setFeedback(message);
+        speak(message);
+      },
+      readCartItemsCount: () => {
+        const totalItems = items.reduce(
+          (sum, item) => sum + Number(item.quantity ?? 0),
+          0,
+        );
+
+        if (totalItems <= 0) {
+          const message = "Não há itens no carrinho.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        const message =
+          totalItems === 1
+            ? "Há um item no carrinho."
+            : `Há ${totalItems} itens no carrinho.`;
+        setFeedback(message);
+        speak(message);
+      },
+      removeLastCartItem: () => {
+        if (items.length === 0) {
+          const message = "O carrinho está vazio. Não há item para remover.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        const lastItem = items[items.length - 1];
+        decreaseFromCart(lastItem.bookId, 1);
+
+        const message =
+          "Removendo uma unidade do último item adicionado ao carrinho.";
+        setFeedback(message);
+        speak(message);
+      },
+      removeBookFromCart: async (bookTerm) => {
+        const normalizedTerm = normalizeMatchText(bookTerm);
+
+        if (!normalizedTerm) {
+          const message = "Informe o nome do livro para remover do carrinho.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        if (items.length === 0) {
+          const message = "O carrinho está vazio. Não há livro para remover.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        const cartBookIds = new Set(items.map((item) => item.bookId));
+
+        try {
+          const searchedBooks = await getBooks(normalizedTerm);
+          const cartMatchedBooks = searchedBooks.filter((book) =>
+            cartBookIds.has(book.id),
+          );
+
+          const exactMatch = cartMatchedBooks.find(
+            (book) => normalizeMatchText(book.title) === normalizedTerm,
+          );
+          const partialMatch = cartMatchedBooks.find((book) =>
+            normalizeMatchText(book.title).includes(normalizedTerm),
+          );
+          const selectedBook =
+            exactMatch ?? partialMatch ?? cartMatchedBooks[0];
+
+          if (!selectedBook) {
+            const message = `Não encontrei o livro ${bookTerm} no carrinho.`;
+            setFeedback(message);
+            speak(message);
+            return;
+          }
+
+          removeFromCart(selectedBook.id);
+          const message = `Removendo ${selectedBook.title} do carrinho.`;
+          setFeedback(message);
+          speak(message);
+        } catch {
+          const message = "Não consegui remover o livro do carrinho agora.";
+          setFeedback(message);
+          speak(message);
+        }
       },
       openCart: () => navigate("/cart"),
       openCheckout: () => navigate("/checkout"),
@@ -304,24 +420,34 @@ export function GlobalVoiceAssistant() {
             },
             readDescription: () => {
               if (currentDetailBook.description) {
+                setFeedback("Lendo descrição do livro.");
                 speak(currentDetailBook.description);
               }
             },
           }
         : {}),
+      onDescriptionUnavailable: () => {
+        const message = "Abra os detalhes de um livro para ouvir a descrição.";
+        setFeedback(message);
+        speak(message);
+      },
       onUnknown: () => {
         setFeedback("Comando não reconhecido. Tente novamente.");
       },
     }),
     [
+      clearCart,
       addToCart,
       currentDetailBook,
+      decreaseFromCart,
       isBookDetailsRoute,
+      items,
       location.pathname,
       location.search,
       logout,
       navigate,
       openOrderByOffset,
+      removeFromCart,
       speak,
     ],
   );
