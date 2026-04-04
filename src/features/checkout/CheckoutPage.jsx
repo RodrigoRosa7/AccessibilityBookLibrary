@@ -125,7 +125,7 @@ export function CheckoutPage() {
           }}
         >
           <Text as="p" sx={{ color: "danger.fg" }}>
-            Nao encontrei o pedido #{requestedOrderId}. Verifique o numero
+            Não encontrei o pedido #{requestedOrderId}. Verifique o número
             informado.
           </Text>
         </div>

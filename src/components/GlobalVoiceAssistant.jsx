@@ -4,6 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/providers/AuthProvider.jsx";
 import { useCart } from "../app/providers/CartProvider.jsx";
 import { getBookById, getBooks } from "../features/books/bookService.js";
+import {
+  buildSearchResultsPageSpeech,
+  SEARCH_RESULTS_PAGE_SIZE,
+} from "../features/voice/searchResultsSpeech.js";
 import { handleVoiceCommand } from "../features/voice/voiceCommands.js";
 import { useSpeechRecognition } from "../features/voice/useSpeechRecognition.js";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
@@ -32,6 +36,25 @@ function formatMoneyForSpeech(value) {
   });
 }
 
+function buildOrderDetailsSpeech(order) {
+  const itemsText =
+    Array.isArray(order?.items) && order.items.length > 0
+      ? order.items
+          .map((item) => `${item.title}, quantidade ${item.quantity}`)
+          .join(". ")
+      : "Sem itens registrados.";
+
+  return `Pedido número ${order?.id}. Total ${formatMoneyForSpeech(order?.total)}. Itens: ${itemsText}.`;
+}
+
+function createEmptySearchResultsPagination() {
+  return {
+    query: "",
+    results: [],
+    pageIndex: 0,
+  };
+}
+
 export function GlobalVoiceAssistant() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,6 +65,29 @@ export function GlobalVoiceAssistant() {
   const [feedback, setFeedback] = useState("");
   const [currentDetailBook, setCurrentDetailBook] = useState(null);
   const cancelRequestedRef = useRef(false);
+  const searchResultsPaginationRef = useRef(
+    createEmptySearchResultsPagination(),
+  );
+
+  const resetSearchResultsPagination = useCallback(() => {
+    searchResultsPaginationRef.current = createEmptySearchResultsPagination();
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname !== "/books") {
+      resetSearchResultsPagination();
+      return;
+    }
+
+    const queryParam = new URLSearchParams(location.search).get("q") ?? "";
+    if (searchResultsPaginationRef.current.query !== queryParam) {
+      searchResultsPaginationRef.current = {
+        query: queryParam,
+        results: [],
+        pageIndex: 0,
+      };
+    }
+  }, [location.pathname, location.search, resetSearchResultsPagination]);
 
   useEffect(() => {
     const detailsMatch = location.pathname.match(/^\/books\/(\d+)$/);
@@ -121,12 +167,110 @@ export function GlobalVoiceAssistant() {
       }
 
       const targetOrder = orderHistory[targetIndex];
-      const message = `Abrindo pedido ${targetOrder.id}.`;
+      const message = `Abrindo pedido ${targetOrder.id} e lendo os dados.`;
       setFeedback(message);
-      speak(message);
+      speak(buildOrderDetailsSpeech(targetOrder));
       navigate(`/checkout?orderId=${targetOrder.id}`);
     },
     [location.search, navigate, speak],
+  );
+
+  const readSearchResultsPage = useCallback(
+    async (mode) => {
+      if (location.pathname !== "/books") {
+        const message =
+          "Abra o catálogo para ouvir os livros exibidos na busca.";
+        setFeedback(message);
+        speak(message);
+        return;
+      }
+
+      const queryParam = new URLSearchParams(location.search).get("q") ?? "";
+      const cachedPagination = searchResultsPaginationRef.current;
+
+      if (
+        mode !== "start" &&
+        cachedPagination.query === queryParam &&
+        cachedPagination.results.length === 0
+      ) {
+        const message =
+          'Diga "ler resultados da busca" para iniciar a leitura paginada.';
+        setFeedback(message);
+        speak(message);
+        return;
+      }
+
+      try {
+        const results =
+          mode === "start" ||
+          cachedPagination.query !== queryParam ||
+          cachedPagination.results.length === 0
+            ? await getBooks(queryParam)
+            : cachedPagination.results;
+
+        if (results.length === 0) {
+          const message = queryParam
+            ? `A busca por ${queryParam} não retornou livros.`
+            : "Não há livros exibidos no catálogo para leitura.";
+          setFeedback(message);
+          speak(message);
+          searchResultsPaginationRef.current = {
+            query: queryParam,
+            results: [],
+            pageIndex: 0,
+          };
+          return;
+        }
+
+        const totalPages = Math.ceil(results.length / SEARCH_RESULTS_PAGE_SIZE);
+        let nextPageIndex =
+          cachedPagination.query === queryParam
+            ? cachedPagination.pageIndex
+            : 0;
+
+        if (mode === "start") {
+          nextPageIndex = 0;
+        } else if (mode === "next") {
+          if (nextPageIndex >= totalPages - 1) {
+            const message =
+              'Você já está no último bloco de resultados. Diga "ler resultados anteriores" ou "repetir resultados".';
+            setFeedback(message);
+            speak(message);
+            return;
+          }
+          nextPageIndex += 1;
+        } else if (mode === "previous") {
+          if (nextPageIndex <= 0) {
+            const message =
+              'Você já está no primeiro bloco de resultados. Diga "ler próximos resultados" para avançar.';
+            setFeedback(message);
+            speak(message);
+            return;
+          }
+          nextPageIndex -= 1;
+        }
+
+        const pageSpeech = buildSearchResultsPageSpeech({
+          results,
+          query: queryParam,
+          pageIndex: nextPageIndex,
+          mode,
+        });
+
+        searchResultsPaginationRef.current = {
+          query: queryParam,
+          results,
+          pageIndex: nextPageIndex,
+        };
+        setFeedback(pageSpeech.feedback);
+        speak(pageSpeech.spokenMessage);
+      } catch {
+        const message = "Não consegui ler os resultados da busca agora.";
+        setFeedback(message);
+        speak(message);
+      }
+    },
+    [location.pathname, location.search, speak],
   );
 
   const voiceActions = useMemo(
@@ -142,6 +286,9 @@ export function GlobalVoiceAssistant() {
           const results = await getBooks(term);
 
           if (results.length === 1) {
+            const message = `A busca retornou um livro. Abrindo detalhes de ${results[0].title}.`;
+            setFeedback(message);
+            speak(message);
             navigate(`/books/${results[0].id}`);
             return;
           }
@@ -150,6 +297,18 @@ export function GlobalVoiceAssistant() {
         }
 
         navigate(`/books?q=${encodeURIComponent(term)}`);
+      },
+      readSearchResults: async () => {
+        await readSearchResultsPage("start");
+      },
+      readNextSearchResults: async () => {
+        await readSearchResultsPage("next");
+      },
+      readPreviousSearchResults: async () => {
+        await readSearchResultsPage("previous");
+      },
+      repeatSearchResults: async () => {
+        await readSearchResultsPage("repeat");
       },
       openBookDetails: async (term) => {
         const normalizedTerm = String(term ?? "").trim();
@@ -200,7 +359,7 @@ export function GlobalVoiceAssistant() {
           document.querySelector('[role="dialog"][aria-modal="true"]');
 
         if (!hasOpenModal) {
-          const message = "Nao ha nenhuma modal aberta para fechar.";
+          const message = "Não há nenhuma modal aberta para fechar.";
           setFeedback(message);
           speak(message);
           return;
@@ -230,6 +389,82 @@ export function GlobalVoiceAssistant() {
         const message = "Carrinho limpo com sucesso.";
         setFeedback(message);
         speak(message);
+      },
+      readCartItems: async () => {
+        if (items.length === 0) {
+          const message = "Não há itens no carrinho.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        try {
+          const books = await getBooks();
+          const booksById = new Map(books.map((book) => [book.id, book]));
+          const spokenItems = items
+            .map((item, index) => {
+              const book = booksById.get(item.bookId);
+              if (!book) {
+                return null;
+              }
+
+              const subtotal =
+                Number(item.quantity ?? 0) * Number(book.price ?? 0);
+              return `Item ${index + 1}: ${book.title}, quantidade ${item.quantity}, preço ${formatMoneyForSpeech(book.price)}, subtotal ${formatMoneyForSpeech(subtotal)}`;
+            })
+            .filter(Boolean);
+
+          if (spokenItems.length === 0) {
+            const message =
+              "Não consegui identificar os livros do carrinho agora.";
+            setFeedback(message);
+            speak(message);
+            return;
+          }
+
+          const message =
+            spokenItems.length === 1
+              ? "Lendo item do carrinho."
+              : `Lendo ${spokenItems.length} itens do carrinho.`;
+          const spokenText = spokenItems.join(". ") + ".";
+          setFeedback(message);
+          speak(spokenText);
+        } catch {
+          const message = "Não consegui ler os itens do carrinho agora.";
+          setFeedback(message);
+          speak(message);
+        }
+      },
+      readCartTotal: async () => {
+        if (items.length === 0) {
+          const message = `Não há itens no carrinho. O total é ${formatMoneyForSpeech(0)}.`;
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        try {
+          const books = await getBooks();
+          const booksById = new Map(books.map((book) => [book.id, book]));
+
+          const cartTotal = items.reduce((sum, item) => {
+            const book = booksById.get(item.bookId);
+            if (!book) {
+              return sum;
+            }
+
+            const quantity = Number(item.quantity ?? 0);
+            return sum + Number(book.price ?? 0) * quantity;
+          }, 0);
+
+          const message = `Total do carrinho: ${formatMoneyForSpeech(cartTotal)}.`;
+          setFeedback(message);
+          speak(message);
+        } catch {
+          const message = "Não consegui calcular o total do carrinho agora.";
+          setFeedback(message);
+          speak(message);
+        }
       },
       readCartItemsCount: () => {
         const totalItems = items.reduce(
@@ -319,11 +554,46 @@ export function GlobalVoiceAssistant() {
         }
       },
       openCart: () => navigate("/cart"),
-      openCheckout: () => navigate("/checkout"),
+      openCheckout: () => {
+        if (items.length === 0) {
+          const message =
+            "O carrinho está vazio. Adicione itens antes de finalizar a compra.";
+          setFeedback(message);
+          speak(message);
+          return;
+        }
+
+        // If in cart, emit event to open dialog instead of navigating
+        if (location.pathname === "/cart") {
+          const message = "Abrindo diálogo de confirmação.";
+          setFeedback(message);
+          speak(message);
+          window.dispatchEvent(new CustomEvent("cart:open-checkout-dialog"));
+          return;
+        }
+
+        const message = "Abrindo checkout para finalizar a compra.";
+        setFeedback(message);
+        speak(message);
+        navigate("/checkout");
+      },
+      confirmCheckout: () => {
+        if (location.pathname === "/cart") {
+          const message = "Confirmando pedido.";
+          setFeedback(message);
+          speak(message);
+          window.dispatchEvent(new CustomEvent("cart:confirm-checkout"));
+          return;
+        }
+
+        const message = "Este comando funciona na tela do carrinho.";
+        setFeedback(message);
+        speak(message);
+      },
       openOrder: (orderId) => {
         const normalizedOrderId = String(orderId ?? "").trim();
         if (!normalizedOrderId) {
-          const message = "Não entendi o numero do pedido.";
+          const message = "Não entendi o número do pedido.";
           setFeedback(message);
           speak(message);
           return;
@@ -399,14 +669,8 @@ export function GlobalVoiceAssistant() {
           return;
         }
 
-        const itemsText = Array.isArray(selectedOrder.items)
-          ? selectedOrder.items
-              .map((item) => `${item.title}, quantidade ${item.quantity}`)
-              .join(". ")
-          : "Sem itens registrados.";
-
         const message = `Lendo dados do pedido ${selectedOrder.id}.`;
-        const spokenDetails = `Pedido número ${selectedOrder.id}. Total ${formatMoneyForSpeech(selectedOrder.total)}. Itens: ${itemsText}.`;
+        const spokenDetails = buildOrderDetailsSpeech(selectedOrder);
 
         setFeedback(message);
         speak(spokenDetails);
@@ -447,6 +711,7 @@ export function GlobalVoiceAssistant() {
       logout,
       navigate,
       openOrderByOffset,
+      readSearchResultsPage,
       removeFromCart,
       speak,
     ],
@@ -454,6 +719,7 @@ export function GlobalVoiceAssistant() {
 
   const speechRecognition = useSpeechRecognition({
     lang: "pt-BR",
+    currentRoute: location.pathname,
     onIntent: (intentResult) => {
       cancelRequestedRef.current = false;
       const message = handleVoiceCommand(intentResult, voiceActions);
@@ -566,7 +832,7 @@ export function GlobalVoiceAssistant() {
       </div>
 
       <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
-        Ultimo comando: {transcript || "nenhum"}
+        Último comando: {transcript || "nenhum"}
       </Text>
 
       <div

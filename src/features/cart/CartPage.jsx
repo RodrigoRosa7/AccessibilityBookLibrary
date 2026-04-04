@@ -1,5 +1,5 @@
 import { Button, Heading, Spinner, Text } from "@primer/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/providers/AuthProvider.jsx";
 import { useCart } from "../../app/providers/CartProvider.jsx";
@@ -64,27 +64,7 @@ export function CartPage() {
     [detailedItems],
   );
 
-  useEffect(() => {
-    function closeCheckoutDialog() {
-      setIsCheckoutDialogOpen(false);
-    }
-
-    function handleKeydown(event) {
-      if (event.key === "Escape") {
-        closeCheckoutDialog();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeydown);
-    window.addEventListener("app-modal:close", closeCheckoutDialog);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeydown);
-      window.removeEventListener("app-modal:close", closeCheckoutDialog);
-    };
-  }, []);
-
-  async function handleCheckout() {
+  const handleCheckout = useCallback(async () => {
     if (!user || detailedItems.length === 0) {
       return;
     }
@@ -143,7 +123,45 @@ export function CartPage() {
     } finally {
       setIsSubmittingOrder(false);
     }
-  }
+  }, [user, detailedItems, total, clearCart, speak, navigate]);
+
+  useEffect(() => {
+    function closeCheckoutDialog() {
+      setIsCheckoutDialogOpen(false);
+    }
+
+    function openCheckoutDialog() {
+      setIsCheckoutDialogOpen(true);
+    }
+
+    function handleConfirmCheckout() {
+      handleCheckout();
+    }
+
+    function handleKeydown(event) {
+      if (event.key === "Escape") {
+        closeCheckoutDialog();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeydown);
+    window.addEventListener("app-modal:close", closeCheckoutDialog);
+    window.addEventListener("cart:open-checkout-dialog", openCheckoutDialog);
+    window.addEventListener("cart:confirm-checkout", handleConfirmCheckout);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+      window.removeEventListener("app-modal:close", closeCheckoutDialog);
+      window.removeEventListener(
+        "cart:open-checkout-dialog",
+        openCheckoutDialog,
+      );
+      window.removeEventListener(
+        "cart:confirm-checkout",
+        handleConfirmCheckout,
+      );
+    };
+  }, [handleCheckout]);
 
   if (loading) {
     return <Spinner size="large" aria-label="Carregando carrinho" />;
@@ -190,7 +208,7 @@ export function CartPage() {
         <div
           style={{ border: "1px solid #d0d7de", borderRadius: 8, padding: 16 }}
         >
-          <Text>Seu carrinho esta vazio.</Text>
+          <Text>Seu carrinho está vazio.</Text>
         </div>
       ) : (
         detailedItems.map((item) => (

@@ -14,6 +14,7 @@ export function useSpeechRecognition(options = {}) {
     lang = "pt-BR",
     continuous = false,
     interimResults = true,
+    currentRoute = "/",
     onIntent,
     onTranscript,
     onError,
@@ -97,7 +98,7 @@ export function useSpeechRecognition(options = {}) {
         onTranscriptRef.current(normalizedFinal);
       }
 
-      const parsedIntent = parseVoiceIntent(normalizedFinal);
+      const parsedIntent = parseVoiceIntent(normalizedFinal, { currentRoute });
       if (onIntentRef.current) {
         onIntentRef.current(parsedIntent, normalizedFinal);
       }
@@ -109,7 +110,13 @@ export function useSpeechRecognition(options = {}) {
       recognition.stop();
       recognitionRef.current = null;
     };
-  }, [SpeechRecognitionConstructor, lang, continuous, interimResults]);
+  }, [
+    SpeechRecognitionConstructor,
+    lang,
+    continuous,
+    interimResults,
+    currentRoute,
+  ]);
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || isListening) {

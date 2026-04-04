@@ -1,7 +1,8 @@
 import { Button, Heading, Spinner, Text, TextInput } from "@primer/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useCart } from "../../app/providers/CartProvider.jsx";
+import { getSearchResultsSummaryMessage } from "../voice/searchResultsSpeech.js";
 import { useSpeechSynthesis } from "../voice/useSpeechSynthesis.js";
 import { BookCard } from "./BookCard.jsx";
 import { getBooks } from "./bookService.js";
@@ -17,6 +18,7 @@ export function BooksPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
+  const announcedSearchSummaryRef = useRef("");
 
   const cartQuantitiesByBookId = useMemo(() => {
     const quantityMap = new Map();
@@ -62,6 +64,31 @@ export function BooksPage() {
     };
   }, [query, retryCount]);
 
+  const searchSummary = useMemo(() => {
+    if (!query || loading || error) {
+      return "";
+    }
+
+    return getSearchResultsSummaryMessage({
+      total: books.length,
+      query,
+    });
+  }, [books.length, error, loading, query]);
+
+  useEffect(() => {
+    if (!query) {
+      announcedSearchSummaryRef.current = "";
+      return;
+    }
+
+    if (!searchSummary || announcedSearchSummaryRef.current === searchSummary) {
+      return;
+    }
+
+    announcedSearchSummaryRef.current = searchSummary;
+    speak(searchSummary);
+  }, [query, searchSummary, speak]);
+
   return (
     <section style={{ display: "grid", gap: 16 }}>
       <div
@@ -73,7 +100,7 @@ export function BooksPage() {
           alignItems: "center",
         }}
       >
-        <Heading as="h2">Catalogo de Livros</Heading>
+        <Heading as="h2">Catálogo de Livros</Heading>
       </div>
 
       <form
@@ -98,7 +125,7 @@ export function BooksPage() {
         <TextInput
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
-          placeholder="Buscar por titulo, autor ou descricao"
+          placeholder="Buscar por título, autor ou descrição"
           aria-label="Buscar livros"
           style={{ minWidth: 260, flex: 1 }}
         />
@@ -127,6 +154,9 @@ export function BooksPage() {
             Tentar novamente
           </Button>
         </div>
+      ) : null}
+      {searchSummary ? (
+        <Text sx={{ color: "fg.muted" }}>{searchSummary}</Text>
       ) : null}
       {!loading && !error && books.length === 0 ? (
         <Text sx={{ color: "fg.muted" }}>

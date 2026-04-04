@@ -1,12 +1,12 @@
-# Prototipo Web Speech API
+# Protótipo Web Speech API
 
-Aplicacao web de livraria em braille com foco em acessibilidade, navegacao por voz e interacao por teclado.
+Aplicação web de livraria em braille com foco em acessibilidade, navegação por voz e interação por teclado.
 
 ## Objetivo
 
-O projeto demonstra um fluxo de compra acessivel com:
+O projeto demonstra um fluxo de compra acessível com:
 
-- reconhecimento de voz para navegacao e ações da aplicação;
+- reconhecimento de voz para navegação e ações da aplicação;
 - síntese de voz para feedback ao usuário;
 - busca por texto e por voz no catálogo de livros;
 - carrinho com controle de quantidade e checkout com histórico de pedidos.
@@ -22,13 +22,13 @@ O projeto demonstra um fluxo de compra acessivel com:
 
 ## Como executar
 
-1. Instale as dependencias:
+1. Instale as dependências:
 
 ```bash
 npm install
 ```
 
-2. Rode em modo desenvolvimento:
+2. Rode em modo de desenvolvimento:
 
 ```bash
 npm run dev
@@ -76,7 +76,7 @@ Esse guia inclui:
 ## Estrutura principal
 
 - `src/components/GlobalVoiceAssistant.jsx`: assistente de voz global
-- `src/features/voice/intentParser.js`: parser de intents de voz
+- `src/features/voice/intentParser.js`: parser de intenções de voz
 - `src/features/voice/voiceCommands.js`: despacho das intents para ações
 - `src/features/books`: catálogo e detalhes de livros
 - `src/features/cart`: carrinho e confirmação de pedido
@@ -85,4 +85,4 @@ Esse guia inclui:
 ## Observações
 
 - A aplicação usa dados mockados via MSW para simular backend.
-- Alguns comandos de voz são contextuais, por exemplo leitura de descricao na tela de detalhes e leitura de pedido no checkout.
+- Alguns comandos de voz são contextuais, por exemplo leitura de descrição na tela de detalhes e leitura de pedido no checkout.

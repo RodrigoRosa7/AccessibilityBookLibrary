@@ -14,11 +14,10 @@ function HomePage() {
       style={{ border: "1px solid #d0d7de", borderRadius: 8, padding: 16 }}
     >
       <Heading as="h2" sx={{ mb: 2 }}>
-        Inicio
+        Início
       </Heading>
       <Text as="p" sx={{ mb: 2 }}>
-        Use navegacao por teclado ou voz para explorar o catalogo de livros em
-        braille.
+        Use navegação por teclado ou voz para explorar o catálogo de livros.
       </Text>
       <div>
         Comandos de exemplo: "abrir livros", "ver carrinho", "finalizar compra".

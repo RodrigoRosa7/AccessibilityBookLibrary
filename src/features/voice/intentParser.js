@@ -1,6 +1,10 @@
 export const VOICE_INTENTS = {
   SEARCH_BOOK: "SEARCH_BOOK",
   OPEN_BOOK_DETAILS: "OPEN_BOOK_DETAILS",
+  READ_SEARCH_RESULTS: "READ_SEARCH_RESULTS",
+  READ_NEXT_SEARCH_RESULTS: "READ_NEXT_SEARCH_RESULTS",
+  READ_PREVIOUS_SEARCH_RESULTS: "READ_PREVIOUS_SEARCH_RESULTS",
+  REPEAT_SEARCH_RESULTS: "REPEAT_SEARCH_RESULTS",
   OPEN_VOICE_HELP: "OPEN_VOICE_HELP",
   CLOSE_MODAL: "CLOSE_MODAL",
   LOGOUT: "LOGOUT",
@@ -9,6 +13,8 @@ export const VOICE_INTENTS = {
   OPEN_NEXT_ORDER: "OPEN_NEXT_ORDER",
   OPEN_PREVIOUS_ORDER: "OPEN_PREVIOUS_ORDER",
   ADD_TO_CART: "ADD_TO_CART",
+  READ_CART_ITEMS: "READ_CART_ITEMS",
+  READ_CART_TOTAL: "READ_CART_TOTAL",
   READ_CART_ITEMS_COUNT: "READ_CART_ITEMS_COUNT",
   CLEAR_CART: "CLEAR_CART",
   REMOVE_CART_ITEM: "REMOVE_CART_ITEM",
@@ -16,6 +22,7 @@ export const VOICE_INTENTS = {
   OPEN_CART: "OPEN_CART",
   OPEN_BOOKS: "OPEN_BOOKS",
   CHECKOUT: "CHECKOUT",
+  CONFIRM_CHECKOUT: "CONFIRM_CHECKOUT",
   GO_BACK: "GO_BACK",
   READ_DESCRIPTION: "READ_DESCRIPTION",
   OPEN_HOME: "OPEN_HOME",
@@ -29,7 +36,6 @@ const SEARCH_VERBS = [
   "procure",
   "encontrar",
   "pesquisar",
-  "quero",
   "mostrar",
   "ache",
 ];
@@ -51,7 +57,7 @@ function includesAny(text, keywords) {
 function extractSearchEntity(normalizedTranscript) {
   const patterns = [
     /(?:buscar|procurar|encontrar|pesquisar|mostrar)\s+(?:livro|livros)?\s*(.+)$/,
-    /quero\s+(?:o\s+)?(?:livro\s+)?(.+)$/,
+    /quero\s+(?:o\s+)?(?:livro|livros)\s+(.+)$/,
     /livro\s+(.+)$/,
   ];
 
@@ -209,9 +215,28 @@ function isCloseModalCommand(normalizedTranscript) {
 
 function isLogoutCommand(normalizedTranscript) {
   return (
-    /(deslogar|deslogue|logout)/.test(normalizedTranscript) ||
-    /(faca|faça|efetue).*(logout)/.test(normalizedTranscript) ||
-    /(saia|sair).*(do sistema|da conta)/.test(normalizedTranscript)
+    /(deslogar|deslogue|logout|logoff)/.test(normalizedTranscript) ||
+    /(faca|faça|efetue).*(logout|logoff)/.test(normalizedTranscript) ||
+    /(saia|sair|quero sair).*(do sistema|da conta|da aplicacao|do aplicativo|do app)/.test(
+      normalizedTranscript,
+    ) ||
+    /(encerrar|encerre|terminar|termine|fechar|feche).*(sessao|sessao atual)/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
+function isOpenHomeCommand(normalizedTranscript) {
+  return (
+    /(abrir|ir|mostrar|voltar|retornar).*(home|inicio)/.test(
+      normalizedTranscript,
+    ) ||
+    /(voltar|retornar).*(pagina inicial|tela inicial)/.test(
+      normalizedTranscript,
+    ) ||
+    /(ir|abrir|mostrar).*(pagina inicial|tela inicial)/.test(
+      normalizedTranscript,
+    )
   );
 }
 
@@ -220,6 +245,7 @@ function isOpenCartCommand(normalizedTranscript) {
     /(abrir|abra|ver|veja|mostrar|mostre).*(carrinho)/.test(
       normalizedTranscript,
     ) ||
+    /(voltar|retornar).*(ao|para o)?\s*carrinho/.test(normalizedTranscript) ||
     /(?:(?:quero\s+)?(?:ir|va|vai|acessar|acesse|entrar|entre)|me leve).*(?:para\s+o|para\s+a|para|o|a)?\s*carrinho/.test(
       normalizedTranscript,
     )
@@ -228,13 +254,21 @@ function isOpenCartCommand(normalizedTranscript) {
 
 function isOpenBooksCommand(normalizedTranscript) {
   return (
-    /(abrir|abra|ver|veja|mostrar|mostre|listar|liste).*(livros|catalogo(?:\s+de\s+livros)?)/.test(
+    /^(?:eu\s+)?(?:vou\s+|quero\s+)?continuar comprando$/.test(
       normalizedTranscript,
     ) ||
-    /(?:(?:quero\s+)?(?:ir|va|vai|acessar|acesse|entrar|entre)|me leve).*(?:para\s+o|para\s+a|para|o|a)?\s*(livros|catalogo(?:\s+de\s+livros)?)/.test(
+    /(abrir|abra|ver|veja|mostrar|mostre|listar|liste)\s*(livros?|catalogo(?:\s+de\s+livros)?)/.test(
+      normalizedTranscript,
+    ) ||
+    /(?:(?:quero\s+)?(?:ir|va|vai|acessar|acesse|entrar|entre)|me leve).*(?:para\s+o|para\s+a|para|o|a)?\s*(livros?|catalogo(?:\s+de\s+livros)?)/.test(
       normalizedTranscript,
     )
   );
+}
+
+function isOpenBooksCommandPartial(normalizedTranscript) {
+  // Reconhece apenas "abrir", "abra", "ver", "veja" como comando para abrir livros em contexto
+  return /^(abrir|abra|ver|veja)$/.test(normalizedTranscript);
 }
 
 function isClearCartCommand(normalizedTranscript) {
@@ -264,7 +298,99 @@ function isReadCartItemsCountCommand(normalizedTranscript) {
   );
 }
 
-export function parseVoiceIntent(transcript) {
+function isReadCartItemsCommand(normalizedTranscript) {
+  return (
+    /(ler|leia|ouvir|listar|liste).*(itens?|livros?).*(carrinho)/.test(
+      normalizedTranscript,
+    ) ||
+    /(carrinho).*(ler|leia|ouvir|listar|liste).*(itens?|livros?)/.test(
+      normalizedTranscript,
+    ) ||
+    /(quais|quais sao).*(itens?|livros?).*(carrinho)/.test(normalizedTranscript)
+  );
+}
+
+function isReadCartTotalCommand(normalizedTranscript, currentRoute) {
+  if (/(itens?|livros?|quantidade)/.test(normalizedTranscript)) {
+    return false;
+  }
+
+  return (
+    /(informe|informar|diga|fale|mostrar|mostre|qual).*(total).*(carrinho)/.test(
+      normalizedTranscript,
+    ) ||
+    /(total).*(carrinho)/.test(normalizedTranscript) ||
+    /(carrinho).*(total)/.test(normalizedTranscript) ||
+    (currentRoute === "/cart" &&
+      /^(qual o total|total|informe o total)$/.test(normalizedTranscript))
+  );
+}
+
+function isReadSearchResultsCommand(normalizedTranscript, currentRoute) {
+  if (currentRoute !== "/books") {
+    return false;
+  }
+
+  return (
+    /(ler|leia|ouvir|fale|diga).*(resultados?|titulos?|livros? encontrados?)/.test(
+      normalizedTranscript,
+    ) ||
+    /(quais|quais sao).*(resultados?|titulos?)/.test(normalizedTranscript) ||
+    /(quais|quais sao).*(livros?).*(foram\s+)?encontrados?/.test(
+      normalizedTranscript,
+    ) ||
+    /^(resultados?|titulos?)$/.test(normalizedTranscript)
+  );
+}
+
+function isReadNextSearchResultsCommand(normalizedTranscript, currentRoute) {
+  if (currentRoute !== "/books") {
+    return false;
+  }
+
+  return (
+    /(ler|leia|ouvir)?\s*(os\s+)?(proximos|seguintes)\s*(resultados?|livros?|titulos?)/.test(
+      normalizedTranscript,
+    ) ||
+    /(mais\s+resultados?|continuar\s+resultados?)/.test(normalizedTranscript)
+  );
+}
+
+function isReadPreviousSearchResultsCommand(
+  normalizedTranscript,
+  currentRoute,
+) {
+  if (currentRoute !== "/books") {
+    return false;
+  }
+
+  return (
+    /(ler|leia|ouvir)?\s*(os\s+)?(resultados?|livros?|titulos?)\s*(anteriores|passados)/.test(
+      normalizedTranscript,
+    ) ||
+    /(voltar|retornar).*(resultados?|livros?|titulos?)/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
+function isRepeatSearchResultsCommand(normalizedTranscript, currentRoute) {
+  if (currentRoute !== "/books") {
+    return false;
+  }
+
+  return (
+    /(repetir|repita).*(resultados?|livros?|titulos?|bloco)/.test(
+      normalizedTranscript,
+    ) ||
+    /(ler|ouvir).*(novamente).*(resultados?|livros?|titulos?|bloco)/.test(
+      normalizedTranscript,
+    )
+  );
+}
+
+export function parseVoiceIntent(transcript, options = {}) {
+  const { currentRoute = "/" } = options;
   const normalizedTranscript = normalizeText(transcript);
 
   if (!normalizedTranscript) {
@@ -308,6 +434,24 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
+  if (isReadCartItemsCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.READ_CART_ITEMS,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isReadCartTotalCommand(normalizedTranscript, currentRoute)) {
+    return {
+      intent: VOICE_INTENTS.READ_CART_TOTAL,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
   if (isReadCartItemsCountCommand(normalizedTranscript)) {
     return {
       intent: VOICE_INTENTS.READ_CART_ITEMS_COUNT,
@@ -344,11 +488,39 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
+  // Reconhece comando parcial "abrir" como OPEN_BOOKS quando na Home
+  if (
+    isOpenBooksCommandPartial(normalizedTranscript) &&
+    /\/(home)?$/.test(currentRoute)
+  ) {
+    return {
+      intent: VOICE_INTENTS.OPEN_BOOKS,
+      entity: null,
+      confidence: 0.85,
+      transcript: normalizedTranscript,
+    };
+  }
+
   if (isCloseModalCommand(normalizedTranscript)) {
     return {
       intent: VOICE_INTENTS.CLOSE_MODAL,
       entity: null,
       confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  // Confirm checkout (only valid in /cart dialog)
+  if (
+    /^(confirmar|ok|sim|prosseguir|continuar|aprovar)$/.test(
+      normalizedTranscript,
+    ) &&
+    currentRoute === "/cart"
+  ) {
+    return {
+      intent: VOICE_INTENTS.CONFIRM_CHECKOUT,
+      entity: null,
+      confidence: 0.95,
       transcript: normalizedTranscript,
     };
   }
@@ -402,16 +574,10 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
-  if (/(voltar|pagina anterior|retornar)/.test(normalizedTranscript)) {
-    return {
-      intent: VOICE_INTENTS.GO_BACK,
-      entity: null,
-      confidence: 0.9,
-      transcript: normalizedTranscript,
-    };
-  }
-
-  if (/(ler|leia|ouvir).*(descricao|sinopse)/.test(normalizedTranscript)) {
+  if (
+    /(ler|leia).*(descricao|sinopse|detalhes)/.test(normalizedTranscript) ||
+    /^(descricao|detalhes)$/.test(normalizedTranscript)
+  ) {
     return {
       intent: VOICE_INTENTS.READ_DESCRIPTION,
       entity: null,
@@ -420,11 +586,56 @@ export function parseVoiceIntent(transcript) {
     };
   }
 
-  if (/(abrir|ir|mostrar).*(home|inicio)/.test(normalizedTranscript)) {
+  if (isReadNextSearchResultsCommand(normalizedTranscript, currentRoute)) {
+    return {
+      intent: VOICE_INTENTS.READ_NEXT_SEARCH_RESULTS,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isReadPreviousSearchResultsCommand(normalizedTranscript, currentRoute)) {
+    return {
+      intent: VOICE_INTENTS.READ_PREVIOUS_SEARCH_RESULTS,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isRepeatSearchResultsCommand(normalizedTranscript, currentRoute)) {
+    return {
+      intent: VOICE_INTENTS.REPEAT_SEARCH_RESULTS,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isReadSearchResultsCommand(normalizedTranscript, currentRoute)) {
+    return {
+      intent: VOICE_INTENTS.READ_SEARCH_RESULTS,
+      entity: null,
+      confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isOpenHomeCommand(normalizedTranscript)) {
     return {
       intent: VOICE_INTENTS.OPEN_HOME,
       entity: null,
-      confidence: 0.88,
+      confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (/(voltar|pagina anterior|retornar)/.test(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.GO_BACK,
+      entity: null,
+      confidence: 0.9,
       transcript: normalizedTranscript,
     };
   }

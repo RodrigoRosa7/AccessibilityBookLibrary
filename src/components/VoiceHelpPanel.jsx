@@ -6,6 +6,7 @@ const GLOBAL_UI_COMMANDS = [
   "abrir livros",
   "abrir carrinho",
   "finalizar compra",
+  "voltar para início",
   "me ajude",
   "voltar",
 ];
@@ -21,7 +22,7 @@ function getRouteCommandSuggestions(pathname) {
   if (/^\/books\/\d+$/.test(pathname)) {
     return {
       title: "Dicas para detalhes do livro",
-      commands: ["adicionar ao carrinho", "ler descricao"],
+      commands: ["adicionar ao carrinho", "ler detalhes", "ler descrição"],
     };
   }
 
@@ -29,9 +30,11 @@ function getRouteCommandSuggestions(pathname) {
     return {
       title: "Dicas para checkout",
       commands: [
+        "continuar comprando",
+        "voltar ao carrinho",
         "abrir pedido 3",
         "ler dados do pedido",
-        "proximo pedido",
+        "próximo pedido",
         "pedido anterior",
       ],
     };
@@ -39,14 +42,40 @@ function getRouteCommandSuggestions(pathname) {
 
   if (pathname === "/books") {
     return {
-      title: "Dicas para catalogo",
-      commands: ["buscar livro clean code", "abrir detalhes de clean code"],
+      title: "Dicas para catálogo",
+      commands: [
+        "buscar livro interfaces acessíveis",
+        "ler resultados da busca",
+        "ler próximos resultados",
+        "ler resultados anteriores",
+        "repetir resultados",
+        "abrir detalhes de interfaces acessíveis",
+      ],
+    };
+  }
+
+  if (pathname === "/cart") {
+    return {
+      title: "Dicas para carrinho",
+      commands: [
+        "ler itens do carrinho",
+        "total do carrinho",
+        "finalizar compra",
+        "confirmar",
+        "cancelar",
+        "continuar comprando",
+      ],
     };
   }
 
   return {
     title: "Dicas gerais",
-    commands: ["abrir livros", "abrir carrinho", "finalizar compra"],
+    commands: [
+      "abrir livros",
+      "abrir carrinho",
+      "finalizar compra",
+      "voltar para início",
+    ],
   };
 }
 

@@ -22,6 +22,22 @@ export function handleVoiceCommand(intentResult, actions = {}) {
       actions.openBookDetails?.(entity);
       return `Buscando detalhes de ${entity}.`;
 
+    case VOICE_INTENTS.READ_SEARCH_RESULTS:
+      actions.readSearchResults?.();
+      return "";
+
+    case VOICE_INTENTS.READ_NEXT_SEARCH_RESULTS:
+      actions.readNextSearchResults?.();
+      return "";
+
+    case VOICE_INTENTS.READ_PREVIOUS_SEARCH_RESULTS:
+      actions.readPreviousSearchResults?.();
+      return "";
+
+    case VOICE_INTENTS.REPEAT_SEARCH_RESULTS:
+      actions.repeatSearchResults?.();
+      return "";
+
     case VOICE_INTENTS.OPEN_VOICE_HELP:
       actions.openVoiceHelp?.();
       return "";
@@ -69,6 +85,14 @@ export function handleVoiceCommand(intentResult, actions = {}) {
       actions.clearCartItems?.();
       return "";
 
+    case VOICE_INTENTS.READ_CART_ITEMS:
+      actions.readCartItems?.();
+      return "";
+
+    case VOICE_INTENTS.READ_CART_TOTAL:
+      actions.readCartTotal?.();
+      return "";
+
     case VOICE_INTENTS.READ_CART_ITEMS_COUNT:
       actions.readCartItemsCount?.();
       return "";
@@ -83,7 +107,11 @@ export function handleVoiceCommand(intentResult, actions = {}) {
 
     case VOICE_INTENTS.CHECKOUT:
       actions.openCheckout?.();
-      return "Abrindo checkout para finalizar a compra.";
+      return "";
+
+    case VOICE_INTENTS.CONFIRM_CHECKOUT:
+      actions.confirmCheckout?.();
+      return "";
 
     case VOICE_INTENTS.GO_BACK:
       actions.goBack?.();

@@ -12,6 +12,10 @@ describe("parseVoiceIntent core commands", () => {
       "quero ir para livros",
       "acessar o catalogo de livros",
       "me leve para os livros",
+      "continuar comprando",
+      "vou continuar comprando",
+      "quero continuar comprando",
+      "eu quero continuar comprando",
     ];
 
     cases.forEach((transcript) => {
@@ -30,6 +34,8 @@ describe("parseVoiceIntent core commands", () => {
       "quero ir para o carrinho",
       "acessar o carrinho",
       "me leve para o carrinho",
+      "voltar ao carrinho",
+      "retornar para o carrinho",
     ];
 
     cases.forEach((transcript) => {
@@ -47,8 +53,42 @@ describe("parseVoiceIntent core commands", () => {
     });
   });
 
+  it("recognizes confirm checkout commands in cart route", () => {
+    const cases = [
+      "confirmar",
+      "ok",
+      "sim",
+      "prosseguir",
+      "continuar",
+      "aprovar",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/cart" });
+      expect(result.intent).toBe(VOICE_INTENTS.CONFIRM_CHECKOUT);
+    });
+  });
+
+  it("does not recognize confirm as confirm checkout outside cart route", () => {
+    const cases = ["confirmar", "ok", "sim"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, {
+        currentRoute: "/checkout",
+      });
+      expect(result.intent).not.toBe(VOICE_INTENTS.CONFIRM_CHECKOUT);
+    });
+  });
+
   it("recognizes open home commands", () => {
-    const cases = ["ir para inicio", "mostrar home"];
+    const cases = [
+      "ir para inicio",
+      "mostrar home",
+      "abrir inicio",
+      "voltar para inicio",
+      "voltar para pagina inicial",
+      "retornar para tela inicial",
+    ];
 
     cases.forEach((transcript) => {
       const result = parseVoiceIntent(transcript);
@@ -98,6 +138,11 @@ describe("parseVoiceIntent core commands", () => {
       "faca logout",
       "efetue logout",
       "saia do sistema",
+      "sair do sistema",
+      "sair da conta",
+      "encerrar sessao",
+      "termine a sessao atual",
+      "logoff",
       "logout",
     ];
 
@@ -108,11 +153,69 @@ describe("parseVoiceIntent core commands", () => {
   });
 
   it("recognizes read description commands", () => {
-    const cases = ["ler descricao", "ouvir a sinopse"];
+    const cases = [
+      "ler descricao",
+      "ler sinopse",
+      "ler detalhes",
+      "detalhes",
+      "descricao",
+    ];
 
     cases.forEach((transcript) => {
       const result = parseVoiceIntent(transcript);
       expect(result.intent).toBe(VOICE_INTENTS.READ_DESCRIPTION);
+    });
+  });
+
+  it("recognizes read search results commands on books route", () => {
+    const cases = [
+      "ler resultados da busca",
+      "ler titulos dos livros",
+      "quais livros foram encontrados",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/books" });
+      expect(result.intent).toBe(VOICE_INTENTS.READ_SEARCH_RESULTS);
+    });
+  });
+
+  it("recognizes next search results commands on books route", () => {
+    const cases = [
+      "ler proximos resultados",
+      "proximos resultados",
+      "mais resultados",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/books" });
+      expect(result.intent).toBe(VOICE_INTENTS.READ_NEXT_SEARCH_RESULTS);
+    });
+  });
+
+  it("recognizes previous search results commands on books route", () => {
+    const cases = [
+      "ler resultados anteriores",
+      "resultados anteriores",
+      "voltar resultados",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/books" });
+      expect(result.intent).toBe(VOICE_INTENTS.READ_PREVIOUS_SEARCH_RESULTS);
+    });
+  });
+
+  it("recognizes repeat search results commands on books route", () => {
+    const cases = [
+      "repetir resultados",
+      "repita os resultados",
+      "ler novamente os resultados",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/books" });
+      expect(result.intent).toBe(VOICE_INTENTS.REPEAT_SEARCH_RESULTS);
     });
   });
 
@@ -154,6 +257,39 @@ describe("parseVoiceIntent core commands", () => {
     });
   });
 
+  it("recognizes read cart items commands", () => {
+    const cases = [
+      "ler itens do carrinho",
+      "listar itens do carrinho",
+      "quais livros estao no carrinho",
+      "ouvir itens do carrinho",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.READ_CART_ITEMS);
+    });
+  });
+
+  it("recognizes read cart total commands", () => {
+    const cases = [
+      "informe o total do carrinho",
+      "total do carrinho",
+      "qual o total do carrinho",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.READ_CART_TOTAL);
+    });
+
+    const shortCases = ["qual o total", "informe o total"];
+    shortCases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/cart" });
+      expect(result.intent).toBe(VOICE_INTENTS.READ_CART_TOTAL);
+    });
+  });
+
   it("recognizes remove last cart item commands", () => {
     const cases = ["remover", "tirar item do carrinho", "remover ultimo item"];
 
@@ -179,6 +315,20 @@ describe("parseVoiceIntent core commands", () => {
     const result = parseVoiceIntent("buscar livro javascript moderno");
     expect(result.intent).toBe(VOICE_INTENTS.SEARCH_BOOK);
     expect(result.entity).toBe("javascript moderno");
+  });
+
+  it("does not classify checkout continue shopping command as search", () => {
+    const result = parseVoiceIntent("quero continuar comprando", {
+      currentRoute: "/checkout",
+    });
+    expect(result.intent).toBe(VOICE_INTENTS.OPEN_BOOKS);
+    expect(result.entity).toBe(null);
+  });
+
+  it("still recognizes search with explicit livro after quero", () => {
+    const result = parseVoiceIntent("quero o livro clean code");
+    expect(result.intent).toBe(VOICE_INTENTS.SEARCH_BOOK);
+    expect(result.entity).toBe("clean code");
   });
 
   it("recognizes detail command and extracts book entity", () => {
@@ -251,5 +401,57 @@ describe("parseVoiceIntent order navigation", () => {
     const result = parseVoiceIntent("ler dados do pedido 8");
     expect(result.intent).toBe(VOICE_INTENTS.READ_ORDER_DETAILS);
     expect(result.entity).toBe("8");
+  });
+});
+
+describe("parseVoiceIntent partial recognition", () => {
+  it("recognizes 'abrir' alone as OPEN_BOOKS when on home route", () => {
+    const result = parseVoiceIntent("abrir", { currentRoute: "/home" });
+    expect(result.intent).toBe(VOICE_INTENTS.OPEN_BOOKS);
+    expect(result.confidence).toBe(0.85);
+  });
+
+  it("recognizes 'abra' alone as OPEN_BOOKS when on root route", () => {
+    const result = parseVoiceIntent("abra", { currentRoute: "/" });
+    expect(result.intent).toBe(VOICE_INTENTS.OPEN_BOOKS);
+    expect(result.confidence).toBe(0.85);
+  });
+
+  it("recognizes 'ver' alone as OPEN_BOOKS when on home route", () => {
+    const result = parseVoiceIntent("ver", { currentRoute: "/home" });
+    expect(result.intent).toBe(VOICE_INTENTS.OPEN_BOOKS);
+    expect(result.confidence).toBe(0.85);
+  });
+
+  it("recognizes 'veja' alone as OPEN_BOOKS when on root route", () => {
+    const result = parseVoiceIntent("veja", { currentRoute: "/" });
+    expect(result.intent).toBe(VOICE_INTENTS.OPEN_BOOKS);
+    expect(result.confidence).toBe(0.85);
+  });
+
+  it("does not treat 'abrir' as OPEN_BOOKS when not on home route", () => {
+    const result = parseVoiceIntent("abrir", { currentRoute: "/books" });
+    expect(result.intent).not.toBe(VOICE_INTENTS.OPEN_BOOKS);
+  });
+
+  it("recognizes 'abrir livro' on any route as explicit OPEN_BOOKS", () => {
+    const result = parseVoiceIntent("abrir livro", {
+      currentRoute: "/books/123",
+    });
+    expect(result.intent).toBe(VOICE_INTENTS.OPEN_BOOKS);
+  });
+
+  it("does not read search results outside books route", () => {
+    const result = parseVoiceIntent("ler resultados da busca", {
+      currentRoute: "/checkout",
+    });
+    expect(result.intent).not.toBe(VOICE_INTENTS.READ_SEARCH_RESULTS);
+  });
+
+  it("does not paginate search results outside books route", () => {
+    const result = parseVoiceIntent("ler proximos resultados", {
+      currentRoute: "/checkout",
+    });
+    expect(result.intent).not.toBe(VOICE_INTENTS.READ_NEXT_SEARCH_RESULTS);
   });
 });

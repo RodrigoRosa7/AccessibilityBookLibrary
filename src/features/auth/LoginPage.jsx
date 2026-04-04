@@ -51,7 +51,7 @@ export function LoginPage() {
           Entrar na Braille Bookstore
         </Heading>
         <Text as="p" sx={{ color: "fg.muted", mb: 3 }}>
-          Use um usuario de teste para acessar o catalogo com comandos de voz.
+          Use um usuário de teste para acessar o catálogo com comandos de voz.
         </Text>
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>

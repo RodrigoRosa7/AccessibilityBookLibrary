@@ -59,7 +59,7 @@ export function BookDetailsPage() {
 
   if (error || !book) {
     return (
-      <Text sx={{ color: "danger.fg" }}>{error || "Livro nao encontrado"}</Text>
+      <Text sx={{ color: "danger.fg" }}>{error || "Livro não encontrado"}</Text>
     );
   }
 
@@ -95,9 +95,9 @@ export function BookDetailsPage() {
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <Button
           onClick={() => speak(book.description)}
-          aria-label="Ler descricao do livro em voz alta"
+          aria-label="Ler descrição do livro em voz alta"
         >
-          Ler descricao
+          Ler descrição
         </Button>
         <Button
           variant="primary"
