@@ -555,16 +555,16 @@ export function GlobalVoiceAssistant() {
       },
       openCart: () => navigate("/cart"),
       openCheckout: () => {
-        if (items.length === 0) {
-          const message =
-            "O carrinho está vazio. Adicione itens antes de finalizar a compra.";
-          setFeedback(message);
-          speak(message);
-          return;
-        }
-
-        // If in cart, emit event to open dialog instead of navigating
+        // If in cart, open the purchase confirmation dialog (requires items)
         if (location.pathname === "/cart") {
+          if (items.length === 0) {
+            const message =
+              "O carrinho está vazio. Adicione itens antes de finalizar a compra.";
+            setFeedback(message);
+            speak(message);
+            return;
+          }
+
           const message = "Abrindo diálogo de confirmação.";
           setFeedback(message);
           speak(message);
@@ -572,7 +572,8 @@ export function GlobalVoiceAssistant() {
           return;
         }
 
-        const message = "Abrindo checkout para finalizar a compra.";
+        // Otherwise navigate to order history (no cart check needed)
+        const message = "Abrindo pedidos.";
         setFeedback(message);
         speak(message);
         navigate("/checkout");
@@ -632,7 +633,7 @@ export function GlobalVoiceAssistant() {
       readOrderDetails: (orderIdFromCommand) => {
         if (location.pathname !== "/checkout") {
           const message =
-            "Abra a tela de checkout para ouvir os dados do pedido.";
+            "Abra a tela de pedidos para ouvir os dados do pedido.";
           setFeedback(message);
           speak(message);
           return;

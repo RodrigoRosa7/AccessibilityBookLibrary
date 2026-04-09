@@ -31,7 +31,7 @@ Este documento centraliza os comandos de voz disponíveis no projeto.
 | Limpar carrinho             | "limpar carrinho", "esvaziar carrinho", "zerar carrinho"                              |
 | Remover último item         | "remover", "tirar item do carrinho", "remover último item"                            |
 | Remover livro do carrinho   | "remover livro interfaces acessíveis", "remover interfaces acessíveis do carrinho"    |
-| Ir para checkout            | "finalizar compra", "concluir pedido", "checkout"                                     |
+| Ir para pedidos             | "finalizar compra", "concluir pedido", "pedidos"                                      |
 | Voltar página               | "voltar", "página anterior", "retornar"                                               |
 | Ir para início              | "abrir início", "mostrar home", "voltar para início", "voltar para página inicial"    |
 
@@ -74,12 +74,12 @@ Quando a busca tiver mais de 3 livros, o assistente lê somente um bloco de 3 po
 | ---------------------------- | ------------------------------------------------------------------ |
 | Ler itens no carrinho        | "ler itens do carrinho", "listar itens do carrinho"                |
 | Ler total do carrinho        | "informe o total do carrinho", "total do carrinho", "qual o total" |
-| Abrir diálogo de confirmação | "finalizar compra", "concluir pedido", "checkout"                  |
+| Abrir diálogo de confirmação | "finalizar compra", "concluir pedido", "pedidos"                   |
 | Confirmar e criar pedido     | "confirmar", "ok", "sim", "prosseguir", "continuar", "aprovar"     |
 | Cancelar e fechar diálogo    | "cancelar", "fechar", "voltar"                                     |
 | Voltar para catálogo         | "continuar comprando"                                              |
 
-### Rota /checkout
+### Rota /checkout (Pedidos)
 
 | Intenção                     | Exemplos de frase                                                  |
 | ---------------------------- | ------------------------------------------------------------------ |
@@ -107,9 +107,9 @@ Use esta seção para tooltip, modal de ajuda ou onboarding rápido. São frases
 | Sessão do usuário           | "deslogar", "sair do sistema", "encerrar sessão"                             |
 | Busca e detalhes de livros  | "buscar livro interfaces acessíveis", "abrir detalhes de programação na web" |
 | Detalhes do livro           | "adicionar ao carrinho", "ler descrição"                                     |
-| Checkout e pedidos          | "abrir pedido 3", "ler dados do pedido", "próximo pedido", "pedido anterior" |
+| Pedidos                     | "abrir pedido 3", "ler dados do pedido", "próximo pedido", "pedido anterior" |
 
-Na tela de checkout, prefira usar as frases que acompanham os botões visíveis na interface, como "continuar comprando" e "voltar ao carrinho".
+Na tela de pedidos, prefira usar as frases que acompanham os botões visíveis na interface, como "continuar comprando" e "voltar ao carrinho".
 
 Sugestão de uso na interface: mostrar de 3 a 5 frases por tela, evitando listar todos os aliases para não poluir a experiência.
 
@@ -134,11 +134,11 @@ Sugestão para UX: priorizar os exemplos da tabela principal na interface e mant
 
 ## Observações de contexto
 
-- Comandos de leitura de pedido funcionam no checkout; fora dele o assistente orienta o usuário a abrir essa tela.
+- Comandos de leitura de pedido funcionam na tela de pedidos; fora dela o assistente orienta o usuário a abrir essa tela.
 - Ao navegar com "próximo pedido" ou "pedido anterior", o assistente abre o pedido e também faz a leitura dos dados.
 - Navegação entre pedidos depende de histórico salvo no navegador (`orderHistory` em localStorage).
-- Se um pedido não for encontrado, o assistente informa por voz e exibe feedback visual na tela de checkout.
-- O comando de fechar modal fecha a ajuda, a confirmação de checkout e a modal de pedido quando alguma delas estiver aberta.
+- Se um pedido não for encontrado, o assistente informa por voz e exibe feedback visual na tela de pedidos.
+- O comando de fechar modal fecha a ajuda, a confirmação do pedido e a modal de pedido quando alguma delas estiver aberta.
 - O comando de logout encerra a sessão atual e redireciona para a tela de login.
 
 ## Dicas de teste

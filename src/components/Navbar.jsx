@@ -6,7 +6,7 @@ const navItems = [
   { to: "/home", label: "Início" },
   { to: "/books", label: "Livros" },
   { to: "/cart", label: "Carrinho" },
-  { to: "/checkout", label: "Checkout" },
+  { to: "/checkout", label: "Pedidos" },
 ];
 
 export function Navbar() {

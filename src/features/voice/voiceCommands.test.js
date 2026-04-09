@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
 import { handleVoiceCommand } from "./voiceCommands.js";
 
-describe("checkout voice navigation flow", () => {
-  it("navigates to books when user says checkout continue shopping command", () => {
+describe("pedidos voice navigation flow", () => {
+  it("navigates to books when user says pedidos continue shopping command", () => {
     const openBooks = vi.fn();
     const openCart = vi.fn();
     const intent = parseVoiceIntent("vou continuar comprando", {
@@ -18,7 +18,7 @@ describe("checkout voice navigation flow", () => {
     expect(message).toBe("Abrindo catálogo de livros.");
   });
 
-  it("navigates to cart when user says checkout back to cart command", () => {
+  it("navigates to cart when user says pedidos back to cart command", () => {
     const openBooks = vi.fn();
     const openCart = vi.fn();
     const intent = parseVoiceIntent("voltar ao carrinho", {

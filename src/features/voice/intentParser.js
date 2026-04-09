@@ -526,7 +526,7 @@ export function parseVoiceIntent(transcript, options = {}) {
   }
 
   if (
-    /(finalizar|concluir|fechar).*(compra|pedido)|checkout/.test(
+    /(finalizar|concluir|fechar).*(compra|pedido)|(?:abrir|ir|mostrar).*(pedidos)|^pedidos$/.test(
       normalizedTranscript,
     )
   ) {

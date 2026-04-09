@@ -112,7 +112,7 @@ export function CheckoutPage() {
       }}
     >
       <Heading as="h2" sx={{ mb: 2 }}>
-        Checkout
+        Pedidos
       </Heading>
 
       {requestedOrderNotFound ? (

@@ -44,8 +44,8 @@ describe("parseVoiceIntent core commands", () => {
     });
   });
 
-  it("recognizes checkout commands", () => {
-    const cases = ["finalizar compra", "concluir pedido", "ir para checkout"];
+  it("recognizes pedidos commands", () => {
+    const cases = ["finalizar compra", "concluir pedido", "ir para pedidos"];
 
     cases.forEach((transcript) => {
       const result = parseVoiceIntent(transcript);
@@ -317,7 +317,7 @@ describe("parseVoiceIntent core commands", () => {
     expect(result.entity).toBe("javascript moderno");
   });
 
-  it("does not classify checkout continue shopping command as search", () => {
+  it("does not classify pedidos continue shopping command as search", () => {
     const result = parseVoiceIntent("quero continuar comprando", {
       currentRoute: "/checkout",
     });

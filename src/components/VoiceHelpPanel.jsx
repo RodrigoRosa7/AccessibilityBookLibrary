@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 const GLOBAL_UI_COMMANDS = [
   "abrir livros",
   "abrir carrinho",
-  "finalizar compra",
+  "abrir pedidos",
   "voltar para início",
   "me ajude",
   "voltar",
@@ -28,7 +28,7 @@ function getRouteCommandSuggestions(pathname) {
 
   if (pathname === "/checkout") {
     return {
-      title: "Dicas para checkout",
+      title: "Dicas para pedidos",
       commands: [
         "continuar comprando",
         "voltar ao carrinho",
@@ -73,7 +73,7 @@ function getRouteCommandSuggestions(pathname) {
     commands: [
       "abrir livros",
       "abrir carrinho",
-      "finalizar compra",
+      "abrir pedidos",
       "voltar para início",
     ],
   };
