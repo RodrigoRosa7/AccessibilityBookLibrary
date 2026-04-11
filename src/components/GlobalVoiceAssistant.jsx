@@ -86,7 +86,7 @@ export function GlobalVoiceAssistant() {
 
       setAssistantFeedback(normalizedMessage, severity);
       setVoiceError(severity === "critical" ? normalizedMessage : "");
-      speak(normalizedMessage);
+      speak(normalizedMessage, { severity });
     },
     [setAssistantFeedback, speak],
   );

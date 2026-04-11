@@ -1,11 +1,21 @@
 import { useCallback, useMemo, useState } from "react";
 
+const VOICE_FEEDBACK_EVENT = "voice-feedback:update";
+
 function getSynthesis() {
   if (typeof window === "undefined") {
     return null;
   }
 
   return window.speechSynthesis ?? null;
+}
+
+function emitVoiceFeedback(detail) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new CustomEvent(VOICE_FEEDBACK_EVENT, { detail }));
 }
 
 export function useSpeechSynthesis(options = {}) {
@@ -17,21 +27,45 @@ export function useSpeechSynthesis(options = {}) {
   const isSupported = Boolean(synthesis);
 
   const speak = useCallback(
-    (text) => {
+    (text, metadata = {}) => {
       if (!synthesis || !text) {
         return;
       }
 
       synthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(text);
+      const normalizedText = String(text).trim();
+      const severity = String(metadata.severity ?? "info");
+
+      const utterance = new SpeechSynthesisUtterance(normalizedText);
       utterance.lang = lang;
       utterance.rate = rate;
       utterance.pitch = pitch;
       utterance.volume = volume;
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+        emitVoiceFeedback({
+          text: normalizedText,
+          severity,
+          isSpeaking: true,
+        });
+      };
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        emitVoiceFeedback({
+          text: normalizedText,
+          severity,
+          isSpeaking: false,
+        });
+      };
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+        emitVoiceFeedback({
+          text: normalizedText,
+          severity: "critical",
+          isSpeaking: false,
+        });
+      };
 
       synthesis.speak(utterance);
     },
@@ -45,6 +79,11 @@ export function useSpeechSynthesis(options = {}) {
 
     synthesis.cancel();
     setIsSpeaking(false);
+    emitVoiceFeedback({
+      text: "",
+      severity: "info",
+      isSpeaking: false,
+    });
   }, [synthesis]);
 
   return {

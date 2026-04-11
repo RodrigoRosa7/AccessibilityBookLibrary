@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useCart } from "../app/providers/CartProvider.jsx";
 import { GlobalVoiceAssistant } from "./GlobalVoiceAssistant.jsx";
 import { Navbar } from "./Navbar.jsx";
+import { VoiceFeedbackBanner } from "./VoiceFeedbackBanner.jsx";
 import { VoiceHelpPanel } from "./VoiceHelpPanel.jsx";
 import { VoiceOnboardingDialog } from "./VoiceOnboardingDialog.jsx";
 
@@ -84,6 +85,7 @@ export function Layout() {
             </button>
           </div>
         </header>
+        <VoiceFeedbackBanner />
         <Outlet />
         <GlobalVoiceAssistant />
         <VoiceOnboardingDialog />
