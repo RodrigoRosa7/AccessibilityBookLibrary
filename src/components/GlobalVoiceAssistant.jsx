@@ -61,12 +61,34 @@ export function GlobalVoiceAssistant() {
   const { logout } = useAuth();
   const { items, addToCart, decreaseFromCart, removeFromCart, clearCart } =
     useCart();
-  const { speak } = useSpeechSynthesis();
+  const { speak, cancel, isSpeaking } = useSpeechSynthesis();
   const [feedback, setFeedback] = useState("");
+  const [feedbackSeverity, setFeedbackSeverity] = useState("info");
+  const [voiceError, setVoiceError] = useState("");
+  const [lastCommand, setLastCommand] = useState("");
   const [currentDetailBook, setCurrentDetailBook] = useState(null);
   const cancelRequestedRef = useRef(false);
   const searchResultsPaginationRef = useRef(
     createEmptySearchResultsPagination(),
+  );
+
+  const setAssistantFeedback = useCallback((message, severity = "info") => {
+    setFeedback(String(message ?? ""));
+    setFeedbackSeverity(severity);
+  }, []);
+
+  const speakAssistantMessage = useCallback(
+    (message, severity = "info") => {
+      const normalizedMessage = String(message ?? "").trim();
+      if (!normalizedMessage) {
+        return;
+      }
+
+      setAssistantFeedback(normalizedMessage, severity);
+      setVoiceError(severity === "critical" ? normalizedMessage : "");
+      speak(normalizedMessage);
+    },
+    [setAssistantFeedback, speak],
   );
 
   const resetSearchResultsPagination = useCallback(() => {
@@ -132,8 +154,7 @@ export function GlobalVoiceAssistant() {
 
       if (orderHistory.length === 0) {
         const message = "Não há pedidos no histórico para navegar.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         navigate("/checkout");
         return;
       }
@@ -150,16 +171,14 @@ export function GlobalVoiceAssistant() {
 
       if (targetIndex < 0) {
         const message = "Este é o pedido mais recente do histórico.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         navigate(`/checkout?orderId=${orderHistory[0].id}`);
         return;
       }
 
       if (targetIndex >= orderHistory.length) {
         const message = "Este é o pedido mais antigo do histórico.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         navigate(
           `/checkout?orderId=${orderHistory[orderHistory.length - 1].id}`,
         );
@@ -168,11 +187,17 @@ export function GlobalVoiceAssistant() {
 
       const targetOrder = orderHistory[targetIndex];
       const message = `Abrindo pedido ${targetOrder.id} e lendo os dados.`;
-      setFeedback(message);
+      setAssistantFeedback(message);
       speak(buildOrderDetailsSpeech(targetOrder));
       navigate(`/checkout?orderId=${targetOrder.id}`);
     },
-    [location.search, navigate, speak],
+    [
+      location.search,
+      navigate,
+      setAssistantFeedback,
+      speak,
+      speakAssistantMessage,
+    ],
   );
 
   const readSearchResultsPage = useCallback(
@@ -180,8 +205,7 @@ export function GlobalVoiceAssistant() {
       if (location.pathname !== "/books") {
         const message =
           "Abra o catálogo para ouvir os livros exibidos na busca.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         return;
       }
 
@@ -195,8 +219,7 @@ export function GlobalVoiceAssistant() {
       ) {
         const message =
           'Diga "ler resultados da busca" para iniciar a leitura paginada.';
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         return;
       }
 
@@ -212,8 +235,7 @@ export function GlobalVoiceAssistant() {
           const message = queryParam
             ? `A busca por ${queryParam} não retornou livros.`
             : "Não há livros exibidos no catálogo para leitura.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           searchResultsPaginationRef.current = {
             query: queryParam,
             results: [],
@@ -234,8 +256,7 @@ export function GlobalVoiceAssistant() {
           if (nextPageIndex >= totalPages - 1) {
             const message =
               'Você já está no último bloco de resultados. Diga "ler resultados anteriores" ou "repetir resultados".';
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             return;
           }
           nextPageIndex += 1;
@@ -243,8 +264,7 @@ export function GlobalVoiceAssistant() {
           if (nextPageIndex <= 0) {
             const message =
               'Você já está no primeiro bloco de resultados. Diga "ler próximos resultados" para avançar.';
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             return;
           }
           nextPageIndex -= 1;
@@ -262,15 +282,20 @@ export function GlobalVoiceAssistant() {
           results,
           pageIndex: nextPageIndex,
         };
-        setFeedback(pageSpeech.feedback);
+        setAssistantFeedback(pageSpeech.feedback);
         speak(pageSpeech.spokenMessage);
       } catch {
         const message = "Não consegui ler os resultados da busca agora.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       }
     },
-    [location.pathname, location.search, speak],
+    [
+      location.pathname,
+      location.search,
+      setAssistantFeedback,
+      speak,
+      speakAssistantMessage,
+    ],
   );
 
   const voiceActions = useMemo(
@@ -287,8 +312,7 @@ export function GlobalVoiceAssistant() {
 
           if (results.length === 1) {
             const message = `A busca retornou um livro. Abrindo detalhes de ${results[0].title}.`;
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             navigate(`/books/${results[0].id}`);
             return;
           }
@@ -315,8 +339,7 @@ export function GlobalVoiceAssistant() {
 
         if (!normalizedTerm) {
           const message = "Informe o nome do livro para abrir os detalhes.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -334,8 +357,7 @@ export function GlobalVoiceAssistant() {
 
           if (!selectedBook) {
             const message = `Não encontrei um livro chamado ${normalizedTerm}.`;
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             navigate(`/books?q=${encodeURIComponent(normalizedTerm)}`);
             return;
           }
@@ -343,15 +365,13 @@ export function GlobalVoiceAssistant() {
           navigate(`/books/${selectedBook.id}`);
         } catch {
           const message = "Não consegui abrir os detalhes do livro agora.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
         }
       },
       openVoiceHelp: () => {
         window.dispatchEvent(new CustomEvent("voice-help:open"));
         const message = "Abrindo ajuda de comandos de voz.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       closeModal: () => {
         const hasOpenModal =
@@ -360,41 +380,35 @@ export function GlobalVoiceAssistant() {
 
         if (!hasOpenModal) {
           const message = "Não há nenhuma modal aberta para fechar.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
         window.dispatchEvent(new CustomEvent("app-modal:close"));
         const message = "Fechando modal aberta.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       logout: () => {
         logout();
         const message = "Saindo do sistema.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         navigate("/login");
       },
       clearCartItems: () => {
         if (items.length === 0) {
           const message = "O carrinho já está vazio.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
         clearCart();
         const message = "Carrinho limpo com sucesso.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       readCartItems: async () => {
         if (items.length === 0) {
           const message = "Não há itens no carrinho.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -417,8 +431,7 @@ export function GlobalVoiceAssistant() {
           if (spokenItems.length === 0) {
             const message =
               "Não consegui identificar os livros do carrinho agora.";
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             return;
           }
 
@@ -427,19 +440,17 @@ export function GlobalVoiceAssistant() {
               ? "Lendo item do carrinho."
               : `Lendo ${spokenItems.length} itens do carrinho.`;
           const spokenText = spokenItems.join(". ") + ".";
-          setFeedback(message);
+          setAssistantFeedback(message);
           speak(spokenText);
         } catch {
           const message = "Não consegui ler os itens do carrinho agora.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
         }
       },
       readCartTotal: async () => {
         if (items.length === 0) {
           const message = `Não há itens no carrinho. O total é ${formatMoneyForSpeech(0)}.`;
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -458,12 +469,10 @@ export function GlobalVoiceAssistant() {
           }, 0);
 
           const message = `Total do carrinho: ${formatMoneyForSpeech(cartTotal)}.`;
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
         } catch {
           const message = "Não consegui calcular o total do carrinho agora.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
         }
       },
       readCartItemsCount: () => {
@@ -474,8 +483,7 @@ export function GlobalVoiceAssistant() {
 
         if (totalItems <= 0) {
           const message = "Não há itens no carrinho.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -483,14 +491,12 @@ export function GlobalVoiceAssistant() {
           totalItems === 1
             ? "Há um item no carrinho."
             : `Há ${totalItems} itens no carrinho.`;
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       removeLastCartItem: () => {
         if (items.length === 0) {
           const message = "O carrinho está vazio. Não há item para remover.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -499,23 +505,20 @@ export function GlobalVoiceAssistant() {
 
         const message =
           "Removendo uma unidade do último item adicionado ao carrinho.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       removeBookFromCart: async (bookTerm) => {
         const normalizedTerm = normalizeMatchText(bookTerm);
 
         if (!normalizedTerm) {
           const message = "Informe o nome do livro para remover do carrinho.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
         if (items.length === 0) {
           const message = "O carrinho está vazio. Não há livro para remover.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -538,19 +541,16 @@ export function GlobalVoiceAssistant() {
 
           if (!selectedBook) {
             const message = `Não encontrei o livro ${bookTerm} no carrinho.`;
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             return;
           }
 
           removeFromCart(selectedBook.id);
           const message = `Removendo ${selectedBook.title} do carrinho.`;
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
         } catch {
           const message = "Não consegui remover o livro do carrinho agora.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
         }
       },
       openCart: () => navigate("/cart"),
@@ -560,43 +560,37 @@ export function GlobalVoiceAssistant() {
           if (items.length === 0) {
             const message =
               "O carrinho está vazio. Adicione itens antes de finalizar a compra.";
-            setFeedback(message);
-            speak(message);
+            speakAssistantMessage(message);
             return;
           }
 
           const message = "Abrindo diálogo de confirmação.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           window.dispatchEvent(new CustomEvent("cart:open-checkout-dialog"));
           return;
         }
 
         // Otherwise navigate to order history (no cart check needed)
         const message = "Abrindo pedidos.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         navigate("/checkout");
       },
       confirmCheckout: () => {
         if (location.pathname === "/cart") {
           const message = "Confirmando pedido.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           window.dispatchEvent(new CustomEvent("cart:confirm-checkout"));
           return;
         }
 
         const message = "Este comando funciona na tela do carrinho.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       openOrder: (orderId) => {
         const normalizedOrderId = String(orderId ?? "").trim();
         if (!normalizedOrderId) {
           const message = "Não entendi o número do pedido.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -611,8 +605,7 @@ export function GlobalVoiceAssistant() {
 
         if (foundOrder) {
           const message = `Pedido ${normalizedOrderId} encontrado. Abrindo detalhes.`;
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           navigate(
             `/checkout?orderId=${encodeURIComponent(normalizedOrderId)}`,
           );
@@ -620,8 +613,7 @@ export function GlobalVoiceAssistant() {
         }
 
         const message = `Não encontrei o pedido ${normalizedOrderId} no histórico.`;
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
         navigate(`/checkout?orderId=${encodeURIComponent(normalizedOrderId)}`);
       },
       openNextOrder: () => {
@@ -634,8 +626,7 @@ export function GlobalVoiceAssistant() {
         if (location.pathname !== "/checkout") {
           const message =
             "Abra a tela de pedidos para ouvir os dados do pedido.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
@@ -665,15 +656,14 @@ export function GlobalVoiceAssistant() {
 
         if (!selectedOrder) {
           const message = "Não há dados de pedido para leitura no momento.";
-          setFeedback(message);
-          speak(message);
+          speakAssistantMessage(message);
           return;
         }
 
         const message = `Lendo dados do pedido ${selectedOrder.id}.`;
         const spokenDetails = buildOrderDetailsSpeech(selectedOrder);
 
-        setFeedback(message);
+        setAssistantFeedback(message);
         speak(spokenDetails);
       },
       goBack: () => navigate(-1),
@@ -685,7 +675,7 @@ export function GlobalVoiceAssistant() {
             },
             readDescription: () => {
               if (currentDetailBook.description) {
-                setFeedback("Lendo descrição do livro.");
+                setAssistantFeedback("Lendo descrição do livro.");
                 speak(currentDetailBook.description);
               }
             },
@@ -693,11 +683,10 @@ export function GlobalVoiceAssistant() {
         : {}),
       onDescriptionUnavailable: () => {
         const message = "Abra os detalhes de um livro para ouvir a descrição.";
-        setFeedback(message);
-        speak(message);
+        speakAssistantMessage(message);
       },
       onUnknown: () => {
-        setFeedback("Comando não reconhecido. Tente novamente.");
+        setAssistantFeedback("Comando não reconhecido. Tente novamente.");
       },
     }),
     [
@@ -714,18 +703,25 @@ export function GlobalVoiceAssistant() {
       openOrderByOffset,
       readSearchResultsPage,
       removeFromCart,
+      setAssistantFeedback,
       speak,
+      speakAssistantMessage,
     ],
   );
 
   const speechRecognition = useSpeechRecognition({
     lang: "pt-BR",
     currentRoute: location.pathname,
+    onTranscript: (nextTranscript) => {
+      setLastCommand(nextTranscript);
+    },
     onIntent: (intentResult) => {
       cancelRequestedRef.current = false;
+      setVoiceError("");
       const message = handleVoiceCommand(intentResult, voiceActions);
-      setFeedback(message);
+      setAssistantFeedback(message);
       if (message) {
+        cancel();
         speak(message);
       }
     },
@@ -741,8 +737,8 @@ export function GlobalVoiceAssistant() {
 
       cancelRequestedRef.current = false;
       const message = `Erro no reconhecimento de voz: ${recognitionError}`;
-      setFeedback(message);
-      speak(message);
+      setVoiceError(message);
+      speakAssistantMessage(message, "critical");
     },
   });
 
@@ -757,12 +753,18 @@ export function GlobalVoiceAssistant() {
   const cancelVoiceCommand = useCallback(() => {
     cancelRequestedRef.current = true;
     stopListening();
+    cancel();
 
     const message =
       "Comando de voz cancelado. Pressione espaço para tentar novamente.";
-    setFeedback(message);
-    speak(message);
-  }, [stopListening, speak]);
+    speakAssistantMessage(message);
+  }, [cancel, speakAssistantMessage, stopListening]);
+
+  const startVoiceCommand = useCallback(() => {
+    cancel();
+    setVoiceError("");
+    startListening();
+  }, [cancel, startListening]);
 
   useEffect(() => {
     function handleSpaceToggle(event) {
@@ -789,7 +791,7 @@ export function GlobalVoiceAssistant() {
         return;
       }
 
-      startListening();
+      startVoiceCommand();
     }
 
     window.addEventListener("keydown", handleSpaceToggle);
@@ -797,22 +799,22 @@ export function GlobalVoiceAssistant() {
     return () => {
       window.removeEventListener("keydown", handleSpaceToggle);
     };
-  }, [cancelVoiceCommand, isListening, startListening]);
+  }, [cancelVoiceCommand, isListening, startVoiceCommand]);
+
+  const voiceState = useMemo(
+    () => ({
+      isListening,
+      isSpeaking,
+      voiceError,
+      lastCommand,
+      lastAssistantMessage: feedback,
+    }),
+    [feedback, isListening, isSpeaking, lastCommand, voiceError],
+  );
 
   return (
     <div
-      style={{
-        position: "fixed",
-        right: 16,
-        bottom: 16,
-        zIndex: 200,
-        border: "1px solid #d0d7de",
-        borderRadius: 12,
-        backgroundColor: "#ffffff",
-        padding: 12,
-        width: 320,
-        boxShadow: "0 8px 20px rgba(31, 35, 40, 0.12)",
-      }}
+      className="voice-assistant-panel"
       aria-label="Assistente de voz global"
     >
       <Heading as="h3" sx={{ fontSize: 1 }}>
@@ -823,22 +825,34 @@ export function GlobalVoiceAssistant() {
         Rota atual: {location.pathname}
       </Text>
 
-      <div style={{ marginTop: 8, marginBottom: 8 }}>
+      <div className="voice-assistant-status">
         <VoiceButton
-          isListening={isListening}
+          isListening={voiceState.isListening}
+          isSpeaking={voiceState.isSpeaking}
           isSupported={isSupported}
-          onStart={startListening}
+          onStart={startVoiceCommand}
           onStop={cancelVoiceCommand}
         />
       </div>
 
       <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
-        Último comando: {transcript || "nenhum"}
+        Último comando: {voiceState.lastCommand || transcript || "nenhum"}
       </Text>
 
+      <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
+        Estado: {voiceState.isListening ? "escutando" : "em espera"}
+        {voiceState.isSpeaking ? " e falando" : ""}
+      </Text>
+
+      {voiceState.voiceError ? (
+        <Text as="p" sx={{ color: "danger.fg", fontSize: 1 }}>
+          {voiceState.voiceError}
+        </Text>
+      ) : null}
+
       <div
-        role="status"
-        aria-live="polite"
+        role={feedbackSeverity === "critical" ? "alert" : "status"}
+        aria-live={feedbackSeverity === "critical" ? "assertive" : "polite"}
         aria-atomic="true"
         style={{
           position: "absolute",
@@ -852,7 +866,7 @@ export function GlobalVoiceAssistant() {
           border: 0,
         }}
       >
-        {feedback}
+        {voiceState.lastAssistantMessage}
       </div>
     </div>
   );

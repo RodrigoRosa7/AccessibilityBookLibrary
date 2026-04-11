@@ -5,6 +5,7 @@ import { useCart } from "../app/providers/CartProvider.jsx";
 import { GlobalVoiceAssistant } from "./GlobalVoiceAssistant.jsx";
 import { Navbar } from "./Navbar.jsx";
 import { VoiceHelpPanel } from "./VoiceHelpPanel.jsx";
+import { VoiceOnboardingDialog } from "./VoiceOnboardingDialog.jsx";
 
 export function Layout() {
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ export function Layout() {
         </header>
         <Outlet />
         <GlobalVoiceAssistant />
+        <VoiceOnboardingDialog />
       </PageLayout.Content>
     </PageLayout>
   );
