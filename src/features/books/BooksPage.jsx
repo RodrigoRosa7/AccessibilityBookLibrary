@@ -116,10 +116,24 @@ export function BooksPage() {
           aria-label="Buscar livros"
           style={{ minWidth: 260, flex: 1 }}
         />
-        <Button type="submit" variant="primary">
+        <Button
+          className="app-button-primary"
+          type="submit"
+          variant="primary"
+          sx={{
+            backgroundColor: "var(--color-primary)",
+            color: "var(--color-bg)",
+            borderColor: "var(--color-primary)",
+            "&:hover:not(:disabled)": {
+              backgroundColor: "var(--color-primary-strong)",
+              borderColor: "var(--color-primary-strong)",
+            },
+          }}
+        >
           Buscar
         </Button>
         <Button
+          className="app-button-primary"
           type="button"
           onClick={() => {
             setSearchInput("");
@@ -133,8 +147,9 @@ export function BooksPage() {
       {loading ? <Spinner size="large" srText="Carregando livros" /> : null}
       {error ? (
         <div className="app-stack-sm">
-          <Text sx={{ color: "danger.fg" }}>{error}</Text>
+          <Text sx={{ color: "var(--color-danger)" }}>{error}</Text>
           <Button
+            className="app-button-primary"
             onClick={() => setRetryCount((c) => c + 1)}
             style={{ alignSelf: "flex-start" }}
           >
@@ -143,10 +158,10 @@ export function BooksPage() {
         </div>
       ) : null}
       {searchSummary ? (
-        <Text sx={{ color: "fg.muted" }}>{searchSummary}</Text>
+        <Text sx={{ color: "var(--color-muted)" }}>{searchSummary}</Text>
       ) : null}
       {!loading && !error && books.length === 0 ? (
-        <Text sx={{ color: "fg.muted" }}>
+        <Text sx={{ color: "var(--color-muted)" }}>
           Nenhum livro encontrado para a busca informada.
         </Text>
       ) : null}

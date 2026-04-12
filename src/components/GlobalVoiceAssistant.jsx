@@ -824,7 +824,7 @@ export function GlobalVoiceAssistant() {
         Assistente de voz
       </Heading>
 
-      <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
+      <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
         Rota atual: {location.pathname}
       </Text>
 
@@ -838,17 +838,17 @@ export function GlobalVoiceAssistant() {
         />
       </div>
 
-      <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
+      <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
         Último comando: {voiceState.lastCommand || transcript || "nenhum"}
       </Text>
 
-      <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
+      <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
         Estado: {voiceState.isListening ? "escutando" : "em espera"}
         {voiceState.isSpeaking ? " e falando" : ""}
       </Text>
 
       {voiceState.voiceError ? (
-        <Text as="p" sx={{ color: "danger.fg", fontSize: 1 }}>
+        <Text as="p" sx={{ color: "var(--color-danger)", fontSize: 1 }}>
           {voiceState.voiceError}
         </Text>
       ) : null}

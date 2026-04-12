@@ -59,7 +59,9 @@ export function BookDetailsPage() {
 
   if (error || !book) {
     return (
-      <Text sx={{ color: "danger.fg" }}>{error || "Livro não encontrado"}</Text>
+      <Text sx={{ color: "var(--color-danger)" }}>
+        {error || "Livro não encontrado"}
+      </Text>
     );
   }
 
@@ -69,7 +71,7 @@ export function BookDetailsPage() {
         <Heading as="h2">{book.title}</Heading>
       </div>
 
-      <Text as="p" sx={{ color: "fg.muted" }}>
+      <Text as="p" sx={{ color: "var(--color-muted)" }}>
         {book.author}
       </Text>
       <Text as="p">{book.description}</Text>
@@ -78,19 +80,31 @@ export function BookDetailsPage() {
 
       <div className="app-actions-row">
         <Button
+          className="app-button-primary"
           onClick={() => speak(book.description)}
           aria-label="Ler descrição do livro em voz alta"
         >
           Ler descrição
         </Button>
         <Button
+          className="app-button-primary"
           variant="primary"
+          sx={{
+            backgroundColor: "var(--color-primary)",
+            color: "var(--color-bg)",
+            borderColor: "var(--color-primary)",
+            "&:hover:not(:disabled)": {
+              backgroundColor: "var(--color-primary-strong)",
+              borderColor: "var(--color-primary-strong)",
+            },
+          }}
           onClick={addCurrentBookToCart}
           aria-label="Adicionar livro ao carrinho"
         >
           Adicionar ao carrinho
         </Button>
         <Button
+          className="app-button-primary"
           onClick={() => navigate(-1)}
           aria-label="Voltar para tela anterior"
         >

@@ -74,6 +74,7 @@ export function VoiceFeedbackBanner() {
       </div>
       <Button
         variant="invisible"
+        sx={{ color: "var(--color-primary-strong)" }}
         onClick={() => setIsVisible(false)}
         aria-label="Ocultar mensagem do assistente de voz"
       >

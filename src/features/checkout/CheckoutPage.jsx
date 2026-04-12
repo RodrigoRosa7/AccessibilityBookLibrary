@@ -109,7 +109,7 @@ export function CheckoutPage() {
 
       {requestedOrderNotFound ? (
         <div className="app-status-banner app-status-banner-critical">
-          <Text as="p" sx={{ color: "danger.fg" }}>
+          <Text as="p" sx={{ color: "var(--color-danger)" }}>
             Não encontrei o pedido #{requestedOrderId}. Verifique o número
             informado.
           </Text>
@@ -122,7 +122,7 @@ export function CheckoutPage() {
             <Text as="p" sx={{ fontWeight: "bold" }}>
               Pedido #{displayedOrder.id} confirmado com sucesso.
             </Text>
-            <Text as="p" sx={{ color: "fg.muted" }}>
+            <Text as="p" sx={{ color: "var(--color-muted)" }}>
               Data: {new Date(displayedOrder.createdAt).toLocaleString("pt-BR")}
             </Text>
           </div>
@@ -187,7 +187,7 @@ export function CheckoutPage() {
                             ? "1px solid var(--color-primary)"
                             : "1px solid var(--color-border)",
                           background: isSelected
-                            ? "color-mix(in srgb, var(--color-surface) 70%, #ddf4ff 30%)"
+                            ? "color-mix(in srgb, var(--color-surface) 70%, var(--color-primary) 30%)"
                             : "var(--color-surface)",
                           borderRadius: 8,
                           padding: 10,
@@ -219,7 +219,7 @@ export function CheckoutPage() {
         </>
       ) : (
         <div className="app-surface-card app-surface-card-muted">
-          <Text as="p" sx={{ color: "fg.muted" }}>
+          <Text as="p" sx={{ color: "var(--color-muted)" }}>
             Nenhum pedido recente encontrado. Finalize uma compra no carrinho
             para ver o resumo aqui.
           </Text>
@@ -261,7 +261,7 @@ export function CheckoutPage() {
               Pedido #{requestedOrder.id}
             </Heading>
 
-            <Text as="p" sx={{ color: "fg.muted" }}>
+            <Text as="p" sx={{ color: "var(--color-muted)" }}>
               Data: {new Date(requestedOrder.createdAt).toLocaleString("pt-BR")}
             </Text>
 

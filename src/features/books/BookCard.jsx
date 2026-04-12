@@ -15,7 +15,7 @@ export function BookCard({
   return (
     <article
       style={{
-        border: "1px solid #d0d7de",
+        border: "1px solid var(--color-border)",
         borderRadius: 8,
         padding: 16,
         display: "grid",
@@ -27,7 +27,7 @@ export function BookCard({
         <Heading as="h3" sx={{ fontSize: 2 }}>
           {book.title}
         </Heading>
-        <Text as="p" sx={{ color: "fg.muted" }}>
+        <Text as="p" sx={{ color: "var(--color-muted)" }}>
           {book.author}
         </Text>
       </div>
@@ -45,7 +45,7 @@ export function BookCard({
           }}
         >
           <Text as="strong">{formatCurrency(book.price)}</Text>
-          <Text as="p" sx={{ color: "fg.muted", fontSize: 0 }}>
+          <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 0 }}>
             No carrinho: {quantityInCart}
           </Text>
         </div>
@@ -60,7 +60,7 @@ export function BookCard({
           }}
         >
           <Button
-            className="interactive-button"
+            className="interactive-button app-button-primary"
             onClick={() => navigate(`/books/${book.id}`)}
             aria-label={`Ver detalhes de ${book.title}`}
           >
@@ -99,8 +99,17 @@ export function BookCard({
             </div>
           ) : (
             <Button
-              className="interactive-button"
+              className="interactive-button app-button-primary"
               variant="primary"
+              sx={{
+                backgroundColor: "var(--color-primary)",
+                color: "var(--color-bg)",
+                borderColor: "var(--color-primary)",
+                "&:hover:not(:disabled)": {
+                  backgroundColor: "var(--color-primary-strong)",
+                  borderColor: "var(--color-primary-strong)",
+                },
+              }}
               onClick={() => onAddToCart(book.id)}
               aria-label={`Adicionar ${book.title} ao carrinho`}
             >

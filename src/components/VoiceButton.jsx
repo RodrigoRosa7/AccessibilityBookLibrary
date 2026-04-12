@@ -10,7 +10,11 @@ export function VoiceButton({
 }) {
   if (!isSupported) {
     return (
-      <Button aria-label="Reconhecimento de voz indisponivel" disabled>
+      <Button
+        className="app-button-primary"
+        aria-label="Reconhecimento de voz indisponivel"
+        disabled
+      >
         Voz indisponivel
       </Button>
     );
@@ -27,7 +31,7 @@ export function VoiceButton({
 
   return (
     <Button
-      className={buttonClassName}
+      className={`${buttonClassName} app-button-primary`}
       aria-label={
         isListening
           ? "Parar reconhecimento de voz"
@@ -36,6 +40,23 @@ export function VoiceButton({
       aria-pressed={isListening}
       onClick={isListening ? onStop : onStart}
       variant={isListening ? "danger" : "primary"}
+      sx={
+        isListening
+          ? {
+              backgroundColor: "var(--color-primary-strong)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary-strong)",
+            }
+          : {
+              backgroundColor: "var(--color-primary)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary)",
+              "&:hover:not(:disabled)": {
+                backgroundColor: "var(--color-primary-strong)",
+                borderColor: "var(--color-primary-strong)",
+              },
+            }
+      }
       disabled={disabled}
     >
       <span className="voice-icon" aria-hidden="true">

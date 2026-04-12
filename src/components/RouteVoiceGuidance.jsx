@@ -86,13 +86,26 @@ export function RouteVoiceGuidance() {
 
         <div className="route-voice-guidance-body">
           <div className="route-voice-guidance-content">
-            <Text as="p" sx={{ color: "fg.muted" }}>
+            <Text as="p" sx={{ color: "var(--color-muted)" }}>
               {guidance.description}
             </Text>
           </div>
 
           <div className="route-voice-guidance-actions">
-            <Button onClick={playGuidance} variant="primary">
+            <Button
+              className="app-button-primary"
+              onClick={playGuidance}
+              variant="primary"
+              sx={{
+                backgroundColor: "var(--color-primary)",
+                color: "var(--color-bg)",
+                borderColor: "var(--color-primary)",
+                "&:hover:not(:disabled)": {
+                  backgroundColor: "var(--color-primary-strong)",
+                  borderColor: "var(--color-primary-strong)",
+                },
+              }}
+            >
               Ouvir instruções
             </Button>
           </div>

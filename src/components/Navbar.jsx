@@ -17,7 +17,7 @@ export function Navbar() {
     <nav
       aria-label="Navegação principal"
       style={{
-        borderRight: "1px solid #d0d7de",
+        borderRight: "1px solid var(--color-border)",
         padding: 16,
         minHeight: "100%",
       }}
@@ -37,10 +37,21 @@ export function Navbar() {
       </div>
 
       <div style={{ marginTop: 20, display: "grid", gap: 8 }}>
-        <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
+        <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
           {user ? `Conectado como ${user.name}` : "Usuário não autenticado"}
         </Text>
         <Button
+          className="app-button-primary"
+          variant="primary"
+          sx={{
+            backgroundColor: "var(--color-primary)",
+            color: "var(--color-bg)",
+            borderColor: "var(--color-primary)",
+            "&:hover:not(:disabled)": {
+              backgroundColor: "var(--color-primary-strong)",
+              borderColor: "var(--color-primary-strong)",
+            },
+          }}
           onClick={() => {
             logout();
             navigate("/login");

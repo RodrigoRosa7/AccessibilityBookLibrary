@@ -42,7 +42,7 @@ export function LoginPage() {
         style={{
           width: "100%",
           maxWidth: 460,
-          border: "1px solid #d0d7de",
+          border: "1px solid var(--color-border)",
           borderRadius: 8,
           padding: 16,
         }}
@@ -50,7 +50,7 @@ export function LoginPage() {
         <Heading as="h1" sx={{ mb: 2 }}>
           Entrar na Braille Bookstore
         </Heading>
-        <Text as="p" sx={{ color: "fg.muted", mb: 3 }}>
+        <Text as="p" sx={{ color: "var(--color-muted)", mb: 3 }}>
           Use um usuário de teste para acessar o catálogo com comandos de voz.
         </Text>
 
@@ -86,12 +86,26 @@ export function LoginPage() {
           </div>
 
           {error ? (
-            <Text as="p" sx={{ color: "danger.fg" }}>
+            <Text as="p" sx={{ color: "var(--color-danger)" }}>
               {error}
             </Text>
           ) : null}
 
-          <Button type="submit" variant="primary" disabled={loading}>
+          <Button
+            className="app-button-primary"
+            type="submit"
+            variant="primary"
+            disabled={loading}
+            sx={{
+              backgroundColor: "var(--color-primary)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary)",
+              "&:hover:not(:disabled)": {
+                backgroundColor: "var(--color-primary-strong)",
+                borderColor: "var(--color-primary-strong)",
+              },
+            }}
+          >
             {loading ? "Entrando..." : "Entrar"}
           </Button>
         </form>

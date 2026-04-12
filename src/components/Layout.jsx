@@ -27,7 +27,7 @@ export function Layout() {
       <PageLayout.Content sx={{ p: 3 }}>
         <header className="app-header-row" style={{ marginBottom: 16 }}>
           <div>
-            <Text as="p" sx={{ color: "fg.muted" }}>
+            <Text as="p" sx={{ color: "var(--color-muted)" }}>
               Demonstração acadêmica de acessibilidade com Web Speech API
             </Text>
           </div>

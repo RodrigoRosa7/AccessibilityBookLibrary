@@ -99,11 +99,11 @@ export function VoiceHelpPanel() {
               </button>
             </div>
 
-            <Text as="p" sx={{ color: "fg.muted" }}>
+            <Text as="p" sx={{ color: "var(--color-muted)" }}>
               Rota atual: {location.pathname}
             </Text>
 
-            <Text as="p" sx={{ color: "fg.muted", fontSize: 1 }}>
+            <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
               Atalhos: ? para abrir e Esc para fechar a modal atual.
             </Text>
 

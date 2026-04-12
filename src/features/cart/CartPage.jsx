@@ -193,7 +193,9 @@ export function CartPage() {
       </div>
 
       {orderMessage ? (
-        <Text sx={{ color: "success.fg" }}>{orderMessage}</Text>
+        <Text sx={{ color: "var(--color-primary-strong)" }}>
+          {orderMessage}
+        </Text>
       ) : null}
 
       {detailedItems.length === 0 ? (
@@ -207,12 +209,13 @@ export function CartPage() {
               <Heading as="h3" sx={{ fontSize: 2 }}>
                 {item.book.title}
               </Heading>
-              <Text as="p" sx={{ color: "fg.muted" }}>
+              <Text as="p" sx={{ color: "var(--color-muted)" }}>
                 Quantidade: {item.quantity}
               </Text>
               <Text as="strong">Subtotal: {formatCurrency(item.subtotal)}</Text>
             </div>
             <Button
+              className="app-button-primary"
               onClick={() => {
                 removeFromCart(item.bookId);
                 speak(`${item.book.title} removido do carrinho.`);
@@ -228,11 +231,24 @@ export function CartPage() {
       <div className="app-surface-card app-stack-sm">
         <Text as="strong">Total: {formatCurrency(total)}</Text>
         <div className="app-actions-row">
-          <Button onClick={() => navigate("/books")}>
+          <Button
+            className="app-button-primary"
+            onClick={() => navigate("/books")}
+          >
             Continuar comprando
           </Button>
           <Button
+            className="app-button-primary"
             variant="primary"
+            sx={{
+              backgroundColor: "var(--color-primary)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary)",
+              "&:hover:not(:disabled)": {
+                backgroundColor: "var(--color-primary-strong)",
+                borderColor: "var(--color-primary-strong)",
+              },
+            }}
             onClick={() => setIsCheckoutDialogOpen(true)}
             disabled={detailedItems.length === 0}
           >
@@ -266,11 +282,24 @@ export function CartPage() {
               className="app-actions-row"
               style={{ justifyContent: "flex-end" }}
             >
-              <Button onClick={() => setIsCheckoutDialogOpen(false)}>
+              <Button
+                className="app-button-primary"
+                onClick={() => setIsCheckoutDialogOpen(false)}
+              >
                 Cancelar
               </Button>
               <Button
+                className="app-button-primary"
                 variant="primary"
+                sx={{
+                  backgroundColor: "var(--color-primary)",
+                  color: "var(--color-bg)",
+                  borderColor: "var(--color-primary)",
+                  "&:hover:not(:disabled)": {
+                    backgroundColor: "var(--color-primary-strong)",
+                    borderColor: "var(--color-primary-strong)",
+                  },
+                }}
                 onClick={handleCheckout}
                 disabled={isSubmittingOrder}
               >

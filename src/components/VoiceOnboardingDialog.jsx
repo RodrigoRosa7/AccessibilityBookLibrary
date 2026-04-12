@@ -83,7 +83,7 @@ export function VoiceOnboardingDialog() {
           Apresentação inicial por voz
         </Heading>
 
-        <Text as="p" sx={{ color: "fg.muted" }}>
+        <Text as="p" sx={{ color: "var(--color-muted)" }}>
           Versão da apresentação: {voiceOnboardingVersion}
         </Text>
 
@@ -94,11 +94,30 @@ export function VoiceOnboardingDialog() {
         </Text>
 
         <div className="voice-onboarding-actions">
-          <Button onClick={handlePlayPresentation} variant="primary">
+          <Button
+            className="app-button-primary"
+            onClick={handlePlayPresentation}
+            variant="primary"
+            sx={{
+              backgroundColor: "var(--color-primary)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary)",
+              "&:hover:not(:disabled)": {
+                backgroundColor: "var(--color-primary-strong)",
+                borderColor: "var(--color-primary-strong)",
+              },
+            }}
+          >
             {isSpeaking ? "Falando..." : "Ouvir novamente"}
           </Button>
-          <Button onClick={handleComplete}>Concluir apresentação</Button>
-          <Button onClick={handleSkip} variant="invisible">
+          <Button className="app-button-primary" onClick={handleComplete}>
+            Concluir apresentação
+          </Button>
+          <Button
+            onClick={handleSkip}
+            variant="invisible"
+            sx={{ color: "var(--color-primary-strong)" }}
+          >
             Pular por agora
           </Button>
         </div>
