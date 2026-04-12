@@ -18,6 +18,28 @@ function getInitialUser() {
   }
 }
 
+function clearRouteGuidanceSessionFlags() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    const storage = window.sessionStorage;
+    const keysToRemove = [];
+
+    for (let index = 0; index < storage.length; index += 1) {
+      const key = storage.key(index);
+      if (key?.startsWith("voice-guidance-played:")) {
+        keysToRemove.push(key);
+      }
+    }
+
+    keysToRemove.forEach((key) => storage.removeItem(key));
+  } catch {
+    // noop: session storage may be unavailable
+  }
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(getInitialUser);
 
@@ -29,6 +51,7 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem(AUTH_STORAGE_KEY);
+    clearRouteGuidanceSessionFlags();
   };
 
   const completeVoiceOnboarding = () => {

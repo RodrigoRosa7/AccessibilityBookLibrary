@@ -275,3 +275,80 @@ button:enabled:active {
     align-items: stretch;
   }
 }
+
+.route-voice-guidance {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-surface) 92%, #ddf4ff 8%);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.route-voice-guidance-accordion {
+  display: grid;
+}
+
+.route-voice-guidance-accordion[open] {
+  gap: 12px;
+}
+
+.route-voice-guidance-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 52px 16px 16px;
+  position: relative;
+}
+
+.route-voice-guidance-summary::-webkit-details-marker {
+  display: none;
+}
+
+.route-voice-guidance-summary::after {
+  content: none;
+}
+
+.route-voice-guidance-chevron {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 40%, #ffffff 60%);
+  background: color-mix(in srgb, var(--color-surface) 70%, #ddf4ff 30%);
+  color: var(--color-primary-strong);
+}
+
+.route-voice-guidance-chevron svg {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.route-voice-guidance-accordion[open] .route-voice-guidance-chevron svg {
+  transform: rotate(0deg);
+}
+
+.route-voice-guidance-body {
+  padding: 0 16px 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.route-voice-guidance-content {
+  display: grid;
+  gap: 8px;
+}
+
+.route-voice-guidance-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.route-voice-guidance-list {
+  margin: 0;
+}

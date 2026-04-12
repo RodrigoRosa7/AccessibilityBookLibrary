@@ -1,83 +1,11 @@
 import { Heading, Text } from "@primer/react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-
-const GLOBAL_UI_COMMANDS = [
-  "abrir livros",
-  "abrir carrinho",
-  "abrir pedidos",
-  "voltar para início",
-  "me ajude",
-  "voltar",
-];
-
-const SESSION_MODAL_COMMANDS = [
-  "fechar modal",
-  "fechar ajuda",
-  "deslogar",
-  "saia do sistema",
-];
-
-function getRouteCommandSuggestions(pathname) {
-  if (/^\/books\/\d+$/.test(pathname)) {
-    return {
-      title: "Dicas para detalhes do livro",
-      commands: ["adicionar ao carrinho", "ler detalhes", "ler descrição"],
-    };
-  }
-
-  if (pathname === "/checkout") {
-    return {
-      title: "Dicas para pedidos",
-      commands: [
-        "continuar comprando",
-        "voltar ao carrinho",
-        "abrir pedido 3",
-        "ler dados do pedido",
-        "próximo pedido",
-        "pedido anterior",
-      ],
-    };
-  }
-
-  if (pathname === "/books") {
-    return {
-      title: "Dicas para catálogo",
-      commands: [
-        "buscar livro interfaces acessíveis",
-        "ler resultados da busca",
-        "ler próximos resultados",
-        "ler resultados anteriores",
-        "repetir resultados",
-        "abrir detalhes de interfaces acessíveis",
-      ],
-    };
-  }
-
-  if (pathname === "/cart") {
-    return {
-      title: "Dicas para carrinho",
-      commands: [
-        "ler itens do carrinho",
-        "total do carrinho",
-        "finalizar compra",
-        "confirmar",
-        "cancelar",
-        "continuar comprando",
-      ],
-    };
-  }
-
-  return {
-    title: "Dicas gerais",
-    commands: [
-      "abrir livros",
-      "abrir carrinho",
-      "abrir pedidos",
-      "voltar para início",
-    ],
-  };
-}
+import {
+  getGlobalVoiceCommands,
+  getPageVoiceGuidance,
+  getSessionModalCommands,
+} from "../features/contextual/pageVoiceGuidance.js";
 
 export function VoiceHelpPanel() {
   const location = useLocation();
@@ -128,9 +56,12 @@ export function VoiceHelpPanel() {
   }, []);
 
   const routeSuggestions = useMemo(
-    () => getRouteCommandSuggestions(location.pathname),
+    () => getPageVoiceGuidance(location.pathname),
     [location.pathname],
   );
+
+  const globalCommands = useMemo(() => getGlobalVoiceCommands(), []);
+  const sessionModalCommands = useMemo(() => getSessionModalCommands(), []);
 
   return (
     <>
@@ -181,7 +112,7 @@ export function VoiceHelpPanel() {
                 Comandos essenciais
               </Heading>
               <ul className="voice-help-list">
-                {GLOBAL_UI_COMMANDS.map((command) => (
+                {globalCommands.map((command) => (
                   <li key={command}>
                     <Text as="p">{command}</Text>
                   </li>
@@ -194,7 +125,7 @@ export function VoiceHelpPanel() {
                 Sessão e modais
               </Heading>
               <ul className="voice-help-list">
-                {SESSION_MODAL_COMMANDS.map((command) => (
+                {sessionModalCommands.map((command) => (
                   <li key={command}>
                     <Text as="p">{command}</Text>
                   </li>

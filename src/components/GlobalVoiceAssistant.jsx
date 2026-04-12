@@ -370,8 +370,11 @@ export function GlobalVoiceAssistant() {
       },
       openVoiceHelp: () => {
         window.dispatchEvent(new CustomEvent("voice-help:open"));
-        const message = "Abrindo ajuda de comandos de voz.";
-        speakAssistantMessage(message);
+        setAssistantFeedback("Abrindo ajuda de comandos de voz.");
+      },
+      repeatPageGuidance: () => {
+        window.dispatchEvent(new CustomEvent("voice-guidance:repeat"));
+        setAssistantFeedback("Repetindo instruções da página.");
       },
       closeModal: () => {
         const hasOpenModal =

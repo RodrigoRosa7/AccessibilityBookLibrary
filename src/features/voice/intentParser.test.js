@@ -116,6 +116,23 @@ describe("parseVoiceIntent core commands", () => {
     });
   });
 
+  it("recognizes repeat page guidance commands", () => {
+    const cases = [
+      "repetir instruções",
+      "repetir instruções da página",
+      "ler instruções",
+      "ouvir instruções",
+      "instruções da página",
+      "ouvir orientações da tela",
+      "repita o resumo da página",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.REPEAT_PAGE_GUIDANCE);
+    });
+  });
+
   it("recognizes close modal commands", () => {
     const cases = [
       "fechar",

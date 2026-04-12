@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useCart } from "../app/providers/CartProvider.jsx";
 import { GlobalVoiceAssistant } from "./GlobalVoiceAssistant.jsx";
 import { Navbar } from "./Navbar.jsx";
+import { RouteVoiceGuidance } from "./RouteVoiceGuidance.jsx";
 import { VoiceFeedbackBanner } from "./VoiceFeedbackBanner.jsx";
 import { VoiceHelpPanel } from "./VoiceHelpPanel.jsx";
 import { VoiceOnboardingDialog } from "./VoiceOnboardingDialog.jsx";
@@ -35,9 +36,6 @@ export function Layout() {
           }}
         >
           <div>
-            <Heading as="h1" sx={{ fontSize: 4 }}>
-              Loja Online de Livros em Braille
-            </Heading>
             <Text as="p" sx={{ color: "fg.muted" }}>
               Demonstração acadêmica de acessibilidade com Web Speech API
             </Text>
@@ -86,6 +84,7 @@ export function Layout() {
           </div>
         </header>
         <VoiceFeedbackBanner />
+        <RouteVoiceGuidance />
         <Outlet />
         <GlobalVoiceAssistant />
         <VoiceOnboardingDialog />

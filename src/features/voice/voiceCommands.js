@@ -38,6 +38,10 @@ export function handleVoiceCommand(intentResult, actions = {}) {
       actions.repeatSearchResults?.();
       return "";
 
+    case VOICE_INTENTS.REPEAT_PAGE_GUIDANCE:
+      actions.repeatPageGuidance?.();
+      return "";
+
     case VOICE_INTENTS.OPEN_VOICE_HELP:
       actions.openVoiceHelp?.();
       return "";

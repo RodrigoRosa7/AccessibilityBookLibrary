@@ -5,6 +5,7 @@ export const VOICE_INTENTS = {
   READ_NEXT_SEARCH_RESULTS: "READ_NEXT_SEARCH_RESULTS",
   READ_PREVIOUS_SEARCH_RESULTS: "READ_PREVIOUS_SEARCH_RESULTS",
   REPEAT_SEARCH_RESULTS: "REPEAT_SEARCH_RESULTS",
+  REPEAT_PAGE_GUIDANCE: "REPEAT_PAGE_GUIDANCE",
   OPEN_VOICE_HELP: "OPEN_VOICE_HELP",
   CLOSE_MODAL: "CLOSE_MODAL",
   LOGOUT: "LOGOUT",
@@ -201,6 +202,23 @@ function isVoiceHelpCommand(normalizedTranscript) {
       normalizedTranscript,
     ) ||
     /(abrir|mostrar|ver).*(ajuda|comandos de voz)/.test(normalizedTranscript)
+  );
+}
+
+function isRepeatPageGuidanceCommand(normalizedTranscript) {
+  return (
+    /^(repetir|repita)\s+(instrucoes|instrutcoes|orientacoes|resumo)$/.test(
+      normalizedTranscript,
+    ) ||
+    /(repetir|repita|ouvir|ler).*(instrucoes|instrutcoes|orientacoes|resumo).*(pagina|tela)/.test(
+      normalizedTranscript,
+    ) ||
+    /^(instrucoes|instrutcoes|orientacoes|resumo).*(pagina|tela)$/.test(
+      normalizedTranscript,
+    ) ||
+    /^(ler|ouvir).*(instrucoes|instrutcoes|orientacoes)$/.test(
+      normalizedTranscript,
+    )
   );
 }
 
@@ -534,6 +552,15 @@ export function parseVoiceIntent(transcript, options = {}) {
       intent: VOICE_INTENTS.CHECKOUT,
       entity: null,
       confidence: 0.92,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isRepeatPageGuidanceCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.REPEAT_PAGE_GUIDANCE,
+      entity: null,
+      confidence: 0.93,
       transcript: normalizedTranscript,
     };
   }
