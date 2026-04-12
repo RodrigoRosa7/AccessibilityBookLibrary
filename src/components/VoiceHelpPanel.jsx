@@ -67,7 +67,7 @@ export function VoiceHelpPanel() {
     <>
       <button
         type="button"
-        className="interactive-button cart-indicator-button"
+        className="interactive-button cart-indicator-button app-button-secondary"
         onClick={() => setIsOpen(true)}
         aria-label="Abrir ajuda de comandos de voz"
       >
@@ -92,7 +92,7 @@ export function VoiceHelpPanel() {
               </Heading>
               <button
                 type="button"
-                className="interactive-button cart-indicator-button"
+                className="interactive-button cart-indicator-button app-button-secondary"
                 onClick={() => setIsOpen(false)}
               >
                 Fechar
@@ -111,39 +111,39 @@ export function VoiceHelpPanel() {
               <Heading as="h4" sx={{ fontSize: 1 }}>
                 Comandos essenciais
               </Heading>
-              <ul className="voice-help-list">
+              <div className="command-chips">
                 {globalCommands.map((command) => (
-                  <li key={command}>
-                    <Text as="p">{command}</Text>
-                  </li>
+                  <span className="command-chip" key={command}>
+                    {command}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </section>
 
             <section className="voice-help-section">
               <Heading as="h4" sx={{ fontSize: 1 }}>
                 Sessão e modais
               </Heading>
-              <ul className="voice-help-list">
+              <div className="command-chips">
                 {sessionModalCommands.map((command) => (
-                  <li key={command}>
-                    <Text as="p">{command}</Text>
-                  </li>
+                  <span className="command-chip" key={command}>
+                    {command}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </section>
 
             <section className="voice-help-section">
               <Heading as="h4" sx={{ fontSize: 1 }}>
                 {routeSuggestions.title}
               </Heading>
-              <ul className="voice-help-list">
+              <div className="command-chips">
                 {routeSuggestions.commands.map((command) => (
-                  <li key={command}>
-                    <Text as="p">{command}</Text>
-                  </li>
+                  <span className="command-chip" key={command}>
+                    {command}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </section>
           </div>
         </div>

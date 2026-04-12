@@ -1,6 +1,6 @@
 :root {
   --color-bg: #fff8f0;
-  --color-surface: #fffcf7;
+  --color-surface: #f7eadf;
   --color-text: #4b2e2b;
   --color-muted: #8c5a3c;
   --color-border: #d7c4b5;
@@ -15,6 +15,15 @@
 body {
   background: var(--color-bg);
   color: var(--color-text);
+  font-family:
+    "Lexend Deca",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-optical-sizing: auto;
+  font-size: 17px;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
 }
 
 .interactive-button {
@@ -27,26 +36,45 @@ body {
 button:enabled.interactive-button:hover,
 button:enabled:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(31, 35, 40, 0.18);
+  box-shadow: 0 6px 16px rgba(75, 46, 43, 0.24);
   filter: saturate(1.05);
 }
 
 button:enabled:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(31, 35, 40, 0.18);
+  box-shadow: 0 2px 8px rgba(75, 46, 43, 0.2);
+}
+
+:where(button, [role="button"], input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .cart-indicator-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 40px;
   gap: 8px;
-  border: 1px solid var(--color-primary-strong);
+  border: 1px solid var(--color-primary);
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 0 12px;
   background: var(--color-primary);
   color: var(--color-bg);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -114,11 +142,23 @@ button:enabled:active {
   border-color: var(--color-primary-strong) !important;
 }
 
+.app-button-secondary {
+  background: var(--color-primary) !important;
+  color: var(--color-bg) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.app-button-secondary:hover:not(:disabled),
+.app-button-secondary:focus-visible {
+  background: var(--color-primary-strong) !important;
+  border-color: var(--color-primary-strong) !important;
+}
+
 .book-quantity-value {
   min-width: 30px;
   text-align: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--color-text);
 }
 
@@ -164,13 +204,6 @@ button:enabled:active {
   gap: 8px;
 }
 
-.voice-help-list {
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 6px;
-}
-
 .voice-assistant-panel {
   position: fixed;
   right: 16px;
@@ -193,6 +226,7 @@ button:enabled:active {
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -213,6 +247,8 @@ button:enabled:active {
 
 .voice-button-label {
   line-height: 1;
+  vertical-align: text-top;
+  white-space: nowrap;
 }
 
 .voice-button:focus-visible {
@@ -381,16 +417,46 @@ button:enabled:active {
   justify-content: flex-start;
 }
 
-.route-voice-guidance-list {
+.command-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 60%,
+    var(--color-primary) 40%
+  );
+  color: var(--color-primary-strong);
+  white-space: nowrap;
 }
 
 .app-surface-card {
-  border: 1px solid var(--color-border);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border) 70%, var(--color-primary) 30%);
   border-radius: 12px;
   background: var(--color-surface);
-  box-shadow: 0 2px 8px rgba(75, 46, 43, 0.12);
+  box-shadow: 0 6px 18px rgba(75, 46, 43, 0.16);
   padding: 16px;
+}
+
+.catalog-book-card {
+  background: var(--color-surface);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border) 68%, var(--color-primary) 32%);
+  border-radius: 12px;
+  box-shadow: 0 5px 14px rgba(75, 46, 43, 0.14);
 }
 
 .app-surface-card-muted {

@@ -66,8 +66,8 @@ export function buildInitialVoicePresentation(user) {
     "No menu principal, você pode abrir Início, Livros, Carrinho e Pedidos.",
     "Para falar com o assistente, pressione a tecla espaço.",
     "Se pressionar espaço novamente, o comando de voz é cancelado.",
-    "Comandos básicos: abrir livros, abrir carrinho, abrir pedidos e voltar para início.",
-    "Quando precisar, diga me ajude para ouvir os comandos disponíveis.",
-    "Você pode repetir esta apresentação no botão ouvir novamente.",
+    "Comandos básicos: 'Abrir livros', 'Abrir carrinho', 'Abrir pedidos' e 'Voltar para início'.",
+    "Quando precisar, diga 'Me ajude' para ouvir os comandos disponíveis.",
+    "Você pode repetir esta apresentação no botão 'ouvir novamente' ou executando o comando 'repetir instruções'.",
   ].join(" ");
 }

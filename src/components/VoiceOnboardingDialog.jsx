@@ -110,7 +110,7 @@ export function VoiceOnboardingDialog() {
           >
             {isSpeaking ? "Falando..." : "Ouvir novamente"}
           </Button>
-          <Button className="app-button-primary" onClick={handleComplete}>
+          <Button className="app-button-secondary" onClick={handleComplete}>
             Concluir apresentação
           </Button>
           <Button

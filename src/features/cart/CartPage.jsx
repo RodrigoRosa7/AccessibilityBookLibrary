@@ -215,7 +215,7 @@ export function CartPage() {
               <Text as="strong">Subtotal: {formatCurrency(item.subtotal)}</Text>
             </div>
             <Button
-              className="app-button-primary"
+              className="app-button-secondary"
               onClick={() => {
                 removeFromCart(item.bookId);
                 speak(`${item.book.title} removido do carrinho.`);
@@ -232,7 +232,7 @@ export function CartPage() {
         <Text as="strong">Total: {formatCurrency(total)}</Text>
         <div className="app-actions-row">
           <Button
-            className="app-button-primary"
+            className="app-button-secondary"
             onClick={() => navigate("/books")}
           >
             Continuar comprando
@@ -283,7 +283,7 @@ export function CartPage() {
               style={{ justifyContent: "flex-end" }}
             >
               <Button
-                className="app-button-primary"
+                className="app-button-secondary"
                 onClick={() => setIsCheckoutDialogOpen(false)}
               >
                 Cancelar

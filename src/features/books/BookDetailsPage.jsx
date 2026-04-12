@@ -80,7 +80,7 @@ export function BookDetailsPage() {
 
       <div className="app-actions-row">
         <Button
-          className="app-button-primary"
+          className="app-button-secondary"
           onClick={() => speak(book.description)}
           aria-label="Ler descrição do livro em voz alta"
         >
@@ -104,7 +104,7 @@ export function BookDetailsPage() {
           Adicionar ao carrinho
         </Button>
         <Button
-          className="app-button-primary"
+          className="app-button-secondary"
           onClick={() => navigate(-1)}
           aria-label="Voltar para tela anterior"
         >

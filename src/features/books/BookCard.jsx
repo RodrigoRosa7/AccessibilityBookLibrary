@@ -14,9 +14,8 @@ export function BookCard({
 
   return (
     <article
+      className="catalog-book-card"
       style={{
-        border: "1px solid var(--color-border)",
-        borderRadius: 8,
         padding: 16,
         display: "grid",
         gap: 12,

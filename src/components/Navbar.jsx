@@ -3,10 +3,10 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/providers/AuthProvider.jsx";
 
 const navItems = [
-  { to: "/home", label: "Início" },
-  { to: "/books", label: "Livros" },
-  { to: "/cart", label: "Carrinho" },
-  { to: "/checkout", label: "Pedidos" },
+  { to: "/home", label: "Início", icon: "🏠" },
+  { to: "/books", label: "Livros", icon: "📚" },
+  { to: "/cart", label: "Carrinho", icon: "🛒" },
+  { to: "/checkout", label: "Pedidos", icon: "📦" },
 ];
 
 export function Navbar() {
@@ -30,7 +30,10 @@ export function Navbar() {
         <ActionList>
           {navItems.map((item) => (
             <ActionList.LinkItem as={NavLink} to={item.to} key={item.to}>
-              {item.label}
+              <span style={{ marginRight: 8, fontSize: 18 }}>{item.icon}</span>
+              <span style={{ fontSize: 16, fontWeight: 500 }}>
+                {item.label}
+              </span>
             </ActionList.LinkItem>
           ))}
         </ActionList>
@@ -41,17 +44,7 @@ export function Navbar() {
           {user ? `Conectado como ${user.name}` : "Usuário não autenticado"}
         </Text>
         <Button
-          className="app-button-primary"
-          variant="primary"
-          sx={{
-            backgroundColor: "var(--color-primary)",
-            color: "var(--color-bg)",
-            borderColor: "var(--color-primary)",
-            "&:hover:not(:disabled)": {
-              backgroundColor: "var(--color-primary-strong)",
-              borderColor: "var(--color-primary-strong)",
-            },
-          }}
+          className="app-button-secondary"
           onClick={() => {
             logout();
             navigate("/login");

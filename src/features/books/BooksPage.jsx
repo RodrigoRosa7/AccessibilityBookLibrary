@@ -133,7 +133,7 @@ export function BooksPage() {
           Buscar
         </Button>
         <Button
-          className="app-button-primary"
+          className="app-button-secondary"
           type="button"
           onClick={() => {
             setSearchInput("");
@@ -149,7 +149,7 @@ export function BooksPage() {
         <div className="app-stack-sm">
           <Text sx={{ color: "var(--color-danger)" }}>{error}</Text>
           <Button
-            className="app-button-primary"
+            className="app-button-secondary"
             onClick={() => setRetryCount((c) => c + 1)}
             style={{ alignSelf: "flex-start" }}
           >

@@ -110,13 +110,13 @@ export function RouteVoiceGuidance() {
             </Button>
           </div>
 
-          <ul className="voice-help-list route-voice-guidance-list">
+          <div className="command-chips">
             {guidance.commands.map((command) => (
-              <li key={command}>
-                <Text as="p">{command}</Text>
-              </li>
+              <span className="command-chip" key={command}>
+                {command}
+              </span>
             ))}
-          </ul>
+          </div>
         </div>
       </details>
     </section>

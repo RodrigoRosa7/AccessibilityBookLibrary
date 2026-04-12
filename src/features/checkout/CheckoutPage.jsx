@@ -229,14 +229,14 @@ export function CheckoutPage() {
       <div className="app-actions-row">
         <button
           type="button"
-          className="interactive-button cart-indicator-button"
+          className="interactive-button cart-indicator-button app-button-secondary"
           onClick={() => navigate("/books")}
         >
           Continuar comprando
         </button>
         <button
           type="button"
-          className="interactive-button cart-indicator-button"
+          className="interactive-button cart-indicator-button app-button-secondary"
           onClick={() => navigate("/cart")}
         >
           Voltar ao carrinho
@@ -303,7 +303,7 @@ export function CheckoutPage() {
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button
                 type="button"
-                className="interactive-button cart-indicator-button"
+                className="interactive-button cart-indicator-button app-button-secondary"
                 onClick={closeOrderModal}
               >
                 Fechar
