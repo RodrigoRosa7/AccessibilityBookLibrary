@@ -64,24 +64,8 @@ export function BookDetailsPage() {
   }
 
   return (
-    <section
-      style={{
-        border: "1px solid #d0d7de",
-        borderRadius: 8,
-        padding: 16,
-        display: "grid",
-        gap: 12,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 8,
-        }}
-      >
+    <section className="app-surface-card app-stack-sm">
+      <div className="app-header-row">
         <Heading as="h2">{book.title}</Heading>
       </div>
 
@@ -92,7 +76,7 @@ export function BookDetailsPage() {
       <Text as="p">Formato: {book.format}</Text>
       <Text as="strong">{formatCurrency(book.price)}</Text>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <div className="app-actions-row">
         <Button
           onClick={() => speak(book.description)}
           aria-label="Ler descrição do livro em voz alta"

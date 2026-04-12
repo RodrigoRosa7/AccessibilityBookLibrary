@@ -102,28 +102,13 @@ export function CheckoutPage() {
   }, [location.state, navigate]);
 
   return (
-    <section
-      style={{
-        border: "1px solid #d0d7de",
-        borderRadius: 8,
-        padding: 16,
-        display: "grid",
-        gap: 12,
-      }}
-    >
+    <section className="app-surface-card app-stack-sm">
       <Heading as="h2" sx={{ mb: 2 }}>
         Pedidos
       </Heading>
 
       {requestedOrderNotFound ? (
-        <div
-          style={{
-            border: "1px solid #d1242f",
-            borderRadius: 8,
-            padding: 12,
-            background: "#ffebe9",
-          }}
-        >
+        <div className="app-status-banner app-status-banner-critical">
           <Text as="p" sx={{ color: "danger.fg" }}>
             Não encontrei o pedido #{requestedOrderId}. Verifique o número
             informado.
@@ -133,14 +118,7 @@ export function CheckoutPage() {
 
       {displayedOrder ? (
         <>
-          <div
-            style={{
-              border: "1px solid #2da44e",
-              background: "#dafbe1",
-              borderRadius: 8,
-              padding: 12,
-            }}
-          >
+          <div className="app-status-banner app-status-banner-success">
             <Text as="p" sx={{ fontWeight: "bold" }}>
               Pedido #{displayedOrder.id} confirmado com sucesso.
             </Text>
@@ -149,15 +127,7 @@ export function CheckoutPage() {
             </Text>
           </div>
 
-          <div
-            style={{
-              border: "1px solid #d0d7de",
-              borderRadius: 8,
-              padding: 12,
-              display: "grid",
-              gap: 8,
-            }}
-          >
+          <div className="app-surface-card app-stack-sm">
             <Heading as="h3" sx={{ fontSize: 2 }}>
               Itens do pedido
             </Heading>
@@ -171,7 +141,8 @@ export function CheckoutPage() {
                   alignItems: "center",
                   gap: 8,
                   flexWrap: "wrap",
-                  borderTop: index === 0 ? "none" : "1px solid #d8dee4",
+                  borderTop:
+                    index === 0 ? "none" : "1px solid var(--color-border)",
                   paddingTop: index === 0 ? 0 : 8,
                 }}
               >
@@ -182,7 +153,12 @@ export function CheckoutPage() {
               </div>
             ))}
 
-            <div style={{ borderTop: "1px solid #d8dee4", paddingTop: 8 }}>
+            <div
+              style={{
+                borderTop: "1px solid var(--color-border)",
+                paddingTop: 8,
+              }}
+            >
               <Text as="strong">
                 Total pago: {formatCurrency(displayedOrder.total)}
               </Text>
@@ -190,15 +166,7 @@ export function CheckoutPage() {
           </div>
 
           {ordersForMenu.length > 0 ? (
-            <div
-              style={{
-                border: "1px solid #d0d7de",
-                borderRadius: 8,
-                padding: 12,
-                display: "grid",
-                gap: 8,
-              }}
-            >
+            <div className="app-surface-card app-stack-sm">
               <details>
                 <summary style={{ cursor: "pointer", fontWeight: 600 }}>
                   Últimos pedidos
@@ -216,9 +184,11 @@ export function CheckoutPage() {
                         className="interactive-button"
                         style={{
                           border: isSelected
-                            ? "1px solid #0969da"
-                            : "1px solid #d0d7de",
-                          background: isSelected ? "#ddf4ff" : "#ffffff",
+                            ? "1px solid var(--color-primary)"
+                            : "1px solid var(--color-border)",
+                          background: isSelected
+                            ? "color-mix(in srgb, var(--color-surface) 70%, #ddf4ff 30%)"
+                            : "var(--color-surface)",
                           borderRadius: 8,
                           padding: 10,
                           textAlign: "left",
@@ -248,9 +218,7 @@ export function CheckoutPage() {
           ) : null}
         </>
       ) : (
-        <div
-          style={{ border: "1px solid #d0d7de", borderRadius: 8, padding: 12 }}
-        >
+        <div className="app-surface-card app-surface-card-muted">
           <Text as="p" sx={{ color: "fg.muted" }}>
             Nenhum pedido recente encontrado. Finalize uma compra no carrinho
             para ver o resumo aqui.
@@ -258,7 +226,7 @@ export function CheckoutPage() {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <div className="app-actions-row">
         <button
           type="button"
           className="interactive-button cart-indicator-button"
@@ -280,30 +248,13 @@ export function CheckoutPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="order-modal-title"
-          style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.58)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 16,
-            zIndex: 1300,
-          }}
+          className="app-dialog-overlay"
+          style={{ zIndex: 1300 }}
           onClick={closeOrderModal}
         >
           <div
-            style={{
-              width: "100%",
-              maxWidth: 560,
-              border: "1px solid #d0d7de",
-              borderRadius: 12,
-              background: "#ffffff",
-              padding: 16,
-              display: "grid",
-              gap: 10,
-              boxShadow: "0 28px 60px rgba(15, 23, 42, 0.32)",
-            }}
+            className="app-dialog-card"
+            style={{ maxWidth: 560, gap: 10 }}
             onClick={(event) => event.stopPropagation()}
           >
             <Heading as="h3" id="order-modal-title" sx={{ fontSize: 3 }}>
@@ -316,7 +267,7 @@ export function CheckoutPage() {
 
             <div
               style={{
-                border: "1px solid #d8dee4",
+                border: "1px solid var(--color-border)",
                 borderRadius: 8,
                 padding: 10,
                 display: "grid",
@@ -332,7 +283,8 @@ export function CheckoutPage() {
                     alignItems: "center",
                     flexWrap: "wrap",
                     gap: 8,
-                    borderTop: index === 0 ? "none" : "1px solid #d8dee4",
+                    borderTop:
+                      index === 0 ? "none" : "1px solid var(--color-border)",
                     paddingTop: index === 0 ? 0 : 8,
                   }}
                 >

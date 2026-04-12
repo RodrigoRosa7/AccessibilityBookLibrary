@@ -10,9 +10,7 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 
 function HomePage() {
   return (
-    <section
-      style={{ border: "1px solid #d0d7de", borderRadius: 8, padding: 16 }}
-    >
+    <section className="app-surface-card app-stack-sm">
       <Heading as="h2" sx={{ mb: 2 }}>
         Início
       </Heading>

@@ -90,16 +90,8 @@ export function BooksPage() {
   }, [query, searchSummary, speak]);
 
   return (
-    <section style={{ display: "grid", gap: 16 }}>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          gap: 8,
-          alignItems: "center",
-        }}
-      >
+    <section className="app-stack">
+      <div className="app-header-row">
         <Heading as="h2">Catálogo de Livros</Heading>
       </div>
 
@@ -115,12 +107,7 @@ export function BooksPage() {
 
           setSearchParams({ q: normalizedQuery });
         }}
-        style={{
-          display: "flex",
-          gap: 8,
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
+        className="app-actions-row"
       >
         <TextInput
           value={searchInput}
@@ -145,7 +132,7 @@ export function BooksPage() {
 
       {loading ? <Spinner size="large" srText="Carregando livros" /> : null}
       {error ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div className="app-stack-sm">
           <Text sx={{ color: "danger.fg" }}>{error}</Text>
           <Button
             onClick={() => setRetryCount((c) => c + 1)}
@@ -165,13 +152,7 @@ export function BooksPage() {
       ) : null}
 
       {!loading && !error ? (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: 12,
-          }}
-        >
+        <div className="app-books-grid">
           {books.map((book) => (
             <BookCard
               key={book.id}

@@ -352,3 +352,83 @@ button:enabled:active {
 .route-voice-guidance-list {
   margin: 0;
 }
+
+.app-surface-card {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 2px 8px rgba(31, 35, 40, 0.06);
+  padding: 16px;
+}
+
+.app-surface-card-muted {
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg) 12%);
+}
+
+.app-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.app-stack-sm {
+  display: grid;
+  gap: 8px;
+}
+
+.app-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.app-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.app-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.app-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.58);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.app-dialog-card {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.28);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.app-status-banner {
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.app-status-banner-success {
+  border-color: color-mix(in srgb, var(--color-primary) 40%, #2da44e 60%);
+  background: color-mix(in srgb, #dafbe1 78%, var(--color-surface) 22%);
+}
+
+.app-status-banner-critical {
+  border-color: color-mix(in srgb, var(--color-danger) 70%, #d1242f 30%);
+  background: color-mix(in srgb, #ffebe9 84%, var(--color-surface) 16%);
+}

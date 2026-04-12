@@ -25,30 +25,14 @@ export function Layout() {
       </PageLayout.Pane>
 
       <PageLayout.Content sx={{ p: 3 }}>
-        <header
-          style={{
-            marginBottom: 16,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            gap: 12,
-            flexWrap: "wrap",
-          }}
-        >
+        <header className="app-header-row" style={{ marginBottom: 16 }}>
           <div>
             <Text as="p" sx={{ color: "fg.muted" }}>
               Demonstração acadêmica de acessibilidade com Web Speech API
             </Text>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
+          <div className="app-actions-row">
             <VoiceHelpPanel />
 
             <button

@@ -168,7 +168,7 @@ export function CartPage() {
   }
 
   return (
-    <section style={{ display: "grid", gap: 16 }}>
+    <section className="app-stack">
       <div
         role="status"
         aria-live="polite"
@@ -188,15 +188,7 @@ export function CartPage() {
         {orderMessage}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 8,
-        }}
-      >
+      <div className="app-header-row">
         <Heading as="h2">Carrinho</Heading>
       </div>
 
@@ -205,26 +197,12 @@ export function CartPage() {
       ) : null}
 
       {detailedItems.length === 0 ? (
-        <div
-          style={{ border: "1px solid #d0d7de", borderRadius: 8, padding: 16 }}
-        >
+        <div className="app-surface-card app-surface-card-muted">
           <Text>Seu carrinho está vazio.</Text>
         </div>
       ) : (
         detailedItems.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              border: "1px solid #d0d7de",
-              borderRadius: 8,
-              padding: 16,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: 8,
-            }}
-          >
+          <div key={item.id} className="app-surface-card app-header-row">
             <div>
               <Heading as="h3" sx={{ fontSize: 2 }}>
                 {item.book.title}
@@ -247,17 +225,9 @@ export function CartPage() {
         ))
       )}
 
-      <div
-        style={{
-          border: "1px solid #d0d7de",
-          borderRadius: 8,
-          padding: 16,
-          display: "grid",
-          gap: 8,
-        }}
-      >
+      <div className="app-surface-card app-stack-sm">
         <Text as="strong">Total: {formatCurrency(total)}</Text>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div className="app-actions-row">
           <Button onClick={() => navigate("/books")}>
             Continuar comprando
           </Button>
@@ -276,30 +246,13 @@ export function CartPage() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="checkout-modal-title"
-          style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(15, 23, 42, 0.55)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 16,
-            zIndex: 1200,
-          }}
+          className="app-dialog-overlay"
+          style={{ zIndex: 1200 }}
           onClick={() => setIsCheckoutDialogOpen(false)}
         >
           <div
-            style={{
-              width: "100%",
-              maxWidth: 520,
-              background: "#ffffff",
-              borderRadius: 12,
-              border: "1px solid #d0d7de",
-              boxShadow: "0 24px 48px rgba(15, 23, 42, 0.28)",
-              padding: 16,
-              display: "grid",
-              gap: 12,
-            }}
+            className="app-dialog-card"
+            style={{ maxWidth: 520 }}
             onClick={(event) => event.stopPropagation()}
           >
             <Heading as="h3" id="checkout-modal-title" sx={{ fontSize: 2 }}>
@@ -310,7 +263,8 @@ export function CartPage() {
               {formatCurrency(total)}?
             </Text>
             <div
-              style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}
+              className="app-actions-row"
+              style={{ justifyContent: "flex-end" }}
             >
               <Button onClick={() => setIsCheckoutDialogOpen(false)}>
                 Cancelar
