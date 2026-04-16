@@ -1,6 +1,7 @@
 import { Heading, Text } from "@primer/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Accordion } from "./Accordion.jsx";
 import { useAuth } from "../app/providers/AuthProvider.jsx";
 import { useCart } from "../app/providers/CartProvider.jsx";
 import { getBookById, getBooks } from "../features/books/bookService.js";
@@ -300,6 +301,50 @@ export function GlobalVoiceAssistant() {
 
   const voiceActions = useMemo(
     () => ({
+      replayVoiceOnboarding: () => {
+        const hasOnboardingModalOpen =
+          typeof document !== "undefined" &&
+          document.querySelector('[data-modal-id="voice-onboarding"]');
+
+        if (!hasOnboardingModalOpen) {
+          const message = "A apresentação inicial não está aberta.";
+          speakAssistantMessage(message);
+          return;
+        }
+
+        window.dispatchEvent(new CustomEvent("voice-onboarding:replay"));
+        setAssistantFeedback("Repetindo a apresentação inicial.");
+      },
+      completeVoiceOnboarding: () => {
+        const hasOnboardingModalOpen =
+          typeof document !== "undefined" &&
+          document.querySelector('[data-modal-id="voice-onboarding"]');
+
+        if (!hasOnboardingModalOpen) {
+          const message = "A apresentação inicial não está aberta.";
+          speakAssistantMessage(message);
+          return;
+        }
+
+        window.dispatchEvent(new CustomEvent("voice-onboarding:complete"));
+        const message = "Concluindo apresentação inicial.";
+        speakAssistantMessage(message);
+      },
+      skipVoiceOnboarding: () => {
+        const hasOnboardingModalOpen =
+          typeof document !== "undefined" &&
+          document.querySelector('[data-modal-id="voice-onboarding"]');
+
+        if (!hasOnboardingModalOpen) {
+          const message = "A apresentação inicial não está aberta.";
+          speakAssistantMessage(message);
+          return;
+        }
+
+        window.dispatchEvent(new CustomEvent("voice-onboarding:skip"));
+        const message = "Pulando apresentação por agora.";
+        speakAssistantMessage(message);
+      },
       openBooks: () => navigate("/books"),
       searchBook: async (term) => {
         if (!term) {
@@ -676,6 +721,12 @@ export function GlobalVoiceAssistant() {
             addCurrentBookToCart: () => {
               addToCart(currentDetailBook.id);
             },
+            readTitle: () => {
+              if (currentDetailBook.title) {
+                setAssistantFeedback("Lendo título do livro.");
+                speak(`O título é ${currentDetailBook.title}.`);
+              }
+            },
             readDescription: () => {
               if (currentDetailBook.description) {
                 setAssistantFeedback("Lendo descrição do livro.");
@@ -684,6 +735,10 @@ export function GlobalVoiceAssistant() {
             },
           }
         : {}),
+      onTitleUnavailable: () => {
+        const message = "Abra os detalhes de um livro para ouvir o título.";
+        speakAssistantMessage(message);
+      },
       onDescriptionUnavailable: () => {
         const message = "Abra os detalhes de um livro para ouvir a descrição.";
         speakAssistantMessage(message);
@@ -820,38 +875,49 @@ export function GlobalVoiceAssistant() {
       className="voice-assistant-panel"
       aria-label="Assistente de voz global"
     >
-      <Heading as="h3" sx={{ fontSize: 1 }}>
-        Assistente de voz
-      </Heading>
-
-      <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
-        Rota atual: {location.pathname}
-      </Text>
-
-      <div className="voice-assistant-status">
-        <VoiceButton
-          isListening={voiceState.isListening}
-          isSpeaking={voiceState.isSpeaking}
-          isSupported={isSupported}
-          onStart={startVoiceCommand}
-          onStop={cancelVoiceCommand}
-        />
-      </div>
-
-      <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
-        Último comando: {voiceState.lastCommand || transcript || "nenhum"}
-      </Text>
-
-      <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
-        Estado: {voiceState.isListening ? "escutando" : "em espera"}
-        {voiceState.isSpeaking ? " e falando" : ""}
-      </Text>
-
-      {voiceState.voiceError ? (
-        <Text as="p" sx={{ color: "var(--color-danger)", fontSize: 1 }}>
-          {voiceState.voiceError}
+      <Accordion
+        className="voice-assistant-accordion"
+        titleComponent={
+          <div className="voice-assistant-title-wrapper">
+            <Heading as="h3" sx={{ fontSize: 1 }}>
+              Assistente de voz
+            </Heading>
+            <div className="voice-assistant-button-container">
+              <VoiceButton
+                isListening={voiceState.isListening}
+                isSpeaking={voiceState.isSpeaking}
+                isSupported={isSupported}
+                onStart={startVoiceCommand}
+                onStop={cancelVoiceCommand}
+              />
+            </div>
+          </div>
+        }
+        summaryClassName="voice-assistant-summary"
+        chevronClassName="voice-assistant-chevron"
+        bodyClassName="voice-assistant-body"
+        contentClassName="voice-assistant-content"
+        isOpen={true}
+      >
+        <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
+          Rota atual: {location.pathname}
         </Text>
-      ) : null}
+
+        <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
+          Último comando: {voiceState.lastCommand || transcript || "nenhum"}
+        </Text>
+
+        <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
+          Estado: {voiceState.isListening ? "escutando" : "em espera"}
+          {voiceState.isSpeaking ? " e falando" : ""}
+        </Text>
+
+        {voiceState.voiceError ? (
+          <Text as="p" sx={{ color: "var(--color-danger)", fontSize: 1 }}>
+            {voiceState.voiceError}
+          </Text>
+        ) : null}
+      </Accordion>
 
       <div
         role={feedbackSeverity === "critical" ? "alert" : "status"}

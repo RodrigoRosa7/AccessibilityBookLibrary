@@ -2,6 +2,22 @@ import { describe, expect, it } from "vitest";
 import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
 
 describe("parseVoiceIntent core commands", () => {
+  it("recognizes onboarding presentation voice commands", () => {
+    const replay = parseVoiceIntent("ouvir novamente");
+    const complete = parseVoiceIntent("concluir apresentação");
+    const completeWithArticle = parseVoiceIntent("concluir a apresentação");
+    const skip = parseVoiceIntent("pular por agora");
+    const skipShort = parseVoiceIntent("pular");
+
+    expect(replay.intent).toBe(VOICE_INTENTS.REPLAY_VOICE_ONBOARDING);
+    expect(complete.intent).toBe(VOICE_INTENTS.COMPLETE_VOICE_ONBOARDING);
+    expect(completeWithArticle.intent).toBe(
+      VOICE_INTENTS.COMPLETE_VOICE_ONBOARDING,
+    );
+    expect(skip.intent).toBe(VOICE_INTENTS.SKIP_VOICE_ONBOARDING);
+    expect(skipShort.intent).toBe(VOICE_INTENTS.SKIP_VOICE_ONBOARDING);
+  });
+
   it("recognizes open books commands", () => {
     const cases = [
       "abrir livros",
@@ -184,11 +200,21 @@ describe("parseVoiceIntent core commands", () => {
     });
   });
 
+  it("recognizes read title commands", () => {
+    const cases = ["ler título", "qual o título"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.READ_TITLE);
+    });
+  });
+
   it("recognizes read search results commands on books route", () => {
     const cases = [
       "ler resultados da busca",
       "ler titulos dos livros",
       "quais livros foram encontrados",
+      "ler livros disponíveis",
     ];
 
     cases.forEach((transcript) => {
@@ -277,13 +303,18 @@ describe("parseVoiceIntent core commands", () => {
   it("recognizes read cart items commands", () => {
     const cases = [
       "ler itens do carrinho",
+      "ler itens",
+      "itens",
+      "itens no carrinho",
+      "itens do carrinho",
       "listar itens do carrinho",
       "quais livros estao no carrinho",
+      "quais itens estão no carrinho",
       "ouvir itens do carrinho",
     ];
 
     cases.forEach((transcript) => {
-      const result = parseVoiceIntent(transcript);
+      const result = parseVoiceIntent(transcript, { currentRoute: "/cart" });
       expect(result.intent).toBe(VOICE_INTENTS.READ_CART_ITEMS);
     });
   });

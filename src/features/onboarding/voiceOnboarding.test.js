@@ -51,6 +51,9 @@ describe("buildInitialVoicePresentation", () => {
     expect(speech).toContain("Início");
     expect(speech).toContain("Livros");
     expect(speech).toContain("tecla espaço");
-    expect(speech).toContain("me ajude");
+    expect(speech).toContain("Me ajude");
+    expect(speech).toContain("Ouvir novamente");
+    expect(speech).toContain("Concluir apresentação");
+    expect(speech).toContain("Pular por agora");
   });
 });

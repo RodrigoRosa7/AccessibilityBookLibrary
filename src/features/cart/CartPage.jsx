@@ -64,6 +64,13 @@ export function CartPage() {
     [detailedItems],
   );
 
+  const checkoutDialogSpeech = useMemo(() => {
+    return [
+      `Deseja finalizar o pedido no valor total de ${formatCurrency(total)}?`,
+      'Você pode dizer "Cancelar" para fechar esta confirmação ou "Confirmar" para finalizar o pedido.',
+    ].join(" ");
+  }, [total]);
+
   const handleCheckout = useCallback(async () => {
     if (!user || detailedItems.length === 0) {
       return;
@@ -162,6 +169,14 @@ export function CartPage() {
       );
     };
   }, [handleCheckout]);
+
+  useEffect(() => {
+    if (!isCheckoutDialogOpen) {
+      return;
+    }
+
+    speak(checkoutDialogSpeech);
+  }, [checkoutDialogSpeech, isCheckoutDialogOpen, speak]);
 
   if (loading) {
     return <Spinner size="large" aria-label="Carregando carrinho" />;

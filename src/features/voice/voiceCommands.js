@@ -4,6 +4,18 @@ export function handleVoiceCommand(intentResult, actions = {}) {
   const { intent, entity } = intentResult;
 
   switch (intent) {
+    case VOICE_INTENTS.REPLAY_VOICE_ONBOARDING:
+      actions.replayVoiceOnboarding?.();
+      return "";
+
+    case VOICE_INTENTS.COMPLETE_VOICE_ONBOARDING:
+      actions.completeVoiceOnboarding?.();
+      return "";
+
+    case VOICE_INTENTS.SKIP_VOICE_ONBOARDING:
+      actions.skipVoiceOnboarding?.();
+      return "";
+
     case VOICE_INTENTS.OPEN_BOOKS:
       actions.openBooks?.();
       return "Abrindo catálogo de livros.";
@@ -126,6 +138,14 @@ export function handleVoiceCommand(intentResult, actions = {}) {
         actions.readDescription();
       } else {
         actions.onDescriptionUnavailable?.();
+      }
+      return "";
+
+    case VOICE_INTENTS.READ_TITLE:
+      if (actions.readTitle) {
+        actions.readTitle();
+      } else {
+        actions.onTitleUnavailable?.();
       }
       return "";
 

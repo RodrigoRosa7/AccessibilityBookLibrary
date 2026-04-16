@@ -18,13 +18,18 @@ function buildSpeechText(title, commands, description) {
   return [
     description,
     `${title}: ${commands.join(", ")}.`,
-    'Você pode dizer "repetir instruções", "repetir instruções da página", "ler instruções" ou "instruções da página" para ouvir este resumo novamente.',
+    'Você pode dizer "repetir instruções" para ouvir este resumo novamente.',
   ].join(" ");
 }
 
 export function getPageVoiceGuidance(pathname) {
   if (/^\/books\/\d+$/.test(pathname)) {
-    const commands = ["adicionar ao carrinho", "ler detalhes", "ler descrição"];
+    const commands = [
+      "adicionar ao carrinho",
+      "ler título",
+      "ler detalhes",
+      "ler descrição",
+    ];
     return {
       title: "Dicas para detalhes do livro",
       description:
@@ -62,7 +67,9 @@ export function getPageVoiceGuidance(pathname) {
 
   if (pathname === "/books") {
     const commands = [
-      'buscar livro "nome do livro"',
+      '"buscar livro"',
+      '"nome do livro"',
+      "ler livros disponíveis",
       "ler resultados da busca",
       "ler próximos resultados",
       "ler resultados anteriores",
@@ -84,6 +91,7 @@ export function getPageVoiceGuidance(pathname) {
 
   if (pathname === "/cart") {
     const commands = [
+      "ler itens",
       "ler itens do carrinho",
       "total do carrinho",
       "finalizar compra",

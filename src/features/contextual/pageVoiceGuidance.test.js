@@ -6,14 +6,16 @@ describe("getPageVoiceGuidance", () => {
     const guidance = getPageVoiceGuidance("/books");
 
     expect(guidance.title).toContain("catálogo");
+    expect(guidance.commands).toContain("ler livros disponíveis");
     expect(guidance.commands).toContain("ler resultados da busca");
-    expect(guidance.speechText).toContain("repetir instruções da página");
+    expect(guidance.speechText).toContain("repetir instruções");
   });
 
   it("returns details guidance for dynamic book route", () => {
     const guidance = getPageVoiceGuidance("/books/10");
 
     expect(guidance.title).toContain("detalhes");
+    expect(guidance.commands).toContain("ler título");
     expect(guidance.commands).toContain("ler descrição");
   });
 

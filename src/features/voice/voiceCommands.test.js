@@ -3,6 +3,29 @@ import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
 import { handleVoiceCommand } from "./voiceCommands.js";
 
 describe("pedidos voice navigation flow", () => {
+  it("dispatches onboarding modal actions", () => {
+    const replayVoiceOnboarding = vi.fn();
+    const completeVoiceOnboarding = vi.fn();
+    const skipVoiceOnboarding = vi.fn();
+
+    handleVoiceCommand(
+      { intent: VOICE_INTENTS.REPLAY_VOICE_ONBOARDING, entity: null },
+      { replayVoiceOnboarding },
+    );
+    handleVoiceCommand(
+      { intent: VOICE_INTENTS.COMPLETE_VOICE_ONBOARDING, entity: null },
+      { completeVoiceOnboarding },
+    );
+    handleVoiceCommand(
+      { intent: VOICE_INTENTS.SKIP_VOICE_ONBOARDING, entity: null },
+      { skipVoiceOnboarding },
+    );
+
+    expect(replayVoiceOnboarding).toHaveBeenCalledTimes(1);
+    expect(completeVoiceOnboarding).toHaveBeenCalledTimes(1);
+    expect(skipVoiceOnboarding).toHaveBeenCalledTimes(1);
+  });
+
   it("navigates to books when user says pedidos continue shopping command", () => {
     const openBooks = vi.fn();
     const openCart = vi.fn();
@@ -106,6 +129,19 @@ describe("pedidos voice navigation flow", () => {
 
     expect(intent.intent).toBe(VOICE_INTENTS.READ_CART_TOTAL);
     expect(readCartTotal).toHaveBeenCalledTimes(1);
+    expect(message).toBe("");
+  });
+
+  it("dispatches read title action", () => {
+    const readTitle = vi.fn();
+    const intent = parseVoiceIntent("ler título", {
+      currentRoute: "/books/1",
+    });
+
+    const message = handleVoiceCommand(intent, { readTitle });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.READ_TITLE);
+    expect(readTitle).toHaveBeenCalledTimes(1);
     expect(message).toBe("");
   });
 });

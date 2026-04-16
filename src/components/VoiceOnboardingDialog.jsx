@@ -67,6 +67,35 @@ export function VoiceOnboardingDialog() {
     };
   }, [cancel]);
 
+  useEffect(() => {
+    function replayOnboarding() {
+      handlePlayPresentation();
+    }
+
+    function completeOnboarding() {
+      handleComplete();
+    }
+
+    function skipOnboarding() {
+      handleSkip();
+    }
+
+    window.addEventListener("voice-onboarding:replay", replayOnboarding);
+    window.addEventListener("voice-onboarding:complete", completeOnboarding);
+    window.addEventListener("voice-onboarding:skip", skipOnboarding);
+    window.addEventListener("app-modal:close", skipOnboarding);
+
+    return () => {
+      window.removeEventListener("voice-onboarding:replay", replayOnboarding);
+      window.removeEventListener(
+        "voice-onboarding:complete",
+        completeOnboarding,
+      );
+      window.removeEventListener("voice-onboarding:skip", skipOnboarding);
+      window.removeEventListener("app-modal:close", skipOnboarding);
+    };
+  }, [handleComplete, handlePlayPresentation, handleSkip]);
+
   if (!isOpen) {
     return null;
   }
@@ -77,6 +106,7 @@ export function VoiceOnboardingDialog() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="voice-onboarding-title"
+      data-modal-id="voice-onboarding"
     >
       <section className="voice-onboarding-card">
         <Heading as="h2" id="voice-onboarding-title" sx={{ fontSize: 3 }}>

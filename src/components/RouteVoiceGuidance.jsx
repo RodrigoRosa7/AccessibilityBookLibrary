@@ -1,6 +1,7 @@
 import { Button, Heading, Text } from "@primer/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import { Accordion } from "./Accordion.jsx";
 import { getPageVoiceGuidance } from "../features/contextual/pageVoiceGuidance.js";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
 
@@ -50,75 +51,51 @@ export function RouteVoiceGuidance() {
   }, [playGuidance]);
 
   return (
-    <section
-      className="route-voice-guidance"
-      aria-labelledby="route-voice-guidance-title"
-    >
-      <details className="route-voice-guidance-accordion" open>
-        <summary className="route-voice-guidance-summary">
-          <div>
-            <Heading
-              as="h2"
-              id="route-voice-guidance-title"
-              sx={{ fontSize: 2 }}
-            >
-              {guidance.title}
-            </Heading>
-          </div>
-          <span className="route-voice-guidance-chevron" aria-hidden="true">
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6 9l6 6 6-6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        </summary>
+    <div className="route-voice-guidance">
+      <Accordion
+        className="route-voice-guidance-accordion"
+        titleComponent={(summaryId) => (
+          <Heading as="h2" id={summaryId} sx={{ fontSize: 2 }}>
+            {guidance.title}
+          </Heading>
+        )}
+        summaryClassName="route-voice-guidance-summary"
+        chevronClassName="route-voice-guidance-chevron"
+        bodyClassName="route-voice-guidance-body"
+        contentClassName="route-voice-guidance-content"
+        isOpen={true}
+      >
+        <Text as="p" sx={{ color: "var(--color-muted)" }}>
+          {guidance.description}
+        </Text>
 
-        <div className="route-voice-guidance-body">
-          <div className="route-voice-guidance-content">
-            <Text as="p" sx={{ color: "var(--color-muted)" }}>
-              {guidance.description}
-            </Text>
-          </div>
-
-          <div className="route-voice-guidance-actions">
-            <Button
-              className="app-button-primary"
-              onClick={playGuidance}
-              variant="primary"
-              sx={{
-                backgroundColor: "var(--color-primary)",
-                color: "var(--color-bg)",
-                borderColor: "var(--color-primary)",
-                "&:hover:not(:disabled)": {
-                  backgroundColor: "var(--color-primary-strong)",
-                  borderColor: "var(--color-primary-strong)",
-                },
-              }}
-            >
-              Ouvir instruções
-            </Button>
-          </div>
-
-          <div className="command-chips">
-            {guidance.commands.map((command) => (
-              <span className="command-chip" key={command}>
-                {command}
-              </span>
-            ))}
-          </div>
+        <div className="route-voice-guidance-actions">
+          <Button
+            className="app-button-primary"
+            onClick={playGuidance}
+            variant="primary"
+            sx={{
+              backgroundColor: "var(--color-primary)",
+              color: "var(--color-bg)",
+              borderColor: "var(--color-primary)",
+              "&:hover:not(:disabled)": {
+                backgroundColor: "var(--color-primary-strong)",
+                borderColor: "var(--color-primary-strong)",
+              },
+            }}
+          >
+            Ouvir instruções
+          </Button>
         </div>
-      </details>
-    </section>
+
+        <div className="command-chips">
+          {guidance.commands.map((command) => (
+            <span className="command-chip" key={command}>
+              {command}
+            </span>
+          ))}
+        </div>
+      </Accordion>
+    </div>
   );
 }

@@ -212,9 +212,105 @@ select {
   border: 1px solid var(--color-border);
   border-radius: 12px;
   background: var(--color-surface);
-  padding: 12px;
+  padding: 0;
   width: 320px;
   box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+}
+
+.voice-assistant-accordion {
+  display: grid;
+}
+
+.voice-assistant-accordion .accordion-details {
+  display: grid;
+}
+
+.voice-assistant-accordion .accordion-details[open] {
+  gap: 12px;
+}
+
+.voice-assistant-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.voice-assistant-summary::-webkit-details-marker {
+  display: none;
+}
+
+.voice-assistant-summary::after {
+  content: none;
+}
+
+.voice-assistant-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.voice-assistant-title-wrapper h3 {
+  margin: 0;
+}
+
+.voice-assistant-button-container {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.voice-assistant-chevron {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 40%, var(--color-bg) 60%);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 70%,
+    var(--color-primary) 30%
+  );
+  color: var(--color-primary-strong);
+  flex-shrink: 0;
+}
+
+.voice-assistant-chevron svg {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.voice-assistant-accordion
+  .accordion-details[open]
+  .voice-assistant-chevron
+  svg {
+  transform: rotate(0deg);
+}
+
+.voice-assistant-body {
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.voice-assistant-content {
+  display: grid;
+  gap: 8px;
 }
 
 .voice-assistant-status {
@@ -351,7 +447,11 @@ select {
   display: grid;
 }
 
-.route-voice-guidance-accordion[open] {
+.route-voice-guidance-accordion .accordion-details {
+  display: grid;
+}
+
+.route-voice-guidance-accordion .accordion-details[open] {
   gap: 12px;
 }
 
@@ -395,7 +495,10 @@ select {
   transition: transform 0.2s ease;
 }
 
-.route-voice-guidance-accordion[open] .route-voice-guidance-chevron svg {
+.route-voice-guidance-accordion
+  .accordion-details[open]
+  .route-voice-guidance-chevron
+  svg {
   transform: rotate(0deg);
 }
 

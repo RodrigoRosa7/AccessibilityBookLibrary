@@ -68,6 +68,8 @@ export function buildInitialVoicePresentation(user) {
     "Se pressionar espaço novamente, o comando de voz é cancelado.",
     "Comandos básicos: 'Abrir livros', 'Abrir carrinho', 'Abrir pedidos' e 'Voltar para início'.",
     "Quando precisar, diga 'Me ajude' para ouvir os comandos disponíveis.",
-    "Você pode repetir esta apresentação no botão 'ouvir novamente' ou executando o comando 'repetir instruções'.",
+    "Ao final desta apresentação, diga 'Ouvir novamente' para escutar de novo.",
+    "Diga 'Concluir apresentação' para fechar esta modal e continuar.",
+    "Diga 'Pular por agora' para fechar esta modal e continuar depois.",
   ].join(" ");
 }

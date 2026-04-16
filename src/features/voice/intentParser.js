@@ -1,4 +1,7 @@
 export const VOICE_INTENTS = {
+  REPLAY_VOICE_ONBOARDING: "REPLAY_VOICE_ONBOARDING",
+  COMPLETE_VOICE_ONBOARDING: "COMPLETE_VOICE_ONBOARDING",
+  SKIP_VOICE_ONBOARDING: "SKIP_VOICE_ONBOARDING",
   SEARCH_BOOK: "SEARCH_BOOK",
   OPEN_BOOK_DETAILS: "OPEN_BOOK_DETAILS",
   READ_SEARCH_RESULTS: "READ_SEARCH_RESULTS",
@@ -25,6 +28,7 @@ export const VOICE_INTENTS = {
   CHECKOUT: "CHECKOUT",
   CONFIRM_CHECKOUT: "CONFIRM_CHECKOUT",
   GO_BACK: "GO_BACK",
+  READ_TITLE: "READ_TITLE",
   READ_DESCRIPTION: "READ_DESCRIPTION",
   OPEN_HOME: "OPEN_HOME",
   UNKNOWN: "UNKNOWN",
@@ -222,6 +226,18 @@ function isRepeatPageGuidanceCommand(normalizedTranscript) {
   );
 }
 
+function isReplayVoiceOnboardingCommand(normalizedTranscript) {
+  return /^ouvir novamente$/.test(normalizedTranscript);
+}
+
+function isCompleteVoiceOnboardingCommand(normalizedTranscript) {
+  return /^concluir(\s+a)?\s+apresentacao$/.test(normalizedTranscript);
+}
+
+function isSkipVoiceOnboardingCommand(normalizedTranscript) {
+  return /^(pular|pular por agora)$/.test(normalizedTranscript);
+}
+
 function isCloseModalCommand(normalizedTranscript) {
   return (
     /^(fechar|fechar modal|fechar ajuda|fechar pedido|cancelar)$/.test(
@@ -316,8 +332,18 @@ function isReadCartItemsCountCommand(normalizedTranscript) {
   );
 }
 
-function isReadCartItemsCommand(normalizedTranscript) {
+function isReadCartItemsCommand(normalizedTranscript, currentRoute) {
+  const isShortCartAliasInCartRoute =
+    currentRoute === "/cart" &&
+    (/^(ler|leia|ouvir|listar|liste)\s+(os\s+)?itens$/.test(
+      normalizedTranscript,
+    ) ||
+      /^(itens|itens no carrinho|itens do carrinho)$/.test(
+        normalizedTranscript,
+      ));
+
   return (
+    isShortCartAliasInCartRoute ||
     /(ler|leia|ouvir|listar|liste).*(itens?|livros?).*(carrinho)/.test(
       normalizedTranscript,
     ) ||
@@ -350,6 +376,10 @@ function isReadSearchResultsCommand(normalizedTranscript, currentRoute) {
   }
 
   return (
+    /^(ler|leia|ouvir|mostrar|mostre|listar|liste)\s+(os\s+)?livros?\s+disponiveis$/.test(
+      normalizedTranscript,
+    ) ||
+    /^livros?\s+disponiveis$/.test(normalizedTranscript) ||
     /(ler|leia|ouvir|fale|diga).*(resultados?|titulos?|livros? encontrados?)/.test(
       normalizedTranscript,
     ) ||
@@ -420,6 +450,33 @@ export function parseVoiceIntent(transcript, options = {}) {
     };
   }
 
+  if (isReplayVoiceOnboardingCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.REPLAY_VOICE_ONBOARDING,
+      entity: null,
+      confidence: 0.93,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isCompleteVoiceOnboardingCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.COMPLETE_VOICE_ONBOARDING,
+      entity: null,
+      confidence: 0.93,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (isSkipVoiceOnboardingCommand(normalizedTranscript)) {
+    return {
+      intent: VOICE_INTENTS.SKIP_VOICE_ONBOARDING,
+      entity: null,
+      confidence: 0.93,
+      transcript: normalizedTranscript,
+    };
+  }
+
   if (
     /(adicionar|adicione|comprar|compre|quero comprar).*(carrinho)?/.test(
       normalizedTranscript,
@@ -452,7 +509,7 @@ export function parseVoiceIntent(transcript, options = {}) {
     };
   }
 
-  if (isReadCartItemsCommand(normalizedTranscript)) {
+  if (isReadCartItemsCommand(normalizedTranscript, currentRoute)) {
     return {
       intent: VOICE_INTENTS.READ_CART_ITEMS,
       entity: null,
@@ -597,6 +654,19 @@ export function parseVoiceIntent(transcript, options = {}) {
       intent: VOICE_INTENTS.OPEN_PREVIOUS_ORDER,
       entity: null,
       confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  if (
+    /^(ler|leia|ouvir)\s+(o\s+)?titulo$/.test(normalizedTranscript) ||
+    /^qual\s+o\s+titulo$/.test(normalizedTranscript) ||
+    /^qual\s+e\s+o\s+titulo$/.test(normalizedTranscript)
+  ) {
+    return {
+      intent: VOICE_INTENTS.READ_TITLE,
+      entity: null,
+      confidence: 0.92,
       transcript: normalizedTranscript,
     };
   }
