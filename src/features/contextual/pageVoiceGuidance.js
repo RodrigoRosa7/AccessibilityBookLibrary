@@ -74,12 +74,13 @@ export function getPageVoiceGuidance(pathname) {
       "ler próximos resultados",
       "ler resultados anteriores",
       "repetir resultados",
+      'selecionar "nome do livro"',
       'abrir detalhes de "nome do livro"',
     ];
     return {
       title: "Dicas para catálogo",
       description:
-        "Você está no catálogo de livros. Aqui pode buscar títulos, ouvir resultados e abrir detalhes de um livro específico.",
+        "Você está no catálogo de livros. Aqui pode buscar títulos, ouvir resultados e selecionar um livro para abrir os detalhes.",
       commands,
       speechText: buildSpeechText(
         "Comandos do catálogo",

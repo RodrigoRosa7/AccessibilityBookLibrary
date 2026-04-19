@@ -4,6 +4,8 @@ import { useAuth } from "../app/providers/AuthProvider.jsx";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
 import { buildInitialVoicePresentation } from "../features/onboarding/voiceOnboarding.js";
 
+const VOICE_ONBOARDING_CLOSED_EVENT = "voice-onboarding:closed";
+
 export function VoiceOnboardingDialog() {
   const {
     user,
@@ -15,6 +17,8 @@ export function VoiceOnboardingDialog() {
   const [dismissedForSession, setDismissedForSession] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const hasAutoPlayedRef = useRef(false);
+  const pendingCloseReasonRef = useRef(null);
+  const wasOpenRef = useRef(false);
 
   const presentationText = buildInitialVoicePresentation(user);
 
@@ -23,6 +27,7 @@ export function VoiceOnboardingDialog() {
   }, [presentationText, speak]);
 
   const handleComplete = useCallback(() => {
+    pendingCloseReasonRef.current = "complete";
     completeVoiceOnboarding();
     setIsOpen(false);
     setDismissedForSession(false);
@@ -30,6 +35,7 @@ export function VoiceOnboardingDialog() {
   }, [cancel, completeVoiceOnboarding]);
 
   const handleSkip = useCallback(() => {
+    pendingCloseReasonRef.current = "skip";
     setDismissedForSession(true);
     setIsOpen(false);
     cancel();
@@ -60,6 +66,31 @@ export function VoiceOnboardingDialog() {
 
     hasAutoPlayedRef.current = false;
   }, [shouldPlayVoiceOnboarding]);
+
+  useEffect(() => {
+    if (isOpen) {
+      wasOpenRef.current = true;
+      return;
+    }
+
+    if (!wasOpenRef.current) {
+      return;
+    }
+
+    const closeReason = pendingCloseReasonRef.current;
+    pendingCloseReasonRef.current = null;
+    wasOpenRef.current = false;
+
+    if (!closeReason || typeof window === "undefined") {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent(VOICE_ONBOARDING_CLOSED_EVENT, {
+        detail: { reason: closeReason },
+      }),
+    );
+  }, [isOpen]);
 
   useEffect(() => {
     return () => {

@@ -10,6 +10,14 @@ function createOrderId() {
   return ordersMock.length + 1;
 }
 
+function normalizeSearchText(text) {
+  return String(text ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 export const handlers = [
   http.post(`${API_BASE}/auth/login`, async ({ request }) => {
     await delay(300);
@@ -41,16 +49,18 @@ export const handlers = [
     await delay(200);
 
     const url = new URL(request.url);
-    const query = url.searchParams.get("q")?.toLowerCase().trim() ?? "";
+    const query = url.searchParams.get("q") ?? "";
 
     if (!query) {
       return HttpResponse.json({ books: booksMock }, { status: 200 });
     }
 
+    const normalizedQuery = normalizeSearchText(query);
     const filteredBooks = booksMock.filter((book) => {
-      const searchableContent =
-        `${book.title} ${book.author} ${book.description}`.toLowerCase().trim();
-      return searchableContent.includes(query);
+      const searchableContent = normalizeSearchText(
+        `${book.title} ${book.author} ${book.description}`,
+      );
+      return searchableContent.includes(normalizedQuery);
     });
 
     return HttpResponse.json({ books: filteredBooks }, { status: 200 });

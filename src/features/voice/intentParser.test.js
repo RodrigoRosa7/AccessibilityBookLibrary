@@ -385,6 +385,33 @@ describe("parseVoiceIntent core commands", () => {
     expect(result.entity).toBe("clean code");
   });
 
+  it("recognizes select book commands with entity when on /books route", () => {
+    const cases = [
+      { transcript: "selecionar clean code", entity: "clean code" },
+      {
+        transcript: "escolher javascript moderno",
+        entity: "javascript moderno",
+      },
+      { transcript: "quero dom casmurro", entity: "dom casmurro" },
+      { transcript: "abrir 1984", entity: "1984" },
+      { transcript: "escolhi fundacao", entity: "fundacao" },
+      { transcript: "escolha o livro macunaima", entity: "macunaima" },
+    ];
+
+    cases.forEach(({ transcript, entity }) => {
+      const result = parseVoiceIntent(transcript, { currentRoute: "/books" });
+      expect(result.intent).toBe(VOICE_INTENTS.SELECT_BOOK);
+      expect(result.entity).toBe(entity);
+    });
+  });
+
+  it("does not recognize select book commands outside /books route", () => {
+    const result = parseVoiceIntent("selecionar clean code", {
+      currentRoute: "/",
+    });
+    expect(result.intent).not.toBe(VOICE_INTENTS.SELECT_BOOK);
+  });
+
   it("handles accents and punctuation for navigation commands", () => {
     const result = parseVoiceIntent("Próximo pedido, por favor!");
     expect(result.intent).toBe(VOICE_INTENTS.OPEN_NEXT_ORDER);

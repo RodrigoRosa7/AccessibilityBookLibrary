@@ -5,6 +5,8 @@ import { Accordion } from "./Accordion.jsx";
 import { getPageVoiceGuidance } from "../features/contextual/pageVoiceGuidance.js";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
 
+const VOICE_ONBOARDING_CLOSED_EVENT = "voice-onboarding:closed";
+
 function getSessionKey(pathname) {
   return `voice-guidance-played:${pathname}`;
 }
@@ -26,29 +28,63 @@ export function RouteVoiceGuidance() {
     }
   }, [guidance.speechText, location.pathname, speak]);
 
-  useEffect(() => {
+  const shouldAutoPlayCurrentRoute = useCallback(() => {
     try {
       if (sessionStorage.getItem(getSessionKey(location.pathname)) === "1") {
-        return;
+        return false;
       }
     } catch {
       // noop
     }
 
+    if (typeof document !== "undefined") {
+      const hasOnboardingModalOpen = document.querySelector(
+        '[data-modal-id="voice-onboarding"]',
+      );
+
+      if (hasOnboardingModalOpen) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!shouldAutoPlayCurrentRoute()) {
+      return;
+    }
+
     playGuidance();
-  }, [location.pathname, playGuidance]);
+  }, [location.pathname, playGuidance, shouldAutoPlayCurrentRoute]);
 
   useEffect(() => {
     function handleRepeatGuidance() {
       playGuidance();
     }
 
+    function handleOnboardingClosed() {
+      if (!shouldAutoPlayCurrentRoute()) {
+        return;
+      }
+
+      playGuidance();
+    }
+
     window.addEventListener("voice-guidance:repeat", handleRepeatGuidance);
+    window.addEventListener(
+      VOICE_ONBOARDING_CLOSED_EVENT,
+      handleOnboardingClosed,
+    );
 
     return () => {
       window.removeEventListener("voice-guidance:repeat", handleRepeatGuidance);
+      window.removeEventListener(
+        VOICE_ONBOARDING_CLOSED_EVENT,
+        handleOnboardingClosed,
+      );
     };
-  }, [playGuidance]);
+  }, [playGuidance, shouldAutoPlayCurrentRoute]);
 
   return (
     <div className="route-voice-guidance">

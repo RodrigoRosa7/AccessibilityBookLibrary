@@ -31,6 +31,7 @@ export const VOICE_INTENTS = {
   READ_TITLE: "READ_TITLE",
   READ_DESCRIPTION: "READ_DESCRIPTION",
   OPEN_HOME: "OPEN_HOME",
+  SELECT_BOOK: "SELECT_BOOK",
   UNKNOWN: "UNKNOWN",
 };
 
@@ -85,6 +86,28 @@ function extractBookDetailsEntity(normalizedTranscript) {
   const patterns = [
     /(?:abrir|mostrar|ver)\s+(?:os\s+)?detalhes\s+(?:do|da|de)?\s*(?:livro\s+)?(.+)$/,
     /detalhes\s+(?:do|da|de)?\s*(?:livro\s+)?(.+)$/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = normalizedTranscript.match(pattern);
+    const rawEntity = match?.[1]?.trim();
+
+    if (rawEntity) {
+      return rawEntity
+        .replace(/^(de|do|da|sobre)\s+/, "")
+        .replace(/\s+(por favor)?$/, "")
+        .trim();
+    }
+  }
+
+  return null;
+}
+
+function extractSelectBookEntity(normalizedTranscript) {
+  const patterns = [
+    /(?:selecionar|escolher|abrir|quero)\s+(?:o\s+)?(?:livro\s+)?(.+)$/,
+    /(?:escolhi|escolha)\s+(?:o\s+)?(?:livro\s+)?(.+)$/,
+    /(?:esse|aquele|este)\s+(?:livro|aqui)\s+(?:da|do|de)?\s*(.+)$/,
   ];
 
   for (const pattern of patterns) {
@@ -273,7 +296,17 @@ function isOpenHomeCommand(normalizedTranscript) {
     )
   );
 }
+function isSelectBookCommand(normalizedTranscript, currentRoute) {
+  if (currentRoute !== "/books") {
+    return false;
+  }
 
+  return (
+    /^(?:selecionar|escolher|quero|abrir|escolhi|escolha)\s+(?:o\s+)?(?:livro\s+)?(.+)/.test(
+      normalizedTranscript,
+    ) || /(?:esse|aquele|este)\s+(?:livro|aqui)/.test(normalizedTranscript)
+  );
+}
 function isOpenCartCommand(normalizedTranscript) {
   return (
     /(abrir|abra|ver|veja|mostrar|mostre).*(carrinho)/.test(
@@ -755,6 +788,19 @@ export function parseVoiceIntent(transcript, options = {}) {
     return {
       intent: VOICE_INTENTS.READ_ORDER_DETAILS,
       entity: extractOrderNumberFromReadCommand(normalizedTranscript),
+      confidence: 0.9,
+      transcript: normalizedTranscript,
+    };
+  }
+
+  const selectBookEntity = extractSelectBookEntity(normalizedTranscript);
+  if (
+    isSelectBookCommand(normalizedTranscript, currentRoute) &&
+    selectBookEntity
+  ) {
+    return {
+      intent: VOICE_INTENTS.SELECT_BOOK,
+      entity: selectBookEntity,
       confidence: 0.9,
       transcript: normalizedTranscript,
     };

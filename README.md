@@ -77,7 +77,7 @@ Esse guia inclui:
 
 - `src/components/GlobalVoiceAssistant.jsx`: assistente de voz global
 - `src/features/voice/intentParser.js`: parser de intenções de voz
-- `src/features/voice/voiceCommands.js`: despacho das intents para ações
+- `src/features/voice/voiceCommands.js`: despacho das intenções para ações
 - `src/features/books`: catálogo e detalhes de livros
 - `src/features/cart`: carrinho e confirmação de pedido
 - `src/features/checkout`: resumo de pedido e histórico
@@ -85,4 +85,3 @@ Esse guia inclui:
 ## Observações
 
 - A aplicação usa dados mockados via MSW para simular backend.
-- Alguns comandos de voz são contextuais, por exemplo leitura de descrição na tela de detalhes e leitura de pedido no checkout.

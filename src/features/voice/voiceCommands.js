@@ -22,9 +22,7 @@ export function handleVoiceCommand(intentResult, actions = {}) {
 
     case VOICE_INTENTS.SEARCH_BOOK:
       actions.searchBook?.(entity ?? "");
-      return entity
-        ? `Buscando livro: ${entity}.`
-        : "Não entendi o termo de busca.";
+      return entity ? "" : "Não entendi o termo de busca.";
 
     case VOICE_INTENTS.OPEN_BOOK_DETAILS:
       if (!entity) {
@@ -148,6 +146,14 @@ export function handleVoiceCommand(intentResult, actions = {}) {
         actions.onTitleUnavailable?.();
       }
       return "";
+
+    case VOICE_INTENTS.SELECT_BOOK:
+      if (!entity) {
+        return "Não entendi qual livro você quer selecionar.";
+      }
+
+      actions.selectBook?.(entity);
+      return `Selecionando ${entity}.`;
 
     case VOICE_INTENTS.OPEN_HOME:
       actions.openHome?.();

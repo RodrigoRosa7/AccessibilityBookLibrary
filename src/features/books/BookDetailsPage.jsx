@@ -75,7 +75,6 @@ export function BookDetailsPage() {
         {book.author}
       </Text>
       <Text as="p">{book.description}</Text>
-      <Text as="p">Formato: {book.format}</Text>
       <Text as="strong">{formatCurrency(book.price)}</Text>
 
       <div className="app-actions-row">

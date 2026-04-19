@@ -106,6 +106,32 @@ describe("pedidos voice navigation flow", () => {
     expect(repeatSearchResults).toHaveBeenCalledTimes(1);
   });
 
+  it("dispatches select book action with entity on books route", () => {
+    const selectBook = vi.fn();
+    const intent = parseVoiceIntent("selecionar clean code", {
+      currentRoute: "/books",
+    });
+
+    const message = handleVoiceCommand(intent, { selectBook });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.SELECT_BOOK);
+    expect(intent.entity).toBe("clean code");
+    expect(selectBook).toHaveBeenCalledWith("clean code");
+    expect(selectBook).toHaveBeenCalledTimes(1);
+    expect(message).toBe("Selecionando clean code.");
+  });
+
+  it("returns error message for select book without entity", () => {
+    const selectBook = vi.fn();
+    const message = handleVoiceCommand(
+      { intent: VOICE_INTENTS.SELECT_BOOK, entity: null },
+      { selectBook },
+    );
+
+    expect(selectBook).not.toHaveBeenCalled();
+    expect(message).toBe("Não entendi qual livro você quer selecionar.");
+  });
+
   it("dispatches read cart items action", () => {
     const readCartItems = vi.fn();
     const intent = parseVoiceIntent("ler itens do carrinho", {

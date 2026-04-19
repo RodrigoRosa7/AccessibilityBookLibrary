@@ -63,6 +63,7 @@ Nesta página, há suporte aprimorado para reconhecimento parcial:
 | Ler próximos resultados   | "ler próximos resultados", "mais resultados"                              |
 | Ler resultados anteriores | "ler resultados anteriores", "voltar resultados"                          |
 | Repetir último bloco      | "repetir resultados", "ler novamente os resultados"                       |
+| Selecionar livro          | "selecionar clean code", "escolher javascript moderno", "quero 1984"      |
 
 Ao ler os resultados da busca, o assistente informa título, autor e preço de cada livro retornado.
 
@@ -94,20 +95,21 @@ Quando a busca tiver mais de 3 livros, o assistente lê somente um bloco de 3 po
 
 Use esta seção para tooltip, modal de ajuda ou onboarding rápido. São frases curtas e de alta taxa de acerto.
 
-| Contexto                    | Frases recomendadas                                                          |
-| --------------------------- | ---------------------------------------------------------------------------- |
-| Navegação global            | "abrir livros", "ir para carrinho", "finalizar compra", "voltar"             |
-| Voltar para início          | "abrir início", "voltar para início", "voltar para página inicial"           |
-| Carrinho por voz            | "limpar carrinho", "remover", "remover livro interfaces acessíveis"          |
-| Leitura do carrinho         | "ler itens do carrinho", "listar itens do carrinho"                          |
-| Total do carrinho           | "informe o total do carrinho", "total do carrinho", "qual o total"           |
-| Finalizar compra (carrinho) | "finalizar compra", "confirmar"                                              |
-| Consulta do carrinho        | "quantos itens", "quantidade de itens", "total de itens"                     |
-| Ajuda e controle de modal   | "me ajude", "fechar modal", "fechar ajuda"                                   |
-| Sessão do usuário           | "deslogar", "sair do sistema", "encerrar sessão"                             |
-| Busca e detalhes de livros  | "buscar livro interfaces acessíveis", "abrir detalhes de programação na web" |
-| Detalhes do livro           | "adicionar ao carrinho", "ler descrição"                                     |
-| Pedidos                     | "abrir pedido 3", "ler dados do pedido", "próximo pedido", "pedido anterior" |
+| Contexto                    | Frases recomendadas                                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Navegação global            | "abrir livros", "ir para carrinho", "finalizar compra", "voltar"                                      |
+| Voltar para início          | "abrir início", "voltar para início", "voltar para página inicial"                                    |
+| Carrinho por voz            | "limpar carrinho", "remover", "remover livro interfaces acessíveis"                                   |
+| Leitura do carrinho         | "ler itens do carrinho", "listar itens do carrinho"                                                   |
+| Total do carrinho           | "informe o total do carrinho", "total do carrinho", "qual o total"                                    |
+| Finalizar compra (carrinho) | "finalizar compra", "confirmar"                                                                       |
+| Consulta do carrinho        | "quantos itens", "quantidade de itens", "total de itens"                                              |
+| Ajuda e controle de modal   | "me ajude", "fechar modal", "fechar ajuda"                                                            |
+| Sessão do usuário           | "deslogar", "sair do sistema", "encerrar sessão"                                                      |
+| Busca e detalhes de livros  | "buscar livro interfaces acessíveis", "selecionar clean code", "abrir detalhes de programação na web" |
+| Seleção de livro            | "selecionar clean code", "escolher javascript moderno", "quero 1984"                                  |
+| Detalhes do livro           | "adicionar ao carrinho", "ler descrição"                                                              |
+| Pedidos                     | "abrir pedido 3", "ler dados do pedido", "próximo pedido", "pedido anterior"                          |
 
 Na tela de pedidos, prefira usar as frases que acompanham os botões visíveis na interface, como "continuar comprando" e "voltar ao carrinho".
 
@@ -125,6 +127,7 @@ Comandos abaixo são aceitos para aumentar tolerância de reconhecimento, mas n�
 | Alias de limpar carrinho   | "esvaziar carrinho", "zerar carrinho"                                             |
 | Alias de remover item      | "tirar item do carrinho", "remover último item"                                   |
 | Alias de remover livro     | "remover livro <nome>", "remover <nome> do carrinho", "remover <nome>"            |
+| Alias de selecionar livro  | "escolher <nome>", "quero <nome>", "escolhi <nome>", "abrir <nome>"               |
 | Alias de próximo pedido    | "pedido prossimo", "pedido proxmo", "mostrar próxima compra"                      |
 | Alias de pedido anterior   | "retornar pedido atrás", "pedido de antes"                                        |
 | Alias de ajuda             | "me ajuda", "pode me ajudar", "quero ajuda", "socorro"                            |

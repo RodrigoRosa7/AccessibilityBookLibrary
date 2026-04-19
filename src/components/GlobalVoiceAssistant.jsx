@@ -413,6 +413,48 @@ export function GlobalVoiceAssistant() {
           speakAssistantMessage(message);
         }
       },
+      selectBook: async (term) => {
+        const normalizedTerm = String(term ?? "").trim();
+
+        if (!normalizedTerm) {
+          const message = "Informe o nome do livro para selecionar.";
+          speakAssistantMessage(message);
+          return;
+        }
+
+        if (location.pathname !== "/books") {
+          const message =
+            "Abra o catálogo de livros para selecionar um livro por voz.";
+          speakAssistantMessage(message);
+          return;
+        }
+
+        try {
+          const books = await getBooks(normalizedTerm);
+          const normalizedTarget = normalizeMatchText(normalizedTerm);
+
+          const exactMatch = books.find(
+            (book) => normalizeMatchText(book.title) === normalizedTarget,
+          );
+          const partialMatch = books.find((book) =>
+            normalizeMatchText(book.title).includes(normalizedTarget),
+          );
+          const selectedBook = exactMatch ?? partialMatch ?? books[0];
+
+          if (!selectedBook) {
+            const message = `Não encontrei um livro chamado ${normalizedTerm} no catálogo.`;
+            speakAssistantMessage(message);
+            return;
+          }
+
+          const message = `Selecionando ${selectedBook.title}. Abrindo detalhes.`;
+          speakAssistantMessage(message);
+          navigate(`/books/${selectedBook.id}`);
+        } catch {
+          const message = "Não consegui selecionar o livro agora.";
+          speakAssistantMessage(message);
+        }
+      },
       openVoiceHelp: () => {
         window.dispatchEvent(new CustomEvent("voice-help:open"));
         setAssistantFeedback("Abrindo ajuda de comandos de voz.");
