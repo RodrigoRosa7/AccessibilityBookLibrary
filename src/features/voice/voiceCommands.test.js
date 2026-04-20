@@ -170,4 +170,17 @@ describe("pedidos voice navigation flow", () => {
     expect(readTitle).toHaveBeenCalledTimes(1);
     expect(message).toBe("");
   });
+
+  it("dispatches voice help action when user asks for help", () => {
+    const openVoiceHelp = vi.fn();
+    const intent = parseVoiceIntent("me ajuda", {
+      currentRoute: "/books",
+    });
+
+    const message = handleVoiceCommand(intent, { openVoiceHelp });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.OPEN_VOICE_HELP);
+    expect(openVoiceHelp).toHaveBeenCalledTimes(1);
+    expect(message).toBe("");
+  });
 });

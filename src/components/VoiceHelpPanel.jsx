@@ -1,5 +1,5 @@
 import { Heading, Text } from "@primer/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   getGlobalVoiceCommands,
@@ -10,6 +10,7 @@ import {
 export function VoiceHelpPanel() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const previousPathnameRef = useRef(location.pathname);
 
   useEffect(() => {
     function openHelpPanel() {
@@ -54,6 +55,16 @@ export function VoiceHelpPanel() {
       window.removeEventListener("keydown", handleKeydown);
     };
   }, []);
+
+  useEffect(() => {
+    const hasPathChanged = previousPathnameRef.current !== location.pathname;
+
+    if (isOpen && hasPathChanged) {
+      setIsOpen(false);
+    }
+
+    previousPathnameRef.current = location.pathname;
+  }, [isOpen, location.pathname]);
 
   const routeSuggestions = useMemo(
     () => getPageVoiceGuidance(location.pathname),
@@ -137,6 +148,9 @@ export function VoiceHelpPanel() {
               <Heading as="h4" sx={{ fontSize: 1 }}>
                 {routeSuggestions.title}
               </Heading>
+              <Text as="p" sx={{ color: "var(--color-muted)", fontSize: 1 }}>
+                {routeSuggestions.description}
+              </Text>
               <div className="command-chips">
                 {routeSuggestions.commands.map((command) => (
                   <span className="command-chip" key={command}>

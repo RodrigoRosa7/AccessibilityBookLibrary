@@ -6,6 +6,11 @@ import { useAuth } from "../app/providers/AuthProvider.jsx";
 import { useCart } from "../app/providers/CartProvider.jsx";
 import { getBookById, getBooks } from "../features/books/bookService.js";
 import {
+  getGlobalVoiceCommands,
+  getPageVoiceGuidance,
+  getSessionModalCommands,
+} from "../features/contextual/pageVoiceGuidance.js";
+import {
   buildSearchResultsPageSpeech,
   SEARCH_RESULTS_PAGE_SIZE,
 } from "../features/voice/searchResultsSpeech.js";
@@ -456,8 +461,20 @@ export function GlobalVoiceAssistant() {
         }
       },
       openVoiceHelp: () => {
+        const routeGuidance = getPageVoiceGuidance(location.pathname);
+        const essentialCommands = getGlobalVoiceCommands();
+        const sessionCommands = getSessionModalCommands();
+
+        const speechText = [
+          "Abrindo ajuda de comandos de voz.",
+          routeGuidance.speechText,
+          `Comandos essenciais: ${essentialCommands.join(", ")}.`,
+          `Comandos de sessão e modais: ${sessionCommands.join(", ")}.`,
+        ].join(" ");
+
         window.dispatchEvent(new CustomEvent("voice-help:open"));
         setAssistantFeedback("Abrindo ajuda de comandos de voz.");
+        speak(speechText);
       },
       repeatPageGuidance: () => {
         window.dispatchEvent(new CustomEvent("voice-guidance:repeat"));
