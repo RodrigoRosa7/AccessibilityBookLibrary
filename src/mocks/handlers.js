@@ -2,7 +2,7 @@ import { delay, http, HttpResponse } from "msw";
 import { booksMock } from "./booksMock.js";
 import { usersMock } from "./usersMock.js";
 
-const API_BASE = "/api";
+const API_BASE = `${import.meta.env.BASE_URL}api`;
 
 const ordersMock = [];
 

@@ -4,12 +4,13 @@ import App from "./App.tsx";
 import "./styles.css";
 
 async function enableMocking() {
-  if (!import.meta.env.DEV) {
-    return;
-  }
-
   const { worker } = await import("./mocks/browser.js");
-  await worker.start({ onUnhandledRequest: "bypass" });
+  await worker.start({
+    onUnhandledRequest: "bypass",
+    serviceWorker: {
+      url: `${import.meta.env.BASE_URL}mockServiceWorker.js`,
+    },
+  });
 }
 
 enableMocking().then(() => {

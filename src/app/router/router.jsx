@@ -34,47 +34,52 @@ function RequireAuth() {
   return <Outlet />;
 }
 
-export const appRouter = createBrowserRouter([
+export const appRouter = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Navigate to="/home" replace />,
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      element: <RequireAuth />,
+      children: [
+        {
+          element: <Layout />,
+          children: [
+            {
+              path: "/home",
+              element: <HomePage />,
+            },
+            {
+              path: "/books",
+              element: <BooksPage />,
+            },
+            {
+              path: "/books/:id",
+              element: <BookDetailsPage />,
+            },
+            {
+              path: "/cart",
+              element: <CartPage />,
+            },
+            {
+              path: "/checkout",
+              element: <CheckoutPage />,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <Navigate to="/home" replace />,
+    },
+  ],
   {
-    path: "/",
-    element: <Navigate to="/home" replace />,
+    basename: import.meta.env.BASE_URL,
   },
-  {
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    element: <RequireAuth />,
-    children: [
-      {
-        element: <Layout />,
-        children: [
-          {
-            path: "/home",
-            element: <HomePage />,
-          },
-          {
-            path: "/books",
-            element: <BooksPage />,
-          },
-          {
-            path: "/books/:id",
-            element: <BookDetailsPage />,
-          },
-          {
-            path: "/cart",
-            element: <CartPage />,
-          },
-          {
-            path: "/checkout",
-            element: <CheckoutPage />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: "*",
-    element: <Navigate to="/home" replace />,
-  },
-]);
+);
