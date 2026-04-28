@@ -5,7 +5,7 @@ import {
   getGlobalVoiceCommands,
   getPageVoiceGuidance,
   getSessionModalCommands,
-} from "../features/contextual/pageVoiceGuidance.js";
+} from "../features/contextual/pageVoiceGuidance";
 
 export function VoiceHelpPanel() {
   const location = useLocation();

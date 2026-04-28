@@ -3,7 +3,7 @@ import {
   VOICE_ONBOARDING_VERSION,
   hasCompletedVoiceOnboarding,
   markVoiceOnboardingCompleted,
-} from "../../features/onboarding/voiceOnboarding.js";
+} from "../../features/onboarding/voiceOnboarding";
 
 const AUTH_STORAGE_KEY = "webspeech-auth-user";
 

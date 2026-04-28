@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getPageVoiceGuidance } from "./pageVoiceGuidance.js";
+import { getPageVoiceGuidance } from "./pageVoiceGuidance";
 
 describe("getPageVoiceGuidance", () => {
   it("returns catalog guidance for books route", () => {

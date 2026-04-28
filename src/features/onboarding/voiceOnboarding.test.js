@@ -5,7 +5,7 @@ import {
   getVoiceOnboardingStorageKey,
   hasCompletedVoiceOnboarding,
   markVoiceOnboardingCompleted,
-} from "./voiceOnboarding.js";
+} from "./voiceOnboarding";
 
 function createMemoryStorage() {
   const values = new Map();

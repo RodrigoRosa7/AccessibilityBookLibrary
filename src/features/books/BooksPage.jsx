@@ -2,10 +2,10 @@ import { Button, Heading, Spinner, Text, TextInput } from "@primer/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useCart } from "../../app/providers/CartProvider.jsx";
-import { getSearchResultsSummaryMessage } from "../voice/searchResultsSpeech.js";
+import { getSearchResultsSummaryMessage } from "../voice/searchResultsSpeech";
 import { useSpeechSynthesis } from "../voice/useSpeechSynthesis.js";
 import { BookCard } from "./BookCard.jsx";
-import { getBooks } from "./bookService.js";
+import { getBooks } from "./bookService";
 
 export function BooksPage() {
   const [searchParams, setSearchParams] = useSearchParams();

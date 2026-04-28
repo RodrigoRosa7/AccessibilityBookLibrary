@@ -1,7 +1,7 @@
 import { Heading, Text } from "@primer/react";
 import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { formatCurrency } from "../../utils/currency.js";
+import { formatCurrency } from "../../utils/currency";
 
 export function CheckoutPage() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { parseVoiceIntent } from "./intentParser.js";
+import { parseVoiceIntent } from "./intentParser";
 
 function getSpeechRecognitionConstructor() {
   if (typeof window === "undefined") {

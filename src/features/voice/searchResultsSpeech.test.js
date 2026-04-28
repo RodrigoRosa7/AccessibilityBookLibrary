@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildSearchResultsPageSpeech,
   getSearchResultsSummaryMessage,
-} from "./searchResultsSpeech.js";
+} from "./searchResultsSpeech";
 
 const sampleBooks = [
   { title: "Livro A", author: "Autor A", price: 10 },
