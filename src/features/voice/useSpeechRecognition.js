@@ -6,6 +6,13 @@ function getSpeechRecognitionConstructor() {
     return null;
   }
 
+  const userAgent = window.navigator?.userAgent ?? "";
+  const isFirefox = /firefox/i.test(userAgent);
+
+  if (isFirefox) {
+    return null;
+  }
+
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
@@ -15,6 +22,8 @@ export function useSpeechRecognition(options = {}) {
     continuous = false,
     interimResults = true,
     currentRoute = "/",
+    retryOnNetworkError = true,
+    maxNetworkRetries = 1,
     onIntent,
     onTranscript,
     onError,
@@ -24,6 +33,8 @@ export function useSpeechRecognition(options = {}) {
   const onIntentRef = useRef(onIntent);
   const onTranscriptRef = useRef(onTranscript);
   const onErrorRef = useRef(onError);
+  const shouldListenRef = useRef(false);
+  const networkRetryCountRef = useRef(0);
 
   const [transcript, setTranscript] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
@@ -64,6 +75,27 @@ export function useSpeechRecognition(options = {}) {
 
     recognition.onerror = (event) => {
       const nextError = event?.error ?? "unknown";
+
+      if (
+        nextError === "network" &&
+        retryOnNetworkError &&
+        shouldListenRef.current &&
+        networkRetryCountRef.current < maxNetworkRetries
+      ) {
+        networkRetryCountRef.current += 1;
+        recognition.stop();
+        window.setTimeout(() => {
+          try {
+            if (shouldListenRef.current) {
+              recognition.start();
+            }
+          } catch {
+            // If start fails, the browser will emit another onerror event.
+          }
+        }, 350);
+        return;
+      }
+
       setError(nextError);
       if (onErrorRef.current) {
         onErrorRef.current(nextError);
@@ -124,13 +156,27 @@ export function useSpeechRecognition(options = {}) {
     }
 
     setError(null);
-    recognitionRef.current.start();
+    shouldListenRef.current = true;
+    networkRetryCountRef.current = 0;
+
+    try {
+      recognitionRef.current.start();
+    } catch (startError) {
+      const nextError = startError?.name?.toLowerCase() ?? "start-failed";
+      setError(nextError);
+      if (onErrorRef.current) {
+        onErrorRef.current(nextError);
+      }
+    }
   }, [isListening]);
 
   const stopListening = useCallback(() => {
     if (!recognitionRef.current) {
       return;
     }
+
+    shouldListenRef.current = false;
+    networkRetryCountRef.current = 0;
 
     recognitionRef.current.stop();
   }, []);

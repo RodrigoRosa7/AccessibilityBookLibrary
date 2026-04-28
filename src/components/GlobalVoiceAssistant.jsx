@@ -14,6 +14,7 @@ import {
   buildSearchResultsPageSpeech,
   SEARCH_RESULTS_PAGE_SIZE,
 } from "../features/voice/searchResultsSpeech.js";
+import { parseVoiceIntent } from "../features/voice/intentParser.js";
 import { handleVoiceCommand } from "../features/voice/voiceCommands.js";
 import { useSpeechRecognition } from "../features/voice/useSpeechRecognition.js";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
@@ -61,6 +62,30 @@ function createEmptySearchResultsPagination() {
   };
 }
 
+function getSpeechRecognitionErrorMessage(recognitionError) {
+  if (recognitionError === "network") {
+    return "Falha de rede no reconhecimento de voz. Verifique se o navegador pode usar servicos de fala online e tente novamente.";
+  }
+
+  if (recognitionError === "not-allowed") {
+    return "Permissao de microfone negada. Autorize o uso do microfone no navegador e tente novamente.";
+  }
+
+  if (recognitionError === "service-not-allowed") {
+    return "Servico de reconhecimento de voz bloqueado pelo navegador.";
+  }
+
+  if (recognitionError === "notallowederror") {
+    return "Nao foi possivel iniciar o reconhecimento de voz. Verifique a permissao do microfone no navegador.";
+  }
+
+  if (recognitionError === "invalidstateerror") {
+    return "Reconhecimento de voz ja estava em andamento. Tente novamente em alguns segundos.";
+  }
+
+  return `Erro no reconhecimento de voz: ${recognitionError}`;
+}
+
 export function GlobalVoiceAssistant() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,6 +97,7 @@ export function GlobalVoiceAssistant() {
   const [feedbackSeverity, setFeedbackSeverity] = useState("info");
   const [voiceError, setVoiceError] = useState("");
   const [lastCommand, setLastCommand] = useState("");
+  const [typedCommand, setTypedCommand] = useState("");
   const [currentDetailBook, setCurrentDetailBook] = useState(null);
   const cancelRequestedRef = useRef(false);
   const searchResultsPaginationRef = useRef(
@@ -826,21 +852,48 @@ export function GlobalVoiceAssistant() {
     ],
   );
 
-  const speechRecognition = useSpeechRecognition({
-    lang: "pt-BR",
-    currentRoute: location.pathname,
-    onTranscript: (nextTranscript) => {
-      setLastCommand(nextTranscript);
-    },
-    onIntent: (intentResult) => {
+  const runAssistantCommand = useCallback(
+    (transcriptText) => {
+      const normalizedTranscript = String(transcriptText ?? "").trim();
+      if (!normalizedTranscript) {
+        return;
+      }
+
       cancelRequestedRef.current = false;
       setVoiceError("");
+      setLastCommand(normalizedTranscript);
+
+      const intentResult = parseVoiceIntent(normalizedTranscript, {
+        currentRoute: location.pathname,
+      });
+
       const message = handleVoiceCommand(intentResult, voiceActions);
       setAssistantFeedback(message);
       if (message) {
         cancel();
         speak(message);
       }
+    },
+    [cancel, location.pathname, setAssistantFeedback, speak, voiceActions],
+  );
+
+  const runTypedCommand = useCallback(
+    (event) => {
+      event.preventDefault();
+      runAssistantCommand(typedCommand);
+      setTypedCommand("");
+    },
+    [runAssistantCommand, typedCommand],
+  );
+
+  const speechRecognition = useSpeechRecognition({
+    lang: "pt-BR",
+    currentRoute: location.pathname,
+    onTranscript: (nextTranscript) => {
+      setLastCommand(nextTranscript);
+    },
+    onIntent: (_intentResult, nextTranscript) => {
+      runAssistantCommand(nextTranscript);
     },
     onError: (recognitionError) => {
       const isCancelledByUser =
@@ -853,7 +906,7 @@ export function GlobalVoiceAssistant() {
       }
 
       cancelRequestedRef.current = false;
-      const message = `Erro no reconhecimento de voz: ${recognitionError}`;
+      const message = getSpeechRecognitionErrorMessage(recognitionError);
       setVoiceError(message);
       speakAssistantMessage(message, "critical");
     },
@@ -866,6 +919,16 @@ export function GlobalVoiceAssistant() {
     startListening,
     stopListening,
   } = speechRecognition;
+
+  useEffect(() => {
+    if (isSupported) {
+      return;
+    }
+
+    setVoiceError(
+      "Reconhecimento de voz indisponivel neste navegador. Use Chrome ou Edge para comandos de voz.",
+    );
+  }, [isSupported]);
 
   const cancelVoiceCommand = useCallback(() => {
     cancelRequestedRef.current = true;
@@ -976,6 +1039,28 @@ export function GlobalVoiceAssistant() {
             {voiceState.voiceError}
           </Text>
         ) : null}
+
+        <form className="voice-command-fallback" onSubmit={runTypedCommand}>
+          <label htmlFor="voice-command-input" className="voice-command-label">
+            Se a voz falhar, digite um comando
+          </label>
+          <div className="voice-command-row">
+            <input
+              id="voice-command-input"
+              type="text"
+              className="voice-command-input"
+              placeholder='Ex.: "abrir livros"'
+              value={typedCommand}
+              onChange={(event) => setTypedCommand(event.target.value)}
+            />
+            <button
+              type="submit"
+              className="app-button-primary voice-command-submit"
+            >
+              Executar
+            </button>
+          </div>
+        </form>
       </Accordion>
 
       <div

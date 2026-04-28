@@ -318,6 +318,39 @@ select {
   margin-bottom: 8px;
 }
 
+.voice-command-fallback {
+  display: grid;
+  gap: 6px;
+}
+
+.voice-command-label {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.voice-command-row {
+  display: flex;
+  gap: 8px;
+}
+
+.voice-command-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.voice-command-submit {
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .voice-button {
   position: relative;
   display: inline-flex;
