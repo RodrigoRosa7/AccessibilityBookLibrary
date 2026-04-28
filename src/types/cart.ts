@@ -1,7 +1,8 @@
-import type { Book, BookId } from "./book";
+import type { BookId } from "./book";
 
 export interface CartItem {
-  book: Book;
+  id: string;
+  bookId: BookId;
   quantity: number;
 }
 
@@ -10,11 +11,9 @@ export interface CartState {
 }
 
 export interface OrderItemSummary {
-  bookId: BookId;
   title: string;
-  author: string;
-  unitPrice: number;
   quantity: number;
+  subtotal: number;
 }
 
 export interface Order {
