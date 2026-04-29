@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
-import { handleVoiceCommand } from "./voiceCommands.js";
+import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser";
+import { handleVoiceCommand } from "./voiceCommands";
 
 describe("pedidos voice navigation flow", () => {
   it("dispatches onboarding modal actions", () => {

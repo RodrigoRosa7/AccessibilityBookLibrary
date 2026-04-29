@@ -2,9 +2,9 @@ import { Button, Heading, Spinner, Text } from "@primer/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../../app/providers/CartProvider.jsx";
-import { formatCurrency } from "../../utils/currency.js";
+import { formatCurrency } from "../../utils/currency";
 import { useSpeechSynthesis } from "../voice/useSpeechSynthesis.js";
-import { getBookById } from "./bookService.js";
+import { getBookById } from "./bookService";
 
 export function BookDetailsPage() {
   const navigate = useNavigate();

@@ -4,18 +4,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Accordion } from "./Accordion.jsx";
 import { useAuth } from "../app/providers/AuthProvider.jsx";
 import { useCart } from "../app/providers/CartProvider.jsx";
-import { getBookById, getBooks } from "../features/books/bookService.js";
+import { getBookById, getBooks } from "../features/books/bookService";
 import {
   getGlobalVoiceCommands,
   getPageVoiceGuidance,
   getSessionModalCommands,
-} from "../features/contextual/pageVoiceGuidance.js";
+} from "../features/contextual/pageVoiceGuidance";
 import {
   buildSearchResultsPageSpeech,
   SEARCH_RESULTS_PAGE_SIZE,
-} from "../features/voice/searchResultsSpeech.js";
-import { parseVoiceIntent } from "../features/voice/intentParser.js";
-import { handleVoiceCommand } from "../features/voice/voiceCommands.js";
+} from "../features/voice/searchResultsSpeech";
+import { parseVoiceIntent } from "../features/voice/intentParser";
+import { handleVoiceCommand } from "../features/voice/voiceCommands";
 import { useSpeechRecognition } from "../features/voice/useSpeechRecognition.js";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
 import { VoiceButton } from "./VoiceButton.jsx";

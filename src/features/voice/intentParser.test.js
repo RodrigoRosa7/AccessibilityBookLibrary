@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
+import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser";
 
 describe("parseVoiceIntent core commands", () => {
   it("recognizes onboarding presentation voice commands", () => {

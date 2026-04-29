@@ -3,9 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../app/providers/AuthProvider.jsx";
 import { useCart } from "../../app/providers/CartProvider.jsx";
-import { formatCurrency } from "../../utils/currency.js";
+import { formatCurrency } from "../../utils/currency";
 import { useSpeechSynthesis } from "../voice/useSpeechSynthesis.js";
-import { getBooks } from "../books/bookService.js";
+import { getBooks } from "../books/bookService";
 import { createOrder } from "./cartService.js";
 
 export function CartPage() {
