@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Accordion } from "./Accordion.jsx";
 import { getPageVoiceGuidance } from "../features/contextual/pageVoiceGuidance";
-import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
+import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 
 const VOICE_ONBOARDING_CLOSED_EVENT = "voice-onboarding:closed";
 

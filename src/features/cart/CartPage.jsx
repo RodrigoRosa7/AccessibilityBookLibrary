@@ -1,10 +1,10 @@
 import { Button, Heading, Spinner, Text } from "@primer/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../app/providers/AuthProvider.jsx";
-import { useCart } from "../../app/providers/CartProvider.jsx";
+import { useAuth } from "../../app/providers/AuthProvider";
+import { useCart } from "../../app/providers/CartProvider";
 import { formatCurrency } from "../../utils/currency";
-import { useSpeechSynthesis } from "../voice/useSpeechSynthesis.js";
+import { useSpeechSynthesis } from "../voice/useSpeechSynthesis";
 import { getBooks } from "../books/bookService";
 import { createOrder } from "./cartService.js";
 
