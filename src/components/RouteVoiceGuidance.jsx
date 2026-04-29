@@ -4,8 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Accordion } from "./Accordion.jsx";
 import { getPageVoiceGuidance } from "../features/contextual/pageVoiceGuidance";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
-
-const VOICE_ONBOARDING_CLOSED_EVENT = "voice-onboarding:closed";
+import { subscribeVoiceEvent, VOICE_EVENT } from "../features/voice/services/voiceEvents";
 
 function getSessionKey(pathname) {
   return `voice-guidance-played:${pathname}`;
@@ -71,18 +70,12 @@ export function RouteVoiceGuidance() {
       playGuidance();
     }
 
-    window.addEventListener("voice-guidance:repeat", handleRepeatGuidance);
-    window.addEventListener(
-      VOICE_ONBOARDING_CLOSED_EVENT,
-      handleOnboardingClosed,
-    );
+    const unsubRepeat = subscribeVoiceEvent(VOICE_EVENT.GUIDANCE_REPEAT, handleRepeatGuidance);
+    const unsubClosed = subscribeVoiceEvent(VOICE_EVENT.ONBOARDING_CLOSED, handleOnboardingClosed);
 
     return () => {
-      window.removeEventListener("voice-guidance:repeat", handleRepeatGuidance);
-      window.removeEventListener(
-        VOICE_ONBOARDING_CLOSED_EVENT,
-        handleOnboardingClosed,
-      );
+      unsubRepeat();
+      unsubClosed();
     };
   }, [playGuidance, shouldAutoPlayCurrentRoute]);
 

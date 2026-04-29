@@ -6,9 +6,10 @@ import {
   SEARCH_RESULTS_PAGE_SIZE,
   type SearchResultsSpeechMode,
 } from "../searchResultsSpeech";
-import type { Book, Order } from "../../../types";
+import type { Book } from "../../../types";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 import { buildOrderDetailsSpeech } from "../domain/speechUtils";
+import { getOrderHistory } from "../../cart/cartService";
 
 interface SearchResultsPagination {
   query: string;
@@ -30,13 +31,6 @@ export interface UseVoicePaginationReturn {
   openOrderByOffset: (offset: number) => void;
 }
 
-function safeParseJson<T>(value: string | null, fallback: T): T {
-  try {
-    return value ? (JSON.parse(value) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
 
 export function useVoicePagination({
   pathname,
@@ -141,8 +135,7 @@ export function useVoicePagination({
 
   const openOrderByOffset = useCallback(
     (offset: number) => {
-      const parsedHistory = safeParseJson<Order[]>(localStorage.getItem("orderHistory"), []);
-      const orderHistory = Array.isArray(parsedHistory) ? parsedHistory : [];
+      const orderHistory = getOrderHistory();
 
       if (orderHistory.length === 0) {
         speakMessage("Não há pedidos no histórico para navegar.");

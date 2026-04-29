@@ -6,7 +6,8 @@ import { useCart } from "../../app/providers/CartProvider";
 import { formatCurrency } from "../../utils/currency";
 import { useSpeechSynthesis } from "../voice/useSpeechSynthesis";
 import { getBooks } from "../books/bookService";
-import { createOrder } from "./cartService.js";
+import { submitCheckout, saveOrderToHistory, saveLatestOrderSummary } from "./cartService";
+import { subscribeVoiceEvent, VOICE_EVENT } from "../voice/services/voiceEvents";
 
 export function CartPage() {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ export function CartPage() {
     setOrderMessage("");
 
     try {
-      const order = await createOrder({
+      const order = await submitCheckout({
         userId: user.id,
         items: detailedItems.map((item) => ({
           id: item.id,
@@ -107,20 +108,8 @@ export function CartPage() {
         })),
       };
 
-      sessionStorage.setItem(
-        "latestOrderSummary",
-        JSON.stringify(orderSummary),
-      );
-
-      try {
-        const rawHistory = localStorage.getItem("orderHistory");
-        const parsedHistory = rawHistory ? JSON.parse(rawHistory) : [];
-        const safeHistory = Array.isArray(parsedHistory) ? parsedHistory : [];
-        const nextHistory = [orderSummary, ...safeHistory].slice(0, 8);
-        localStorage.setItem("orderHistory", JSON.stringify(nextHistory));
-      } catch {
-        // Ignore local storage failures to avoid blocking checkout flow.
-      }
+      saveLatestOrderSummary(orderSummary);
+      saveOrderToHistory(orderSummary);
 
       navigate("/checkout", { state: { orderSummary } });
     } catch (checkoutError) {
@@ -152,21 +141,15 @@ export function CartPage() {
     }
 
     window.addEventListener("keydown", handleKeydown);
-    window.addEventListener("app-modal:close", closeCheckoutDialog);
-    window.addEventListener("cart:open-checkout-dialog", openCheckoutDialog);
-    window.addEventListener("cart:confirm-checkout", handleConfirmCheckout);
+    const unsubClose = subscribeVoiceEvent(VOICE_EVENT.MODAL_CLOSE, closeCheckoutDialog);
+    const unsubOpen = subscribeVoiceEvent(VOICE_EVENT.CART_OPEN_CHECKOUT_DIALOG, openCheckoutDialog);
+    const unsubConfirm = subscribeVoiceEvent(VOICE_EVENT.CART_CONFIRM_CHECKOUT, handleConfirmCheckout);
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
-      window.removeEventListener("app-modal:close", closeCheckoutDialog);
-      window.removeEventListener(
-        "cart:open-checkout-dialog",
-        openCheckoutDialog,
-      );
-      window.removeEventListener(
-        "cart:confirm-checkout",
-        handleConfirmCheckout,
-      );
+      unsubClose();
+      unsubOpen();
+      unsubConfirm();
     };
   }, [handleCheckout]);
 

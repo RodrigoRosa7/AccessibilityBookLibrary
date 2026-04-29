@@ -2,34 +2,18 @@ import { Heading, Text } from "@primer/react";
 import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../utils/currency";
+import { getOrderHistory, getLatestOrderSummary } from "../cart/cartService";
+import { subscribeVoiceEvent, VOICE_EVENT } from "../voice/services/voiceEvents";
 
 export function CheckoutPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const orderSummary = useMemo(() => {
-    const fromNavigation = location.state?.orderSummary;
-    if (fromNavigation) {
-      return fromNavigation;
-    }
-
-    try {
-      const cachedOrder = sessionStorage.getItem("latestOrderSummary");
-      return cachedOrder ? JSON.parse(cachedOrder) : null;
-    } catch {
-      return null;
-    }
+    return location.state?.orderSummary ?? getLatestOrderSummary();
   }, [location.state]);
 
-  const orderHistory = useMemo(() => {
-    try {
-      const rawHistory = localStorage.getItem("orderHistory");
-      const parsedHistory = rawHistory ? JSON.parse(rawHistory) : [];
-      return Array.isArray(parsedHistory) ? parsedHistory : [];
-    } catch {
-      return [];
-    }
-  }, []);
+  const orderHistory = useMemo(() => getOrderHistory(), []);
 
   const requestedOrderId = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -93,11 +77,11 @@ export function CheckoutPage() {
     }
 
     window.addEventListener("keydown", handleKeydown);
-    window.addEventListener("app-modal:close", closeOrderModal);
+    const unsubClose = subscribeVoiceEvent(VOICE_EVENT.MODAL_CLOSE, closeOrderModal);
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
-      window.removeEventListener("app-modal:close", closeOrderModal);
+      unsubClose();
     };
   }, [location.state, navigate]);
 
