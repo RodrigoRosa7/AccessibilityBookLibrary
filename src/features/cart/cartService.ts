@@ -1,4 +1,4 @@
-import { apiPost } from "../../services/apiClient";
+import { apiPost } from "../../shared/lib/api/apiClient";
 import type { BookId, Order } from "../../types";
 
 interface CheckoutPayload {

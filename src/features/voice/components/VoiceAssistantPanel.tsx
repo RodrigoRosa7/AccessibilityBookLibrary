@@ -1,6 +1,6 @@
 import type React from "react";
 import type { ComponentType, ReactNode } from "react";
-import { Accordion as AccordionBase } from "../../../components/Accordion.jsx";
+import { Accordion as AccordionBase } from "../../../shared/ui/Accordion.jsx";
 import { VoiceButton } from "../../../components/VoiceButton.jsx";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 

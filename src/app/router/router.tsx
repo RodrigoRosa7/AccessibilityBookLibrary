@@ -1,28 +1,12 @@
-import { Heading, Text } from "@primer/react";
 import { Navigate, Outlet, createBrowserRouter } from "react-router-dom";
 import { Layout } from "../../components/Layout.jsx";
-import { LoginPage } from "../../features/auth/LoginPage.jsx";
-import { BookDetailsPage } from "../../features/books/BookDetailsPage.jsx";
-import { BooksPage } from "../../features/books/BooksPage.jsx";
-import { CartPage } from "../../features/cart/CartPage.jsx";
-import { CheckoutPage } from "../../features/checkout/CheckoutPage.jsx";
+import { LoginPage } from "../../pages/LoginPage.jsx";
+import { HomePage } from "../../pages/HomePage.jsx";
+import { BooksPage } from "../../pages/BooksPage.jsx";
+import { BookDetailsPage } from "../../pages/BookDetailsPage.jsx";
+import { CartPage } from "../../pages/CartPage.jsx";
+import { CheckoutPage } from "../../pages/CheckoutPage.jsx";
 import { useAuth } from "../providers/AuthProvider";
-
-function HomePage() {
-  return (
-    <section className="app-surface-card app-stack-sm">
-      <Heading as="h2" style={{ marginBottom: 8 }}>
-        Início
-      </Heading>
-      <Text as="p" style={{ marginBottom: 8 }}>
-        Use navegação por teclado ou voz para explorar o catálogo de livros.
-      </Text>
-      <div>
-        Comandos de exemplo: "abrir livros", "ver carrinho", "finalizar compra".
-      </div>
-    </section>
-  );
-}
 
 function RequireAuth() {
   const { isAuthenticated } = useAuth();

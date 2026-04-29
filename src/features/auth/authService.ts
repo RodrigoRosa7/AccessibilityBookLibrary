@@ -1,4 +1,4 @@
-import { apiPost } from "../../services/apiClient";
+import { apiPost } from "../../shared/lib/api/apiClient";
 import type { AuthCredentials, AuthResponse, User } from "../../types";
 
 export async function loginWithEmailPassword(
