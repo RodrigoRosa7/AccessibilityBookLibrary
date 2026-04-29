@@ -1,4 +1,4 @@
-import { apiGet } from "../../services/apiClient";
+import { apiGet } from "../../shared/lib/api/apiClient";
 import type {
   Book,
   BookDetailsResponse,

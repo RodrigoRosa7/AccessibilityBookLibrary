@@ -1,7 +1,7 @@
 import { Button, Heading, Text } from "@primer/react";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { Accordion } from "./Accordion.jsx";
+import { Accordion } from "../shared/ui/Accordion.jsx";
 import { getPageVoiceGuidance } from "../features/contextual/pageVoiceGuidance";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { subscribeVoiceEvent, VOICE_EVENT } from "../features/voice/services/voiceEvents";

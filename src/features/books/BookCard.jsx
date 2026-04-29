@@ -1,6 +1,6 @@
 import { Button, Heading, Text } from "@primer/react";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "../../utils/currency";
+import { formatCurrency } from "../../shared/lib/currency";
 
 export function BookCard({
   book,
