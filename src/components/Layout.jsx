@@ -2,7 +2,7 @@ import { Heading, PageLayout, Text } from "@primer/react";
 import { useMemo } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useCart } from "../app/providers/CartProvider";
-import { GlobalVoiceAssistant } from "./GlobalVoiceAssistant.jsx";
+import { GlobalVoiceAssistant } from "./GlobalVoiceAssistant";
 import { Navbar } from "./Navbar.jsx";
 import { RouteVoiceGuidance } from "./RouteVoiceGuidance.jsx";
 import { VoiceFeedbackBanner } from "./VoiceFeedbackBanner.jsx";
