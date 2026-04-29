@@ -10,6 +10,7 @@ import {
   getSessionModalCommands,
 } from "../../contextual/pageVoiceGuidance";
 import type { Book, Order, VoiceActions } from "../../../types";
+import { formatMoneyForSpeech, buildOrderDetailsSpeech } from "../domain/speechUtils";
 import { useVoiceFeedback } from "./useVoiceFeedback";
 import type { SpeechSeverity } from "./useVoiceFeedback";
 import { useVoicePagination } from "./useVoicePagination";
@@ -48,22 +49,6 @@ function safeParseJson<T>(value: string | null, fallback: T): T {
   }
 }
 
-function formatMoneyForSpeech(value: number | string | null | undefined): string {
-  return Number(value ?? 0).toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-}
-
-function buildOrderDetailsSpeech(order: Order): string {
-  const itemsText =
-    Array.isArray(order?.items) && order.items.length > 0
-      ? order.items
-          .map((item) => `${item.title}, quantidade ${item.quantity}`)
-          .join(". ")
-      : "Sem itens registrados.";
-  return `Pedido número ${order?.id}. Total ${formatMoneyForSpeech(order?.total)}. Itens: ${itemsText}.`;
-}
 
 export function useVoiceAssistant(): UseVoiceAssistantReturn {
   const navigate = useNavigate();

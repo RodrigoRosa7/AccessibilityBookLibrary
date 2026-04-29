@@ -3,7 +3,7 @@ import type React from "react";
 import { useSpeechRecognition } from "../useSpeechRecognition";
 import { parseVoiceIntent } from "../intentParser";
 import { handleVoiceCommand } from "../voiceCommands";
-import type { VoiceActions } from "../../../types";
+import type { ParsedIntent, VoiceActions } from "../../../types";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 
 interface UseVoiceCommandsOptions {
@@ -30,19 +30,19 @@ export interface UseVoiceCommandsReturn {
 
 function getSpeechRecognitionErrorMessage(recognitionError: string): string {
   if (recognitionError === "network") {
-    return "Falha de rede no reconhecimento de voz. Verifique se o navegador pode usar servicos de fala online e tente novamente.";
+    return "Falha de rede no reconhecimento de voz. Verifique se o navegador pode usar serviços de fala online e tente novamente.";
   }
   if (recognitionError === "not-allowed") {
-    return "Permissao de microfone negada. Autorize o uso do microfone no navegador e tente novamente.";
+    return "Permissão de microfone negada. Autorize o uso do microfone no navegador e tente novamente.";
   }
   if (recognitionError === "service-not-allowed") {
-    return "Servico de reconhecimento de voz bloqueado pelo navegador.";
+    return "Serviço de reconhecimento de voz bloqueado pelo navegador.";
   }
   if (recognitionError === "notallowederror") {
-    return "Nao foi possivel iniciar o reconhecimento de voz. Verifique a permissao do microfone no navegador.";
+    return "Não foi possível iniciar o reconhecimento de voz. Verifique a permissão do microfone no navegador.";
   }
   if (recognitionError === "invalidstateerror") {
-    return "Reconhecimento de voz ja estava em andamento. Tente novamente em alguns segundos.";
+    return "Reconhecimento de voz já estava em andamento. Tente novamente em alguns segundos.";
   }
   return `Erro no reconhecimento de voz: ${recognitionError}`;
 }
@@ -66,7 +66,7 @@ export function useVoiceCommands({
   }, [voiceActions]);
 
   const runAssistantCommand = useCallback(
-    (transcriptText: string) => {
+    (transcriptText: string, preParseResult?: ParsedIntent) => {
       const normalized = String(transcriptText ?? "").trim();
       if (!normalized) return;
 
@@ -74,7 +74,8 @@ export function useVoiceCommands({
       setVoiceError("");
       setLastCommand(normalized);
 
-      const intentResult = parseVoiceIntent(normalized, { currentRoute: pathname });
+      const intentResult =
+        preParseResult ?? parseVoiceIntent(normalized, { currentRoute: pathname });
       const message = handleVoiceCommand(intentResult, voiceActionsRef.current);
       setFeedback(message);
       if (message) {
@@ -89,7 +90,7 @@ export function useVoiceCommands({
     lang: "pt-BR",
     currentRoute: pathname,
     onTranscript: (nextTranscript) => setLastCommand(nextTranscript),
-    onIntent: (_intentResult, nextTranscript) => runAssistantCommand(nextTranscript),
+    onIntent: (intentResult, nextTranscript) => runAssistantCommand(nextTranscript, intentResult),
     onError: (recognitionError) => {
       const isCancelledByUser =
         cancelRequestedRef.current &&
@@ -112,7 +113,7 @@ export function useVoiceCommands({
   useEffect(() => {
     if (!isSupported) {
       setVoiceError(
-        "Reconhecimento de voz indisponivel neste navegador. Use Chrome ou Edge para comandos de voz.",
+        "Reconhecimento de voz indisponível neste navegador. Use Chrome ou Edge para comandos de voz.",
       );
     }
   }, [isSupported, setVoiceError]);

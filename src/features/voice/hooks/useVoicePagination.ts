@@ -8,6 +8,7 @@ import {
 } from "../searchResultsSpeech";
 import type { Book, Order } from "../../../types";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
+import { buildOrderDetailsSpeech } from "../domain/speechUtils";
 
 interface SearchResultsPagination {
   query: string;
@@ -35,23 +36,6 @@ function safeParseJson<T>(value: string | null, fallback: T): T {
   } catch {
     return fallback;
   }
-}
-
-function formatMoneyForSpeech(value: number | string | null | undefined): string {
-  return Number(value ?? 0).toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-}
-
-function buildOrderDetailsSpeech(order: Order): string {
-  const itemsText =
-    Array.isArray(order?.items) && order.items.length > 0
-      ? order.items
-          .map((item) => `${item.title}, quantidade ${item.quantity}`)
-          .join(". ")
-      : "Sem itens registrados.";
-  return `Pedido número ${order?.id}. Total ${formatMoneyForSpeech(order?.total)}. Itens: ${itemsText}.`;
 }
 
 export function useVoicePagination({
