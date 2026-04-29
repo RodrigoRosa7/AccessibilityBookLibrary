@@ -24,7 +24,7 @@ export interface UseSpeechSynthesisReturn {
 
 interface VoiceFeedbackDetail {
   text: string;
-  severity: string;
+  severity: SpeechSeverity;
   isSpeaking: boolean;
 }
 
