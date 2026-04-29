@@ -2,8 +2,8 @@ import { Heading, Text } from "@primer/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Accordion } from "./Accordion.jsx";
-import { useAuth } from "../app/providers/AuthProvider.jsx";
-import { useCart } from "../app/providers/CartProvider.jsx";
+import { useAuth } from "../app/providers/AuthProvider";
+import { useCart } from "../app/providers/CartProvider";
 import { getBookById, getBooks } from "../features/books/bookService";
 import {
   getGlobalVoiceCommands,
@@ -16,8 +16,8 @@ import {
 } from "../features/voice/searchResultsSpeech";
 import { parseVoiceIntent } from "../features/voice/intentParser";
 import { handleVoiceCommand } from "../features/voice/voiceCommands";
-import { useSpeechRecognition } from "../features/voice/useSpeechRecognition.js";
-import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
+import { useSpeechRecognition } from "../features/voice/useSpeechRecognition";
+import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { VoiceButton } from "./VoiceButton.jsx";
 
 function normalizeMatchText(text) {

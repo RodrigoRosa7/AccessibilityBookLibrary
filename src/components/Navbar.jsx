@@ -1,6 +1,6 @@
 import { ActionList, Button, Heading, Text } from "@primer/react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../app/providers/AuthProvider.jsx";
+import { useAuth } from "../app/providers/AuthProvider";
 
 const navItems = [
   { to: "/home", label: "Início", icon: "🏠" },

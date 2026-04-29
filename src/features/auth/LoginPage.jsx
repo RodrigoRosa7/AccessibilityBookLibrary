@@ -1,7 +1,7 @@
 import { Button, Heading, Text, TextInput } from "@primer/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../app/providers/AuthProvider.jsx";
+import { useAuth } from "../../app/providers/AuthProvider";
 import { loginWithEmailPassword } from "./authService";
 
 export function LoginPage() {

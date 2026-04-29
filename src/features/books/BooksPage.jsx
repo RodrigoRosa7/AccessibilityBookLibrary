@@ -1,9 +1,9 @@
 import { Button, Heading, Spinner, Text, TextInput } from "@primer/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useCart } from "../../app/providers/CartProvider.jsx";
+import { useCart } from "../../app/providers/CartProvider";
 import { getSearchResultsSummaryMessage } from "../voice/searchResultsSpeech";
-import { useSpeechSynthesis } from "../voice/useSpeechSynthesis.js";
+import { useSpeechSynthesis } from "../voice/useSpeechSynthesis";
 import { BookCard } from "./BookCard.jsx";
 import { getBooks } from "./bookService";
 

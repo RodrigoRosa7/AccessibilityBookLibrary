@@ -1,7 +1,7 @@
 import { Button, Heading, Text } from "@primer/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "../app/providers/AuthProvider.jsx";
-import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis.js";
+import { useAuth } from "../app/providers/AuthProvider";
+import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { buildInitialVoicePresentation } from "../features/onboarding/voiceOnboarding";
 
 const VOICE_ONBOARDING_CLOSED_EVENT = "voice-onboarding:closed";
