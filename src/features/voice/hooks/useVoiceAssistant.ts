@@ -9,8 +9,10 @@ import {
   getPageVoiceGuidance,
   getSessionModalCommands,
 } from "../../contextual/pageVoiceGuidance";
-import type { Book, Order, VoiceActions } from "../../../types";
+import type { Book, VoiceActions } from "../../../types";
 import { formatMoneyForSpeech, buildOrderDetailsSpeech } from "../domain/speechUtils";
+import { emitVoiceEvent, VOICE_EVENT } from "../services/voiceEvents";
+import { getOrderHistory, getLatestOrderSummary } from "../../cart/cartService";
 import { useVoiceFeedback } from "./useVoiceFeedback";
 import type { SpeechSeverity } from "./useVoiceFeedback";
 import { useVoicePagination } from "./useVoicePagination";
@@ -41,13 +43,6 @@ function normalizeMatchText(text: string | null | undefined): string {
     .trim();
 }
 
-function safeParseJson<T>(value: string | null, fallback: T): T {
-  try {
-    return value ? (JSON.parse(value) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
 
 
 export function useVoiceAssistant(): UseVoiceAssistantReturn {
@@ -113,7 +108,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           speakMessage("A apresentação inicial não está aberta.");
           return;
         }
-        window.dispatchEvent(new CustomEvent("voice-onboarding:replay"));
+        emitVoiceEvent(VOICE_EVENT.ONBOARDING_REPLAY);
         setFeedback("Repetindo a apresentação inicial.");
       },
       completeVoiceOnboarding: () => {
@@ -124,7 +119,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           speakMessage("A apresentação inicial não está aberta.");
           return;
         }
-        window.dispatchEvent(new CustomEvent("voice-onboarding:complete"));
+        emitVoiceEvent(VOICE_EVENT.ONBOARDING_COMPLETE);
         speakMessage("Concluindo apresentação inicial.");
       },
       skipVoiceOnboarding: () => {
@@ -135,7 +130,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           speakMessage("A apresentação inicial não está aberta.");
           return;
         }
-        window.dispatchEvent(new CustomEvent("voice-onboarding:skip"));
+        emitVoiceEvent(VOICE_EVENT.ONBOARDING_SKIP);
         speakMessage("Pulando apresentação por agora.");
       },
       openBooks: () => navigate("/books"),
@@ -234,12 +229,12 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           `Comandos essenciais: ${essentialCommands.join(", ")}.`,
           `Comandos de sessão e modais: ${sessionCommands.join(", ")}.`,
         ].join(" ");
-        window.dispatchEvent(new CustomEvent("voice-help:open"));
+        emitVoiceEvent(VOICE_EVENT.HELP_OPEN);
         setFeedback("Abrindo ajuda de comandos de voz.");
         speak(speechText);
       },
       repeatPageGuidance: () => {
-        window.dispatchEvent(new CustomEvent("voice-guidance:repeat"));
+        emitVoiceEvent(VOICE_EVENT.GUIDANCE_REPEAT);
         setFeedback("Repetindo instruções da página.");
       },
       closeModal: () => {
@@ -250,7 +245,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           speakMessage("Não há nenhuma modal aberta para fechar.");
           return;
         }
-        window.dispatchEvent(new CustomEvent("app-modal:close"));
+        emitVoiceEvent(VOICE_EVENT.MODAL_CLOSE);
         speakMessage("Fechando modal aberta.");
       },
       logout: () => {
@@ -382,7 +377,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
             return;
           }
           speakMessage("Abrindo diálogo de confirmação.");
-          window.dispatchEvent(new CustomEvent("cart:open-checkout-dialog"));
+          emitVoiceEvent(VOICE_EVENT.CART_OPEN_CHECKOUT_DIALOG);
           return;
         }
         speakMessage("Abrindo pedidos.");
@@ -391,7 +386,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
       confirmCheckout: () => {
         if (location.pathname === "/cart") {
           speakMessage("Confirmando pedido.");
-          window.dispatchEvent(new CustomEvent("cart:confirm-checkout"));
+          emitVoiceEvent(VOICE_EVENT.CART_CONFIRM_CHECKOUT);
           return;
         }
         speakMessage("Este comando funciona na tela do carrinho.");
@@ -402,11 +397,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           speakMessage("Não entendi o número do pedido.");
           return;
         }
-        const parsedHistory = safeParseJson<Order[]>(
-          localStorage.getItem("orderHistory"),
-          [],
-        );
-        const orderHistory = Array.isArray(parsedHistory) ? parsedHistory : [];
+        const orderHistory = getOrderHistory();
         const foundOrder = orderHistory.find(
           (order) => Number(order.id) === Number(normalizedOrderId),
         );
@@ -429,15 +420,8 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           speakMessage("Abra a tela de pedidos para ouvir os dados do pedido.");
           return;
         }
-        const latestOrder = safeParseJson<Order | null>(
-          sessionStorage.getItem("latestOrderSummary"),
-          null,
-        );
-        const parsedHistory = safeParseJson<Order[]>(
-          localStorage.getItem("orderHistory"),
-          [],
-        );
-        const orderHistory = Array.isArray(parsedHistory) ? parsedHistory : [];
+        const latestOrder = getLatestOrderSummary();
+        const orderHistory = getOrderHistory();
         const requestedOrderFromRoute = new URLSearchParams(location.search).get(
           "orderId",
         );

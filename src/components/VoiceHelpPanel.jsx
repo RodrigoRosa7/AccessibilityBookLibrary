@@ -6,6 +6,7 @@ import {
   getPageVoiceGuidance,
   getSessionModalCommands,
 } from "../features/contextual/pageVoiceGuidance";
+import { subscribeVoiceEvent, VOICE_EVENT } from "../features/voice/services/voiceEvents";
 
 export function VoiceHelpPanel() {
   const location = useLocation();
@@ -45,13 +46,13 @@ export function VoiceHelpPanel() {
       }
     }
 
-    window.addEventListener("voice-help:open", openHelpPanel);
-    window.addEventListener("app-modal:close", closeHelpPanel);
+    const unsubOpen = subscribeVoiceEvent(VOICE_EVENT.HELP_OPEN, openHelpPanel);
+    const unsubClose = subscribeVoiceEvent(VOICE_EVENT.MODAL_CLOSE, closeHelpPanel);
     window.addEventListener("keydown", handleKeydown);
 
     return () => {
-      window.removeEventListener("voice-help:open", openHelpPanel);
-      window.removeEventListener("app-modal:close", closeHelpPanel);
+      unsubOpen();
+      unsubClose();
       window.removeEventListener("keydown", handleKeydown);
     };
   }, []);

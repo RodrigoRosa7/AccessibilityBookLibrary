@@ -3,8 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../app/providers/AuthProvider";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { buildInitialVoicePresentation } from "../features/onboarding/voiceOnboarding";
-
-const VOICE_ONBOARDING_CLOSED_EVENT = "voice-onboarding:closed";
+import { subscribeVoiceEvent, emitVoiceEvent, VOICE_EVENT } from "../features/voice/services/voiceEvents";
 
 export function VoiceOnboardingDialog() {
   const {
@@ -81,15 +80,11 @@ export function VoiceOnboardingDialog() {
     pendingCloseReasonRef.current = null;
     wasOpenRef.current = false;
 
-    if (!closeReason || typeof window === "undefined") {
+    if (!closeReason) {
       return;
     }
 
-    window.dispatchEvent(
-      new CustomEvent(VOICE_ONBOARDING_CLOSED_EVENT, {
-        detail: { reason: closeReason },
-      }),
-    );
+    emitVoiceEvent(VOICE_EVENT.ONBOARDING_CLOSED);
   }, [isOpen]);
 
   useEffect(() => {
@@ -111,19 +106,16 @@ export function VoiceOnboardingDialog() {
       handleSkip();
     }
 
-    window.addEventListener("voice-onboarding:replay", replayOnboarding);
-    window.addEventListener("voice-onboarding:complete", completeOnboarding);
-    window.addEventListener("voice-onboarding:skip", skipOnboarding);
-    window.addEventListener("app-modal:close", skipOnboarding);
+    const unsubReplay = subscribeVoiceEvent(VOICE_EVENT.ONBOARDING_REPLAY, replayOnboarding);
+    const unsubComplete = subscribeVoiceEvent(VOICE_EVENT.ONBOARDING_COMPLETE, completeOnboarding);
+    const unsubSkip = subscribeVoiceEvent(VOICE_EVENT.ONBOARDING_SKIP, skipOnboarding);
+    const unsubClose = subscribeVoiceEvent(VOICE_EVENT.MODAL_CLOSE, skipOnboarding);
 
     return () => {
-      window.removeEventListener("voice-onboarding:replay", replayOnboarding);
-      window.removeEventListener(
-        "voice-onboarding:complete",
-        completeOnboarding,
-      );
-      window.removeEventListener("voice-onboarding:skip", skipOnboarding);
-      window.removeEventListener("app-modal:close", skipOnboarding);
+      unsubReplay();
+      unsubComplete();
+      unsubSkip();
+      unsubClose();
     };
   }, [handleComplete, handlePlayPresentation, handleSkip]);
 
