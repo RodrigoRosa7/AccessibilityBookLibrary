@@ -12,16 +12,20 @@ export const VOICE_EVENT = {
 
 export type VoiceEventName = (typeof VOICE_EVENT)[keyof typeof VOICE_EVENT];
 
-export function emitVoiceEvent(name: VoiceEventName): void {
+export function emitVoiceEvent<T = unknown>(
+  name: VoiceEventName,
+  eventInit?: CustomEventInit<T>,
+): void {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(name));
+  window.dispatchEvent(new CustomEvent<T>(name, eventInit));
 }
 
-export function subscribeVoiceEvent(
+export function subscribeVoiceEvent<T = unknown>(
   name: VoiceEventName,
-  handler: () => void,
+  handler: (event: CustomEvent<T>) => void,
 ): () => void {
   if (typeof window === "undefined") return () => {};
-  window.addEventListener(name, handler);
-  return () => window.removeEventListener(name, handler);
+  const listener: EventListener = handler as EventListener;
+  window.addEventListener(name, listener);
+  return () => window.removeEventListener(name, listener);
 }

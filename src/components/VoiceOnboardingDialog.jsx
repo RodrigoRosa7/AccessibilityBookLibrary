@@ -84,7 +84,7 @@ export function VoiceOnboardingDialog() {
       return;
     }
 
-    emitVoiceEvent(VOICE_EVENT.ONBOARDING_CLOSED);
+    emitVoiceEvent(VOICE_EVENT.ONBOARDING_CLOSED, { detail: { reason: closeReason } });
   }, [isOpen]);
 
   useEffect(() => {
