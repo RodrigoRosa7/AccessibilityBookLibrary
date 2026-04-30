@@ -1,0 +1,654 @@
+/* ── Cart indicator ─────────────────────────────────────────────────── */
+.cart-indicator-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  gap: 8px;
+  border: 1px solid var(--color-primary);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cart-indicator-button:hover,
+.cart-indicator-button:focus-visible {
+  background: var(--color-primary-strong);
+  border-color: var(--color-primary-strong);
+}
+
+.cart-indicator-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-indicator-count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  background: var(--color-primary-strong);
+  color: var(--color-bg);
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* ── Book quantity controls ─────────────────────────────────────────── */
+.book-quantity-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 4px;
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 88%,
+    var(--color-primary) 12%
+  );
+}
+
+.quantity-step-button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-primary-strong);
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.book-quantity-value {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--color-text);
+}
+
+/* ── App buttons (overrides for Primer — to be replaced by CSS Modules in PR #9) */
+.app-button-primary {
+  background: var(--color-primary) !important;
+  color: var(--color-bg) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.app-button-primary:hover:not(:disabled),
+.app-button-primary:focus-visible {
+  background: var(--color-primary-strong) !important;
+  border-color: var(--color-primary-strong) !important;
+}
+
+.app-button-secondary {
+  background: var(--color-primary) !important;
+  color: var(--color-bg) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.app-button-secondary:hover:not(:disabled),
+.app-button-secondary:focus-visible {
+  background: var(--color-primary-strong) !important;
+  border-color: var(--color-primary-strong) !important;
+}
+
+/* ── Dark mode toggle ───────────────────────────────────────────────── */
+.dark-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--color-surface-mid);
+  border-color: var(--color-border-strong);
+}
+
+/* ── Voice help panel ───────────────────────────────────────────────── */
+.voice-help-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1300;
+}
+
+.voice-help-modal {
+  width: 100%;
+  max-width: 620px;
+  max-height: calc(100vh - 32px);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  box-shadow: 0 28px 60px rgba(75, 46, 43, 0.28);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.voice-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.voice-help-section {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+/* ── Voice assistant panel ──────────────────────────────────────────── */
+.voice-assistant-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 200;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  padding: 0;
+  width: 320px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+}
+
+.voice-assistant-accordion {
+  display: grid;
+}
+
+.voice-assistant-accordion .accordion-details {
+  display: grid;
+}
+
+.voice-assistant-accordion .accordion-details[open] {
+  gap: 12px;
+}
+
+.voice-assistant-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.voice-assistant-summary::-webkit-details-marker {
+  display: none;
+}
+
+.voice-assistant-summary::after {
+  content: none;
+}
+
+.voice-assistant-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
+.voice-assistant-title-wrapper h3 {
+  margin: 0;
+}
+
+.voice-assistant-button-container {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.voice-assistant-chevron {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 40%, var(--color-bg) 60%);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 70%,
+    var(--color-primary) 30%
+  );
+  color: var(--color-primary-strong);
+  flex-shrink: 0;
+}
+
+.voice-assistant-chevron svg {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.voice-assistant-accordion
+  .accordion-details[open]
+  .voice-assistant-chevron
+  svg {
+  transform: rotate(0deg);
+}
+
+.voice-assistant-body {
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.voice-assistant-content {
+  display: grid;
+  gap: 8px;
+}
+
+.voice-assistant-status {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.voice-command-fallback {
+  display: grid;
+  gap: 6px;
+}
+
+.voice-command-label {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.voice-command-row {
+  display: flex;
+  gap: 8px;
+}
+
+.voice-command-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.voice-command-submit {
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Voice button ───────────────────────────────────────────────────── */
+.voice-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.voice-button-listening {
+  animation: voice-pulse 1.2s ease-in-out infinite;
+}
+
+.voice-button-speaking {
+  box-shadow: inset 0 0 0 1px rgba(192, 133, 82, 0.4);
+}
+
+.voice-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.voice-button-label {
+  line-height: 1;
+  vertical-align: text-top;
+  white-space: nowrap;
+}
+
+.voice-button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@keyframes voice-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(192, 133, 82, 0.14);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(192, 133, 82, 0.24);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-button-listening {
+    animation: none;
+    box-shadow: inset 0 0 0 2px rgba(192, 133, 82, 0.5);
+  }
+}
+
+/* ── Voice onboarding ───────────────────────────────────────────────── */
+.voice-onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 1400;
+}
+
+.voice-onboarding-card {
+  width: min(640px, 100%);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.voice-onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Voice feedback banner ──────────────────────────────────────────── */
+.voice-feedback-banner {
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.voice-feedback-content {
+  display: grid;
+  gap: 4px;
+}
+
+.voice-feedback-info {
+  border-left-color: var(--color-primary);
+}
+
+.voice-feedback-critical {
+  border-left-color: var(--color-danger);
+}
+
+@media (max-width: 600px) {
+  .voice-feedback-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ── Route voice guidance ───────────────────────────────────────────── */
+.route-voice-guidance {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 92%,
+    var(--color-primary) 8%
+  );
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.route-voice-guidance-accordion {
+  display: grid;
+}
+
+.route-voice-guidance-accordion .accordion-details {
+  display: grid;
+}
+
+.route-voice-guidance-accordion .accordion-details[open] {
+  gap: 12px;
+}
+
+.route-voice-guidance-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 52px 16px 16px;
+  position: relative;
+}
+
+.route-voice-guidance-summary::-webkit-details-marker {
+  display: none;
+}
+
+.route-voice-guidance-summary::after {
+  content: none;
+}
+
+.route-voice-guidance-chevron {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 40%, var(--color-bg) 60%);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 70%,
+    var(--color-primary) 30%
+  );
+  color: var(--color-primary-strong);
+}
+
+.route-voice-guidance-chevron svg {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.route-voice-guidance-accordion
+  .accordion-details[open]
+  .route-voice-guidance-chevron
+  svg {
+  transform: rotate(0deg);
+}
+
+.route-voice-guidance-body {
+  padding: 0 16px 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.route-voice-guidance-content {
+  display: grid;
+  gap: 8px;
+}
+
+.route-voice-guidance-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* ── Command chips ──────────────────────────────────────────────────── */
+.command-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 60%,
+    var(--color-primary) 40%
+  );
+  color: var(--color-primary-strong);
+  white-space: nowrap;
+}
+
+/* ── App layout primitives ──────────────────────────────────────────── */
+.app-surface-card {
+  border: 1px solid
+    color-mix(in srgb, var(--color-border) 70%, var(--color-primary) 30%);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: 0 6px 18px rgba(75, 46, 43, 0.16);
+  padding: 16px;
+}
+
+.catalog-book-card {
+  background: var(--color-surface);
+  border: 1px solid
+    color-mix(in srgb, var(--color-border) 68%, var(--color-primary) 32%);
+  border-radius: 12px;
+  box-shadow: 0 5px 14px rgba(75, 46, 43, 0.14);
+}
+
+.app-surface-card-muted {
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg) 12%);
+}
+
+.app-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.app-stack-sm {
+  display: grid;
+  gap: 8px;
+}
+
+.app-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.app-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.app-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* ── App dialogs ────────────────────────────────────────────────────── */
+.app-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.app-dialog-card {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 24px 48px rgba(75, 46, 43, 0.25);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+/* ── Status banners ─────────────────────────────────────────────────── */
+.app-status-banner {
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.app-status-banner-success {
+  border-color: color-mix(
+    in srgb,
+    var(--color-success) 55%,
+    var(--color-border) 45%
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 86%,
+    var(--color-success) 14%
+  );
+}
+
+.app-status-banner-critical {
+  border-color: color-mix(
+    in srgb,
+    var(--color-danger) 70%,
+    var(--color-border) 30%
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 88%,
+    var(--color-danger) 12%
+  );
+}

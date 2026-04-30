@@ -1,0 +1,7 @@
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: 0.3px;
+  font-optical-sizing: auto;
+}
