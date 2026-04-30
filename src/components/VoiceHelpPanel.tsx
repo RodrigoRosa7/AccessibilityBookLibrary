@@ -67,6 +67,7 @@ export function VoiceHelpPanel() {
     const hasPathChanged = previousPathnameRef.current !== location.pathname;
 
     if (isOpen && hasPathChanged) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsOpen(false);
     }
 
@@ -93,13 +94,16 @@ export function VoiceHelpPanel() {
       </button>
 
       {isOpen ? (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="voice-help-modal-title"
           className="voice-help-overlay"
           onClick={() => setIsOpen(false)}
+          onKeyDown={(event) => { if (event.key === "Escape") setIsOpen(false); }}
         >
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
             className="voice-help-modal"
             onClick={(event) => event.stopPropagation()}

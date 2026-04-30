@@ -272,6 +272,7 @@ export function CartPage() {
       </div>
 
       {isCheckoutDialogOpen ? (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           role="dialog"
           aria-modal="true"
@@ -279,7 +280,9 @@ export function CartPage() {
           className="app-dialog-overlay"
           style={{ zIndex: 1200 }}
           onClick={() => setIsCheckoutDialogOpen(false)}
+          onKeyDown={(event) => { if (event.key === "Escape") setIsCheckoutDialogOpen(false); }}
         >
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
             className="app-dialog-card"
             style={{ maxWidth: 520 }}

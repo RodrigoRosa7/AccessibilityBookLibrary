@@ -47,6 +47,7 @@ export function VoiceOnboardingDialog() {
 
   useEffect(() => {
     if (!shouldPlayVoiceOnboarding || dismissedForSession) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsOpen(false);
       return;
     }

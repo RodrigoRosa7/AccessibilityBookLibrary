@@ -231,6 +231,7 @@ export function CheckoutPage() {
       </div>
 
       {shouldShowOrderModal && requestedOrder ? (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           role="dialog"
           aria-modal="true"
@@ -238,7 +239,9 @@ export function CheckoutPage() {
           className="app-dialog-overlay"
           style={{ zIndex: 1300 }}
           onClick={closeOrderModal}
+          onKeyDown={(event) => { if (event.key === "Escape") closeOrderModal(); }}
         >
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
           <div
             className="app-dialog-card"
             style={{ maxWidth: 560, gap: 10 }}

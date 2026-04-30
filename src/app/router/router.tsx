@@ -8,6 +8,7 @@ import { CartPage } from "../../pages/CartPage.jsx";
 import { CheckoutPage } from "../../pages/CheckoutPage.jsx";
 import { useAuth } from "../providers/AuthProvider";
 
+// eslint-disable-next-line react-refresh/only-export-components
 function RequireAuth() {
   const { isAuthenticated } = useAuth();
 

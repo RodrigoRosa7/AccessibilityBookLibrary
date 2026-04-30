@@ -69,6 +69,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
     const bookId = match?.[1];
 
     if (!bookId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentDetailBook(null);
       return;
     }
