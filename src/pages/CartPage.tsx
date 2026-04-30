@@ -1,4 +1,5 @@
-import { Button, Heading, Spinner, Text } from "@primer/react";
+import { Heading, Spinner, Text } from "@primer/react";
+import { AppButton } from "../shared/ui/AppButton";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/providers/AuthProvider";
@@ -240,8 +241,8 @@ export function CartPage() {
               </Text>
               <strong>Subtotal: {formatCurrency(item.subtotal)}</strong>
             </div>
-            <Button
-              className="app-button-secondary"
+            <AppButton
+              variant="secondary"
               onClick={() => {
                 removeFromCart(item.bookId);
                 speak(`${item.book.title} removido do carrinho.`);
@@ -249,7 +250,7 @@ export function CartPage() {
               aria-label={`Remover ${item.book.title} do carrinho`}
             >
               Remover
-            </Button>
+            </AppButton>
           </div>
         ))
       )}
@@ -257,20 +258,16 @@ export function CartPage() {
       <div className="app-surface-card app-stack-sm">
         <strong>Total: {formatCurrency(total)}</strong>
         <div className="app-actions-row">
-          <Button
-            className="app-button-secondary"
-            onClick={() => navigate("/books")}
-          >
+          <AppButton variant="secondary" onClick={() => navigate("/books")}>
             Continuar comprando
-          </Button>
-          <Button
-            className="app-button-primary"
+          </AppButton>
+          <AppButton
             variant="primary"
             onClick={() => setIsCheckoutDialogOpen(true)}
             disabled={detailedItems.length === 0}
           >
             Finalizar compra
-          </Button>
+          </AppButton>
         </div>
       </div>
 
@@ -299,20 +296,19 @@ export function CartPage() {
               className="app-actions-row"
               style={{ justifyContent: "flex-end" }}
             >
-              <Button
-                className="app-button-secondary"
+              <AppButton
+                variant="secondary"
                 onClick={() => setIsCheckoutDialogOpen(false)}
               >
                 Cancelar
-              </Button>
-              <Button
-                className="app-button-primary"
+              </AppButton>
+              <AppButton
                 variant="primary"
                 onClick={handleCheckout}
                 disabled={isSubmittingOrder}
               >
                 {isSubmittingOrder ? "Processando..." : "Confirmar"}
-              </Button>
+              </AppButton>
             </div>
           </div>
         </div>

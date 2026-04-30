@@ -85,7 +85,7 @@ export function VoiceHelpPanel() {
     <>
       <button
         type="button"
-        className="interactive-button cart-indicator-button app-button-secondary"
+        className="interactive-button cart-indicator-button"
         onClick={() => setIsOpen(true)}
         aria-label="Abrir ajuda de comandos de voz"
       >
@@ -114,7 +114,7 @@ export function VoiceHelpPanel() {
               </Heading>
               <button
                 type="button"
-                className="interactive-button cart-indicator-button app-button-secondary"
+                className="interactive-button cart-indicator-button"
                 onClick={() => setIsOpen(false)}
               >
                 Fechar

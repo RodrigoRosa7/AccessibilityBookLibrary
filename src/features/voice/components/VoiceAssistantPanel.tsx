@@ -2,7 +2,9 @@ import type React from "react";
 import type { ComponentType, ReactNode } from "react";
 import { Accordion as AccordionBase } from "../../../shared/ui/Accordion.jsx";
 import { VoiceButton } from "../../../components/VoiceButton.jsx";
+import { AppButton } from "../../../shared/ui/AppButton";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
+import styles from "./VoiceAssistantPanel.module.css";
 
 // Accordion.jsx is untyped; cast to avoid implicit-any errors on its props.
 const Accordion = AccordionBase as ComponentType<{
@@ -50,13 +52,13 @@ export function VoiceAssistantPanel({
   onStop,
 }: VoiceAssistantPanelProps) {
   return (
-    <div className="voice-assistant-panel" aria-label="Assistente de voz global">
+    <div className={styles.panel} aria-label="Assistente de voz global">
       <Accordion
-        className="voice-assistant-accordion"
+        className={styles.accordion}
         titleComponent={
-          <div className="voice-assistant-title-wrapper">
+          <div className={styles.titleWrapper}>
             <h3 style={{ fontSize: "13px", margin: 0 }}>Assistente de voz</h3>
-            <div className="voice-assistant-button-container">
+            <div className={styles.buttonContainer}>
               <VoiceButton
                 isListening={isListening}
                 isSpeaking={isSpeaking}
@@ -67,10 +69,10 @@ export function VoiceAssistantPanel({
             </div>
           </div>
         }
-        summaryClassName="voice-assistant-summary"
-        chevronClassName="voice-assistant-chevron"
-        bodyClassName="voice-assistant-body"
-        contentClassName="voice-assistant-content"
+        summaryClassName={styles.summary}
+        chevronClassName={styles.chevron}
+        bodyClassName={styles.body}
+        contentClassName={styles.content}
         isOpen={true}
       >
         <p style={{ color: "var(--color-muted)", fontSize: "13px" }}>
@@ -92,25 +94,22 @@ export function VoiceAssistantPanel({
           </p>
         ) : null}
 
-        <form className="voice-command-fallback" onSubmit={onTypedCommandSubmit}>
-          <label htmlFor="voice-command-input" className="voice-command-label">
+        <form className={styles.commandFallback} onSubmit={onTypedCommandSubmit}>
+          <label htmlFor="voice-command-input" className={styles.commandLabel}>
             Se a voz falhar, digite um comando
           </label>
-          <div className="voice-command-row">
+          <div className={styles.commandRow}>
             <input
               id="voice-command-input"
               type="text"
-              className="voice-command-input"
+              className={styles.commandInput}
               placeholder='Ex.: "abrir livros"'
               value={typedCommand}
               onChange={(event) => onTypedCommandChange(event.target.value)}
             />
-            <button
-              type="submit"
-              className="app-button-primary voice-command-submit"
-            >
+            <AppButton type="submit" variant="primary">
               Executar
-            </button>
+            </AppButton>
           </div>
         </form>
       </Accordion>

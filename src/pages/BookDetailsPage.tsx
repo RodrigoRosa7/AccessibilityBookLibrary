@@ -1,10 +1,11 @@
-import { Button, Heading, Spinner, Text } from "@primer/react";
+import { Heading, Spinner, Text } from "@primer/react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../app/providers/CartProvider";
 import { formatCurrency } from "../shared/lib/currency";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { getBookById } from "../features/books/bookService";
+import { AppButton } from "../shared/ui/AppButton";
 import type { Book } from "../types";
 
 export function BookDetailsPage() {
@@ -73,38 +74,42 @@ export function BookDetailsPage() {
   return (
     <section className="app-surface-card app-stack-sm">
       <div className="app-header-row">
-        <Heading as="h2">{book.title}</Heading>
+        <Heading
+          as="h2"
+          style={{ fontFamily: "var(--font-serif)", lineHeight: "var(--leading-tight)" }}
+        >
+          {book.title}
+        </Heading>
       </div>
 
       <Text as="p" style={{ color: "var(--color-muted)" }}>
         {book.author}
       </Text>
       <Text as="p">{book.description}</Text>
-      <strong>{formatCurrency(book.price)}</strong>
+      <strong style={{ fontSize: "var(--text-lg)" }}>{formatCurrency(book.price)}</strong>
 
       <div className="app-actions-row">
-        <Button
-          className="app-button-secondary"
+        <AppButton
+          variant="secondary"
           onClick={() => speak(book.description)}
           aria-label="Ler descrição do livro em voz alta"
         >
           Ler descrição
-        </Button>
-        <Button
-          className="app-button-primary"
+        </AppButton>
+        <AppButton
           variant="primary"
           onClick={addCurrentBookToCart}
           aria-label="Adicionar livro ao carrinho"
         >
           Adicionar ao carrinho
-        </Button>
-        <Button
-          className="app-button-secondary"
+        </AppButton>
+        <AppButton
+          variant="secondary"
           onClick={() => navigate(-1)}
           aria-label="Voltar para tela anterior"
         >
           Voltar
-        </Button>
+        </AppButton>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import { Heading, Text } from "@primer/react";
+import { AppButton } from "../shared/ui/AppButton";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatCurrency } from "../shared/lib/currency";
@@ -221,20 +222,12 @@ export function CheckoutPage() {
       )}
 
       <div className="app-actions-row">
-        <button
-          type="button"
-          className="interactive-button cart-indicator-button app-button-secondary"
-          onClick={() => navigate("/books")}
-        >
+        <AppButton variant="secondary" onClick={() => navigate("/books")}>
           Continuar comprando
-        </button>
-        <button
-          type="button"
-          className="interactive-button cart-indicator-button app-button-secondary"
-          onClick={() => navigate("/cart")}
-        >
+        </AppButton>
+        <AppButton variant="secondary" onClick={() => navigate("/cart")}>
           Voltar ao carrinho
-        </button>
+        </AppButton>
       </div>
 
       {shouldShowOrderModal && requestedOrder ? (
@@ -295,13 +288,9 @@ export function CheckoutPage() {
             </strong>
 
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <button
-                type="button"
-                className="interactive-button cart-indicator-button app-button-secondary"
-                onClick={closeOrderModal}
-              >
+              <AppButton variant="secondary" onClick={closeOrderModal}>
                 Fechar
-              </button>
+              </AppButton>
             </div>
           </div>
         </div>

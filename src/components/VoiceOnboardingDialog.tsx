@@ -1,4 +1,5 @@
 import { Button, Heading, Text } from "@primer/react";
+import { AppButton } from "../shared/ui/AppButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../app/providers/AuthProvider";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
@@ -165,16 +166,16 @@ export function VoiceOnboardingDialog() {
         </Text>
 
         <div className="voice-onboarding-actions">
-          <Button
-            className="app-button-primary"
-            onClick={handlePlayPresentation}
+          <AppButton
             variant="primary"
+            onClick={handlePlayPresentation}
+            disabled={isSpeaking}
           >
             {isSpeaking ? "Falando..." : "Ouvir novamente"}
-          </Button>
-          <Button className="app-button-secondary" onClick={handleComplete}>
+          </AppButton>
+          <AppButton variant="secondary" onClick={handleComplete}>
             Concluir apresentação
-          </Button>
+          </AppButton>
           <Button onClick={handleSkip} variant="invisible">
             Pular por agora
           </Button>

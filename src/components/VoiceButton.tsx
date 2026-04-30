@@ -1,4 +1,4 @@
-import { Button } from "@primer/react";
+import { AppButton } from "../shared/ui/AppButton";
 
 interface VoiceButtonProps {
   isListening: boolean;
@@ -19,18 +19,14 @@ export function VoiceButton({
 }: VoiceButtonProps) {
   if (!isSupported) {
     return (
-      <Button
-        className="app-button-primary"
-        aria-label="Reconhecimento de voz indisponível"
-        disabled
-      >
+      <AppButton variant="primary" disabled aria-label="Reconhecimento de voz indisponível">
         Voz indisponível
-      </Button>
+      </AppButton>
     );
   }
 
   const buttonLabel = isListening ? "Parar voz" : "Microfone";
-  const buttonClassName = [
+  const animationClass = [
     "voice-button",
     isListening ? "voice-button-listening" : "",
     isSpeaking ? "voice-button-speaking" : "",
@@ -39,8 +35,9 @@ export function VoiceButton({
     .join(" ");
 
   return (
-    <Button
-      className={`${buttonClassName} app-button-primary`}
+    <AppButton
+      className={animationClass}
+      variant={isListening ? "danger" : "primary"}
       aria-label={
         isListening
           ? "Parar reconhecimento de voz"
@@ -48,7 +45,6 @@ export function VoiceButton({
       }
       aria-pressed={isListening}
       onClick={isListening ? onStop : onStart}
-      variant={isListening ? "danger" : "primary"}
       disabled={disabled}
     >
       <span className="voice-icon" aria-hidden="true">
@@ -90,6 +86,6 @@ export function VoiceButton({
         </svg>
       </span>
       <span className="voice-button-label">{buttonLabel}</span>
-    </Button>
+    </AppButton>
   );
 }

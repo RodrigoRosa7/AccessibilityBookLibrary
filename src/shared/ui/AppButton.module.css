@@ -1,0 +1,79 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px 16px;
+  min-height: 36px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease-out,
+    border-color 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+/* ── Primary — filled warm brown ─── */
+.primary {
+  background: var(--color-primary);
+  color: var(--color-bg);
+  border-color: var(--color-primary);
+}
+
+.primary:not(:disabled):hover {
+  background: var(--color-primary-strong);
+  border-color: var(--color-primary-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* ── Secondary — outlined ─────────── */
+.secondary {
+  background: var(--color-surface);
+  color: var(--color-primary-strong);
+  border-color: var(--color-border-strong);
+}
+
+.secondary:not(:disabled):hover {
+  background: var(--color-surface-mid);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* ── Danger — for destructive / active-state actions ─── */
+.danger {
+  background: var(--color-danger);
+  color: #fff;
+  border-color: var(--color-danger);
+}
+
+.danger:not(:disabled):hover {
+  background: color-mix(in srgb, var(--color-danger) 80%, black 20%);
+  border-color: color-mix(in srgb, var(--color-danger) 80%, black 20%);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

@@ -1,8 +1,9 @@
-import { Button, Heading, Text, TextInput } from "@primer/react";
+import { Text, TextInput } from "@primer/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../app/providers/AuthProvider";
 import { loginWithEmailPassword } from "../features/auth/authService";
+import { AppButton } from "../shared/ui/AppButton";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -37,28 +38,49 @@ export function LoginPage() {
         minHeight: "100vh",
         display: "grid",
         placeItems: "center",
-        padding: 16,
+        padding: "var(--space-4)",
+        background: "var(--color-bg)",
       }}
     >
       <section
         style={{
           width: "100%",
-          maxWidth: 460,
+          maxWidth: 480,
           border: "1px solid var(--color-border)",
-          borderRadius: 8,
-          padding: 16,
+          borderRadius: "var(--radius-lg)",
+          padding: "var(--space-6)",
+          background: "var(--color-surface)",
+          boxShadow: "var(--shadow-md)",
+          display: "grid",
+          gap: "var(--space-5)",
         }}
       >
-        <Heading as="h1" style={{ marginBottom: 8 }}>
-          Entrar na Braille Bookstore
-        </Heading>
-        <Text as="p" style={{ color: "var(--color-muted)", marginBottom: 16 }}>
-          Use um usuário de teste para acessar o catálogo com comandos de voz.
-        </Text>
+        <div style={{ display: "grid", gap: "var(--space-2)" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "var(--text-2xl)",
+              fontWeight: 700,
+              lineHeight: "var(--leading-tight)",
+              color: "var(--color-text)",
+              margin: 0,
+            }}
+          >
+            Braille Bookstore
+          </h1>
+          <Text as="p" style={{ color: "var(--color-muted)", margin: 0 }}>
+            Use um usuário de teste para acessar o catálogo com comandos de voz.
+          </Text>
+        </div>
 
-        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
-          <div>
-            <label htmlFor="email-input">E-mail</label>
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: "var(--space-3)" }}>
+          <div style={{ display: "grid", gap: "var(--space-1)" }}>
+            <label
+              htmlFor="email-input"
+              style={{ fontWeight: 600, fontSize: "var(--text-sm)" }}
+            >
+              E-mail
+            </label>
             <TextInput
               id="email-input"
               type="email"
@@ -70,8 +92,13 @@ export function LoginPage() {
             />
           </div>
 
-          <div>
-            <label htmlFor="password-input">Senha</label>
+          <div style={{ display: "grid", gap: "var(--space-1)" }}>
+            <label
+              htmlFor="password-input"
+              style={{ fontWeight: 600, fontSize: "var(--text-sm)" }}
+            >
+              Senha
+            </label>
             <TextInput
               id="password-input"
               type="password"
@@ -84,17 +111,26 @@ export function LoginPage() {
           </div>
 
           {error ? (
-            <p style={{ color: "var(--color-danger)", margin: 0 }}>{error}</p>
+            <p
+              role="alert"
+              style={{
+                color: "var(--color-danger)",
+                margin: 0,
+                fontSize: "var(--text-sm)",
+              }}
+            >
+              {error}
+            </p>
           ) : null}
 
-          <Button
-            className="app-button-primary"
+          <AppButton
             type="submit"
             variant="primary"
             disabled={loading}
+            style={{ width: "100%", justifyContent: "center", marginTop: "var(--space-1)" }}
           >
             {loading ? "Entrando..." : "Entrar"}
-          </Button>
+          </AppButton>
         </form>
       </section>
     </div>
