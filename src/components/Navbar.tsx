@@ -44,7 +44,7 @@ export function Navbar() {
                   ? ("page" as const)
                   : undefined
               }
-              onClick={(event: React.MouseEvent) => {
+              onClick={(event) => {
                 event.preventDefault();
                 navigate(item.to);
               }}

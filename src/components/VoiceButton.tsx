@@ -21,10 +21,10 @@ export function VoiceButton({
     return (
       <Button
         className="app-button-primary"
-        aria-label="Reconhecimento de voz indisponivel"
+        aria-label="Reconhecimento de voz indisponível"
         disabled
       >
-        Voz indisponivel
+        Voz indisponível
       </Button>
     );
   }
