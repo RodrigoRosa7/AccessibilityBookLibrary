@@ -36,7 +36,7 @@ export function Accordion({
         titleComponent as Array<TitleComponentFn | ReactNode>
       ).map((el) => (typeof el === "function" ? el(summaryId) : el));
     }
-    return titleComponent;
+    return <span id={summaryId} style={{ display: "contents" }}>{titleComponent}</span>;
   }
 
   return (

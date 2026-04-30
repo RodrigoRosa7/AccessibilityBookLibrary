@@ -1,22 +1,10 @@
 import type React from "react";
-import type { ComponentType, ReactNode } from "react";
-import { Accordion as AccordionBase } from "../../../shared/ui/Accordion.jsx";
+import type { ReactNode } from "react";
+import { Accordion } from "../../../shared/ui/Accordion.jsx";
 import { VoiceButton } from "../../../components/VoiceButton.jsx";
 import { AppButton } from "../../../shared/ui/AppButton";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 import styles from "./VoiceAssistantPanel.module.css";
-
-// Accordion.jsx is untyped; cast to avoid implicit-any errors on its props.
-const Accordion = AccordionBase as ComponentType<{
-  className?: string;
-  titleComponent?: ReactNode;
-  summaryClassName?: string;
-  chevronClassName?: string;
-  bodyClassName?: string;
-  contentClassName?: string;
-  isOpen?: boolean;
-  children?: ReactNode;
-}>;
 
 interface VoiceAssistantPanelProps {
   pathname: string;
@@ -53,22 +41,24 @@ export function VoiceAssistantPanel({
 }: VoiceAssistantPanelProps) {
   return (
     <div className={styles.panel} aria-label="Assistente de voz global">
+      <div className={styles.header}>
+        <h3 style={{ fontSize: "13px", margin: 0 }}>Assistente de voz</h3>
+        <VoiceButton
+          isListening={isListening}
+          isSpeaking={isSpeaking}
+          isSupported={isSupported}
+          onStart={onStart}
+          onStop={onStop}
+        />
+      </div>
+
       <Accordion
         className={styles.accordion}
-        titleComponent={
-          <div className={styles.titleWrapper}>
-            <h3 style={{ fontSize: "13px", margin: 0 }}>Assistente de voz</h3>
-            <div className={styles.buttonContainer}>
-              <VoiceButton
-                isListening={isListening}
-                isSpeaking={isSpeaking}
-                isSupported={isSupported}
-                onStart={onStart}
-                onStop={onStop}
-              />
-            </div>
-          </div>
-        }
+        titleComponent={(summaryId: string): ReactNode => (
+          <span id={summaryId} style={{ fontSize: "13px" }}>
+            {isListening ? "Ouvindo…" : isSpeaking ? "Falando…" : "Em espera"}
+          </span>
+        )}
         summaryClassName={styles.summary}
         chevronClassName={styles.chevron}
         bodyClassName={styles.body}
