@@ -13,13 +13,13 @@ body {
 button:enabled.interactive-button:hover,
 button:enabled:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(75, 46, 43, 0.24);
+  box-shadow: var(--shadow-md);
   filter: saturate(1.05);
 }
 
 button:enabled:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(75, 46, 43, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 :where(button, [role="button"], input, select, textarea):focus-visible {
