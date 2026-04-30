@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
@@ -9,7 +10,7 @@ vi.mock("../features/auth/authService", () => ({
   loginWithEmailPassword: vi.fn(),
 }));
 
-function Wrapper({ children }: { children: React.ReactNode }) {
+function Wrapper({ children }: { children: ReactNode }) {
   return (
     <MemoryRouter>
       <AuthProvider>{children}</AuthProvider>

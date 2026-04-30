@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { act, render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import axe from "axe-core";
 import { BooksPage } from "./BooksPage";
 import { CartProvider } from "../app/providers/CartProvider";
+
 vi.mock("../features/books/bookService", () => ({
   getBooks: vi.fn().mockResolvedValue([
     {
@@ -27,18 +28,17 @@ vi.mock("../features/voice/useSpeechSynthesis", () => ({
 
 describe("BooksPage accessibility", () => {
   it("has no axe violations after books load", async () => {
-    let container: HTMLElement;
-    await act(async () => {
-      const result = render(
-        <MemoryRouter initialEntries={["/books"]}>
-          <CartProvider>
-            <BooksPage />
-          </CartProvider>
-        </MemoryRouter>,
-      );
-      container = result.container;
-    });
-    const results = await axe.run(container!);
+    const { container } = render(
+      <MemoryRouter initialEntries={["/books"]}>
+        <CartProvider>
+          <BooksPage />
+        </CartProvider>
+      </MemoryRouter>,
+    );
+
+    await screen.findByText("Dom Casmurro");
+
+    const results = await axe.run(container);
     if (results.violations.length > 0) {
       console.error(
         "Axe violations:",

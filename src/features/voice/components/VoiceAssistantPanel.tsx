@@ -1,7 +1,7 @@
 import type React from "react";
 import type { ReactNode } from "react";
-import { Accordion } from "../../../shared/ui/Accordion.jsx";
-import { VoiceButton } from "../../../components/VoiceButton.jsx";
+import { Accordion } from "../../../shared/ui/Accordion";
+import { VoiceButton } from "../../../components/VoiceButton";
 import { AppButton } from "../../../shared/ui/AppButton";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 import styles from "./VoiceAssistantPanel.module.css";

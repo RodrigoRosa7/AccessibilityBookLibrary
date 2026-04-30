@@ -33,8 +33,12 @@ export function Accordion({
     if (typeof titleComponent === "function") return titleComponent(summaryId);
     if (Array.isArray(titleComponent)) {
       return (
-        titleComponent as Array<TitleComponentFn | ReactNode>
-      ).map((el) => (typeof el === "function" ? el(summaryId) : el));
+        <span id={summaryId} style={{ display: "contents" }}>
+          {(titleComponent as Array<TitleComponentFn | ReactNode>).map((el) =>
+            typeof el === "function" ? el(summaryId) : el,
+          )}
+        </span>
+      );
     }
     return <span id={summaryId} style={{ display: "contents" }}>{titleComponent}</span>;
   }
