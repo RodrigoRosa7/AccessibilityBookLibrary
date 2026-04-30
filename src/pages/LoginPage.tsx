@@ -13,7 +13,7 @@ export function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setError("");
     setLoading(true);
@@ -23,7 +23,9 @@ export function LoginPage() {
       login(user);
       navigate("/home");
     } catch (submitError) {
-      setError(submitError.message);
+      setError(
+        submitError instanceof Error ? submitError.message : "Erro ao entrar.",
+      );
     } finally {
       setLoading(false);
     }
@@ -47,18 +49,16 @@ export function LoginPage() {
           padding: 16,
         }}
       >
-        <Heading as="h1" sx={{ mb: 2 }}>
+        <Heading as="h1" style={{ marginBottom: 8 }}>
           Entrar na Braille Bookstore
         </Heading>
-        <Text as="p" sx={{ color: "var(--color-muted)", mb: 3 }}>
+        <Text as="p" style={{ color: "var(--color-muted)", marginBottom: 16 }}>
           Use um usuário de teste para acessar o catálogo com comandos de voz.
         </Text>
 
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
           <div>
-            <Text as="label" htmlFor="email-input">
-              E-mail
-            </Text>
+            <label htmlFor="email-input">E-mail</label>
             <TextInput
               id="email-input"
               type="email"
@@ -71,9 +71,7 @@ export function LoginPage() {
           </div>
 
           <div>
-            <Text as="label" htmlFor="password-input">
-              Senha
-            </Text>
+            <label htmlFor="password-input">Senha</label>
             <TextInput
               id="password-input"
               type="password"
@@ -86,9 +84,7 @@ export function LoginPage() {
           </div>
 
           {error ? (
-            <Text as="p" sx={{ color: "var(--color-danger)" }}>
-              {error}
-            </Text>
+            <p style={{ color: "var(--color-danger)", margin: 0 }}>{error}</p>
           ) : null}
 
           <Button
@@ -96,15 +92,6 @@ export function LoginPage() {
             type="submit"
             variant="primary"
             disabled={loading}
-            sx={{
-              backgroundColor: "var(--color-primary)",
-              color: "var(--color-bg)",
-              borderColor: "var(--color-primary)",
-              "&:hover:not(:disabled)": {
-                backgroundColor: "var(--color-primary-strong)",
-                borderColor: "var(--color-primary-strong)",
-              },
-            }}
           >
             {loading ? "Entrando..." : "Entrar"}
           </Button>

@@ -1,4 +1,19 @@
+import type { ReactNode } from "react";
 import { useId } from "react";
+
+type TitleComponentFn = (summaryId: string) => ReactNode;
+
+interface AccordionProps {
+  title?: string;
+  titleComponent?: TitleComponentFn | ReactNode;
+  isOpen?: boolean;
+  children: ReactNode;
+  className?: string;
+  chevronClassName?: string;
+  summaryClassName?: string;
+  bodyClassName?: string;
+  contentClassName?: string;
+}
 
 export function Accordion({
   title,
@@ -10,28 +25,25 @@ export function Accordion({
   summaryClassName = "accordion-summary",
   bodyClassName = "accordion-body",
   contentClassName = "accordion-content",
-}) {
+}: AccordionProps) {
   const summaryId = useId();
+
+  function renderTitle(): ReactNode {
+    if (!titleComponent) return <h2 id={summaryId}>{title}</h2>;
+    if (typeof titleComponent === "function") return titleComponent(summaryId);
+    if (Array.isArray(titleComponent)) {
+      return (
+        titleComponent as Array<TitleComponentFn | ReactNode>
+      ).map((el) => (typeof el === "function" ? el(summaryId) : el));
+    }
+    return titleComponent;
+  }
 
   return (
     <section className={`accordion ${className}`} aria-labelledby={summaryId}>
       <details className="accordion-details" open={isOpen}>
         <summary className={summaryClassName}>
-          <div>
-            {titleComponent ? (
-              typeof titleComponent === "function" ? (
-                titleComponent(summaryId)
-              ) : Array.isArray(titleComponent) ? (
-                titleComponent.map((el) =>
-                  typeof el === "function" ? el(summaryId) : el,
-                )
-              ) : (
-                titleComponent
-              )
-            ) : (
-              <h2 id={summaryId}>{title}</h2>
-            )}
-          </div>
+          <div>{renderTitle()}</div>
           <span className={chevronClassName} aria-hidden="true">
             <svg
               viewBox="0 0 24 24"

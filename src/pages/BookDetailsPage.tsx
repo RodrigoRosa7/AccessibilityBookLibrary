@@ -5,6 +5,7 @@ import { useCart } from "../app/providers/CartProvider";
 import { formatCurrency } from "../shared/lib/currency";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { getBookById } from "../features/books/bookService";
+import type { Book } from "../types";
 
 export function BookDetailsPage() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export function BookDetailsPage() {
   const { addToCart } = useCart();
   const { speak } = useSpeechSynthesis();
 
-  const [book, setBook] = useState(null);
+  const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -24,13 +25,17 @@ export function BookDetailsPage() {
       setError("");
 
       try {
-        const result = await getBookById(id);
+        const result = await getBookById(id ?? "");
         if (active) {
           setBook(result);
         }
       } catch (loadError) {
         if (active) {
-          setError(loadError.message);
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Erro ao carregar detalhes do livro.",
+          );
         }
       } finally {
         if (active) {
@@ -59,7 +64,7 @@ export function BookDetailsPage() {
 
   if (error || !book) {
     return (
-      <Text sx={{ color: "var(--color-danger)" }}>
+      <Text style={{ color: "var(--color-danger)" }}>
         {error || "Livro não encontrado"}
       </Text>
     );
@@ -71,11 +76,11 @@ export function BookDetailsPage() {
         <Heading as="h2">{book.title}</Heading>
       </div>
 
-      <Text as="p" sx={{ color: "var(--color-muted)" }}>
+      <Text as="p" style={{ color: "var(--color-muted)" }}>
         {book.author}
       </Text>
       <Text as="p">{book.description}</Text>
-      <Text as="strong">{formatCurrency(book.price)}</Text>
+      <strong>{formatCurrency(book.price)}</strong>
 
       <div className="app-actions-row">
         <Button
@@ -88,15 +93,6 @@ export function BookDetailsPage() {
         <Button
           className="app-button-primary"
           variant="primary"
-          sx={{
-            backgroundColor: "var(--color-primary)",
-            color: "var(--color-bg)",
-            borderColor: "var(--color-primary)",
-            "&:hover:not(:disabled)": {
-              backgroundColor: "var(--color-primary-strong)",
-              borderColor: "var(--color-primary-strong)",
-            },
-          }}
           onClick={addCurrentBookToCart}
           aria-label="Adicionar livro ao carrinho"
         >

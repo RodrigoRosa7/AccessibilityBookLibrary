@@ -6,8 +6,24 @@ import { useCart } from "../app/providers/CartProvider";
 import { formatCurrency } from "../shared/lib/currency";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { getBooks } from "../features/books/bookService";
-import { submitCheckout, saveOrderToHistory, saveLatestOrderSummary } from "../features/cart/cartService";
-import { subscribeVoiceEvent, VOICE_EVENT } from "../features/voice/services/voiceEvents";
+import {
+  submitCheckout,
+  saveOrderToHistory,
+  saveLatestOrderSummary,
+} from "../features/cart/cartService";
+import {
+  subscribeVoiceEvent,
+  VOICE_EVENT,
+} from "../features/voice/services/voiceEvents";
+import type { Book } from "../types";
+
+interface DetailedItem {
+  id: string;
+  bookId: number;
+  quantity: number;
+  book: Book;
+  subtotal: number;
+}
 
 export function CartPage() {
   const navigate = useNavigate();
@@ -15,7 +31,7 @@ export function CartPage() {
   const { items, removeFromCart, clearCart } = useCart();
   const { speak } = useSpeechSynthesis();
 
-  const [catalog, setCatalog] = useState([]);
+  const [catalog, setCatalog] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCheckoutDialogOpen, setIsCheckoutDialogOpen] = useState(false);
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
@@ -43,7 +59,7 @@ export function CartPage() {
     };
   }, []);
 
-  const detailedItems = useMemo(() => {
+  const detailedItems = useMemo<DetailedItem[]>(() => {
     return items
       .map((item) => {
         const book = catalog.find((entry) => entry.id === item.bookId);
@@ -57,7 +73,7 @@ export function CartPage() {
           subtotal: book.price * item.quantity,
         };
       })
-      .filter(Boolean);
+      .filter((item): item is DetailedItem => item !== null);
   }, [items, catalog]);
 
   const total = useMemo(
@@ -113,7 +129,10 @@ export function CartPage() {
 
       navigate("/checkout", { state: { orderSummary } });
     } catch (checkoutError) {
-      const message = checkoutError.message ?? "Erro ao finalizar o pedido.";
+      const message =
+        checkoutError instanceof Error
+          ? checkoutError.message || "Erro ao finalizar o pedido."
+          : "Erro ao finalizar o pedido.";
       setOrderMessage(message);
       speak(message);
     } finally {
@@ -134,16 +153,25 @@ export function CartPage() {
       handleCheckout();
     }
 
-    function handleKeydown(event) {
+    function handleKeydown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         closeCheckoutDialog();
       }
     }
 
     window.addEventListener("keydown", handleKeydown);
-    const unsubClose = subscribeVoiceEvent(VOICE_EVENT.MODAL_CLOSE, closeCheckoutDialog);
-    const unsubOpen = subscribeVoiceEvent(VOICE_EVENT.CART_OPEN_CHECKOUT_DIALOG, openCheckoutDialog);
-    const unsubConfirm = subscribeVoiceEvent(VOICE_EVENT.CART_CONFIRM_CHECKOUT, handleConfirmCheckout);
+    const unsubClose = subscribeVoiceEvent(
+      VOICE_EVENT.MODAL_CLOSE,
+      closeCheckoutDialog,
+    );
+    const unsubOpen = subscribeVoiceEvent(
+      VOICE_EVENT.CART_OPEN_CHECKOUT_DIALOG,
+      openCheckoutDialog,
+    );
+    const unsubConfirm = subscribeVoiceEvent(
+      VOICE_EVENT.CART_CONFIRM_CHECKOUT,
+      handleConfirmCheckout,
+    );
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
@@ -191,7 +219,7 @@ export function CartPage() {
       </div>
 
       {orderMessage ? (
-        <Text sx={{ color: "var(--color-primary-strong)" }}>
+        <Text style={{ color: "var(--color-primary-strong)" }}>
           {orderMessage}
         </Text>
       ) : null}
@@ -204,13 +232,13 @@ export function CartPage() {
         detailedItems.map((item) => (
           <div key={item.id} className="app-surface-card app-header-row">
             <div>
-              <Heading as="h3" sx={{ fontSize: 2 }}>
+              <Heading as="h3" style={{ fontSize: 16 }}>
                 {item.book.title}
               </Heading>
-              <Text as="p" sx={{ color: "var(--color-muted)" }}>
+              <Text as="p" style={{ color: "var(--color-muted)" }}>
                 Quantidade: {item.quantity}
               </Text>
-              <Text as="strong">Subtotal: {formatCurrency(item.subtotal)}</Text>
+              <strong>Subtotal: {formatCurrency(item.subtotal)}</strong>
             </div>
             <Button
               className="app-button-secondary"
@@ -227,7 +255,7 @@ export function CartPage() {
       )}
 
       <div className="app-surface-card app-stack-sm">
-        <Text as="strong">Total: {formatCurrency(total)}</Text>
+        <strong>Total: {formatCurrency(total)}</strong>
         <div className="app-actions-row">
           <Button
             className="app-button-secondary"
@@ -238,15 +266,6 @@ export function CartPage() {
           <Button
             className="app-button-primary"
             variant="primary"
-            sx={{
-              backgroundColor: "var(--color-primary)",
-              color: "var(--color-bg)",
-              borderColor: "var(--color-primary)",
-              "&:hover:not(:disabled)": {
-                backgroundColor: "var(--color-primary-strong)",
-                borderColor: "var(--color-primary-strong)",
-              },
-            }}
             onClick={() => setIsCheckoutDialogOpen(true)}
             disabled={detailedItems.length === 0}
           >
@@ -269,7 +288,7 @@ export function CartPage() {
             style={{ maxWidth: 520 }}
             onClick={(event) => event.stopPropagation()}
           >
-            <Heading as="h3" id="checkout-modal-title" sx={{ fontSize: 2 }}>
+            <Heading as="h3" id="checkout-modal-title" style={{ fontSize: 16 }}>
               Confirmar pedido
             </Heading>
             <Text>
@@ -289,15 +308,6 @@ export function CartPage() {
               <Button
                 className="app-button-primary"
                 variant="primary"
-                sx={{
-                  backgroundColor: "var(--color-primary)",
-                  color: "var(--color-bg)",
-                  borderColor: "var(--color-primary)",
-                  "&:hover:not(:disabled)": {
-                    backgroundColor: "var(--color-primary-strong)",
-                    borderColor: "var(--color-primary-strong)",
-                  },
-                }}
                 onClick={handleCheckout}
                 disabled={isSubmittingOrder}
               >
