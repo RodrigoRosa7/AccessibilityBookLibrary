@@ -1,12 +1,16 @@
-import { Button, Heading, Spinner, Text, TextInput } from "@primer/react";
+import { Heading, Text, TextInput } from "@primer/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useCart } from "../app/providers/CartProvider";
 import { getSearchResultsSummaryMessage } from "../features/voice/searchResultsSpeech";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 import { BookCard } from "../features/books/BookCard";
+import { BookCardSkeleton } from "../features/books/BookCardSkeleton";
 import { getBooks } from "../features/books/bookService";
+import { AppButton } from "../shared/ui/AppButton";
 import type { Book } from "../types";
+
+const SKELETON_COUNT = 6;
 
 export function BooksPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,11 +27,9 @@ export function BooksPage() {
 
   const cartQuantitiesByBookId = useMemo(() => {
     const quantityMap = new Map<number, number>();
-
     items.forEach((item) => {
       quantityMap.set(item.bookId, item.quantity);
     });
-
     return quantityMap;
   }, [items]);
 
@@ -121,41 +123,46 @@ export function BooksPage() {
           aria-label="Buscar livros"
           style={{ minWidth: 260, flex: 1 }}
         />
-        <Button
-          className="app-button-primary"
-          type="submit"
-          variant="primary"
-        >
+        <AppButton type="submit" variant="primary">
           Buscar
-        </Button>
-        <Button
-          className="app-button-secondary"
+        </AppButton>
+        <AppButton
           type="button"
+          variant="secondary"
           onClick={() => {
             setSearchInput("");
             setSearchParams({});
           }}
         >
           Limpar
-        </Button>
+        </AppButton>
       </form>
 
-      {loading ? <Spinner size="large" srText="Carregando livros" /> : null}
       {error ? (
         <div className="app-stack-sm">
           <Text style={{ color: "var(--color-danger)" }}>{error}</Text>
-          <Button
-            className="app-button-secondary"
+          <AppButton
+            variant="secondary"
             onClick={() => setRetryCount((c) => c + 1)}
             style={{ alignSelf: "flex-start" }}
           >
             Tentar novamente
-          </Button>
+          </AppButton>
         </div>
       ) : null}
+
       {searchSummary ? (
         <Text style={{ color: "var(--color-muted)" }}>{searchSummary}</Text>
       ) : null}
+
+      {loading ? (
+        <div className="app-books-grid" aria-label="Carregando livros..." aria-busy="true">
+          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+            <BookCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : null}
+
       {!loading && !error && books.length === 0 ? (
         <Text style={{ color: "var(--color-muted)" }}>
           Nenhum livro encontrado para a busca informada.

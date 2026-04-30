@@ -1,7 +1,9 @@
-import { Button, Heading, Text } from "@primer/react";
+import { Heading, Text } from "@primer/react";
 import { useNavigate } from "react-router-dom";
 import type { Book, BookId } from "../../types";
 import { formatCurrency } from "../../shared/lib/currency";
+import { AppButton } from "../../shared/ui/AppButton";
+import styles from "./BookCard.module.css";
 
 interface BookCardProps {
   book: Book;
@@ -22,15 +24,7 @@ export function BookCard({
   const isInCart = quantityInCart > 0;
 
   return (
-    <article
-      className="catalog-book-card"
-      style={{
-        padding: 16,
-        display: "grid",
-        gap: 12,
-        minHeight: 220,
-      }}
-    >
+    <article className={styles.card}>
       <div>
         <Heading as="h3" style={{ fontSize: 16 }}>
           {book.title}
@@ -42,7 +36,7 @@ export function BookCard({
 
       <Text as="p">{book.description}</Text>
 
-      <div style={{ display: "grid", gap: 8 }}>
+      <div style={{ display: "grid", gap: 8, marginTop: "auto" }}>
         <div
           style={{
             display: "flex",
@@ -53,9 +47,11 @@ export function BookCard({
           }}
         >
           <strong>{formatCurrency(book.price)}</strong>
-          <Text as="p" style={{ color: "var(--color-muted)", fontSize: "12px" }}>
-            No carrinho: {quantityInCart}
-          </Text>
+          {isInCart ? (
+            <Text as="p" style={{ color: "var(--color-muted)", fontSize: "12px" }}>
+              No carrinho: {quantityInCart}
+            </Text>
+          ) : null}
         </div>
 
         <div
@@ -67,30 +63,30 @@ export function BookCard({
             flexWrap: "wrap",
           }}
         >
-          <Button
-            className="interactive-button app-button-primary"
+          <AppButton
+            variant="secondary"
             onClick={() => navigate(`/books/${book.id}`)}
             aria-label={`Ver detalhes de ${book.title}`}
           >
             Detalhes
-          </Button>
+          </AppButton>
 
           {isInCart ? (
             <div
-              className="book-quantity-controls"
+              className={styles.quantityControls}
               role="group"
               aria-label={`Quantidade de ${book.title} no carrinho`}
             >
               <button
                 type="button"
-                className="interactive-button quantity-step-button"
+                className={`interactive-button ${styles.quantityBtn}`}
                 onClick={() => onDecreaseQuantity(book.id, quantityInCart)}
                 aria-label={`Diminuir quantidade de ${book.title}`}
               >
-                -
+                −
               </button>
               <output
-                className="book-quantity-value"
+                className={styles.quantityValue}
                 aria-live="polite"
                 aria-atomic="true"
               >
@@ -98,7 +94,7 @@ export function BookCard({
               </output>
               <button
                 type="button"
-                className="interactive-button quantity-step-button"
+                className={`interactive-button ${styles.quantityBtn}`}
                 onClick={() => onIncreaseQuantity(book.id)}
                 aria-label={`Aumentar quantidade de ${book.title}`}
               >
@@ -106,14 +102,13 @@ export function BookCard({
               </button>
             </div>
           ) : (
-            <Button
-              className="interactive-button app-button-primary"
+            <AppButton
               variant="primary"
               onClick={() => onAddToCart(book.id)}
               aria-label={`Adicionar ${book.title} ao carrinho`}
             >
               Adicionar
-            </Button>
+            </AppButton>
           )}
         </div>
       </div>

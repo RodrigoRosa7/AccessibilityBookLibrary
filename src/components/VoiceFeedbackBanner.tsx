@@ -1,5 +1,5 @@
-import { Button } from "@primer/react";
 import { useEffect, useRef, useState } from "react";
+import styles from "./VoiceFeedbackBanner.module.css";
 
 const VOICE_FEEDBACK_EVENT = "voice-feedback:update";
 
@@ -8,6 +8,13 @@ interface FeedbackEventDetail {
   severity?: string;
   isSpeaking?: boolean;
 }
+
+const severityClass: Record<string, string> = {
+  info: styles.info,
+  critical: styles.critical,
+  warning: styles.warning,
+  success: styles.success,
+};
 
 export function VoiceFeedbackBanner() {
   const [message, setMessage] = useState("");
@@ -68,24 +75,34 @@ export function VoiceFeedbackBanner() {
 
   return (
     <section
-      className={`voice-feedback-banner voice-feedback-${severity}`}
+      className={`${styles.banner} ${severityClass[severity] ?? styles.info}`}
       role={role}
       aria-live={liveMode}
       aria-atomic="true"
     >
-      <div className="voice-feedback-content">
+      <div className={styles.content}>
         <p style={{ fontWeight: 600, margin: 0 }}>
           Assistente de voz ({speakingState})
         </p>
         <p style={{ margin: 0 }}>{message}</p>
       </div>
-      <Button
-        variant="invisible"
+      <button
+        type="button"
         onClick={() => setIsVisible(false)}
         aria-label="Ocultar mensagem do assistente de voz"
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          color: "var(--color-muted)",
+          padding: "4px 8px",
+          borderRadius: "var(--radius-sm)",
+          flexShrink: 0,
+          alignSelf: "flex-start",
+        }}
       >
         Fechar
-      </Button>
+      </button>
     </section>
   );
 }

@@ -64,7 +64,7 @@ export function Navbar() {
         </Text>
         <button
           type="button"
-          className="interactive-button cart-indicator-button app-button-secondary"
+          className="interactive-button cart-indicator-button"
           onClick={() => {
             logout();
             navigate("/login");

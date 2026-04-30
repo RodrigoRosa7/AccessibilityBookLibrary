@@ -1,4 +1,5 @@
-import { Button, Heading, Text } from "@primer/react";
+import { Heading, Text } from "@primer/react";
+import { AppButton } from "../shared/ui/AppButton";
 import { useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Accordion } from "../shared/ui/Accordion";
@@ -108,13 +109,9 @@ export function RouteVoiceGuidance() {
         </Text>
 
         <div className="route-voice-guidance-actions">
-          <Button
-            className="app-button-primary"
-            onClick={playGuidance}
-            variant="primary"
-          >
+          <AppButton variant="primary" onClick={playGuidance}>
             Ouvir instruções
-          </Button>
+          </AppButton>
         </div>
 
         <div className="command-chips">

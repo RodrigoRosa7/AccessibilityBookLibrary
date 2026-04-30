@@ -42,66 +42,6 @@
   line-height: 1;
 }
 
-/* ── Book quantity controls ─────────────────────────────────────────── */
-.book-quantity-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 4px;
-  background: color-mix(
-    in srgb,
-    var(--color-surface) 88%,
-    var(--color-primary) 12%
-  );
-}
-
-.quantity-step-button {
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--color-primary-strong);
-  border-radius: 999px;
-  background: var(--color-primary);
-  color: var(--color-bg);
-  cursor: pointer;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.book-quantity-value {
-  min-width: 30px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--color-text);
-}
-
-/* ── App buttons (overrides for Primer — to be replaced by CSS Modules in PR #9) */
-.app-button-primary {
-  background: var(--color-primary) !important;
-  color: var(--color-bg) !important;
-  border-color: var(--color-primary) !important;
-}
-
-.app-button-primary:hover:not(:disabled),
-.app-button-primary:focus-visible {
-  background: var(--color-primary-strong) !important;
-  border-color: var(--color-primary-strong) !important;
-}
-
-.app-button-secondary {
-  background: var(--color-primary) !important;
-  color: var(--color-bg) !important;
-  border-color: var(--color-primary) !important;
-}
-
-.app-button-secondary:hover:not(:disabled),
-.app-button-secondary:focus-visible {
-  background: var(--color-primary-strong) !important;
-  border-color: var(--color-primary-strong) !important;
-}
-
 /* ── Dark mode toggle ───────────────────────────────────────────────── */
 .dark-mode-toggle {
   display: inline-flex;
@@ -163,154 +103,6 @@
   padding: 12px;
   display: grid;
   gap: 8px;
-}
-
-/* ── Voice assistant panel ──────────────────────────────────────────── */
-.voice-assistant-panel {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 200;
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  background: var(--color-surface);
-  padding: 0;
-  width: 320px;
-  box-shadow: var(--shadow-soft);
-  display: flex;
-  flex-direction: column;
-}
-
-.voice-assistant-accordion {
-  display: grid;
-}
-
-.voice-assistant-accordion .accordion-details {
-  display: grid;
-}
-
-.voice-assistant-accordion .accordion-details[open] {
-  gap: 12px;
-}
-
-.voice-assistant-summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 12px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.voice-assistant-summary::-webkit-details-marker {
-  display: none;
-}
-
-.voice-assistant-summary::after {
-  content: none;
-}
-
-.voice-assistant-title-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-}
-
-.voice-assistant-title-wrapper h3 {
-  margin: 0;
-}
-
-.voice-assistant-button-container {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-  width: 100%;
-}
-
-.voice-assistant-chevron {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid
-    color-mix(in srgb, var(--color-primary) 40%, var(--color-bg) 60%);
-  background: color-mix(
-    in srgb,
-    var(--color-surface) 70%,
-    var(--color-primary) 30%
-  );
-  color: var(--color-primary-strong);
-  flex-shrink: 0;
-}
-
-.voice-assistant-chevron svg {
-  transform: rotate(180deg);
-  transition: transform 0.2s ease;
-}
-
-.voice-assistant-accordion
-  .accordion-details[open]
-  .voice-assistant-chevron
-  svg {
-  transform: rotate(0deg);
-}
-
-.voice-assistant-body {
-  padding: 0 12px 12px;
-  display: grid;
-  gap: 12px;
-}
-
-.voice-assistant-content {
-  display: grid;
-  gap: 8px;
-}
-
-.voice-assistant-status {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-
-.voice-command-fallback {
-  display: grid;
-  gap: 6px;
-}
-
-.voice-command-label {
-  font-size: 13px;
-  color: var(--color-muted);
-}
-
-.voice-command-row {
-  display: flex;
-  gap: 8px;
-}
-
-.voice-command-input {
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 8px 10px;
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.voice-command-submit {
-  border: 1px solid var(--color-primary);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 /* ── Voice button ───────────────────────────────────────────────────── */
@@ -391,42 +183,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-/* ── Voice feedback banner ──────────────────────────────────────────── */
-.voice-feedback-banner {
-  border: 1px solid var(--color-border);
-  border-left-width: 4px;
-  border-radius: 10px;
-  background: var(--color-surface);
-  color: var(--color-text);
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  box-shadow: var(--shadow-soft);
-}
-
-.voice-feedback-content {
-  display: grid;
-  gap: 4px;
-}
-
-.voice-feedback-info {
-  border-left-color: var(--color-primary);
-}
-
-.voice-feedback-critical {
-  border-left-color: var(--color-danger);
-}
-
-@media (max-width: 600px) {
-  .voice-feedback-banner {
-    flex-direction: column;
-    align-items: stretch;
-  }
 }
 
 /* ── Route voice guidance ───────────────────────────────────────────── */
@@ -555,13 +311,6 @@
   padding: 16px;
 }
 
-.catalog-book-card {
-  background: var(--color-surface);
-  border: 1px solid
-    color-mix(in srgb, var(--color-border) 68%, var(--color-primary) 32%);
-  border-radius: 12px;
-  box-shadow: var(--shadow-md);
-}
 
 .app-surface-card-muted {
   background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg) 12%);
