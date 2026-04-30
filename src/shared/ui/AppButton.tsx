@@ -13,7 +13,7 @@ export function AppButton({
   return (
     <button
       {...props}
-      className={`interactive-button ${styles.button} ${styles[variant]} ${className}`.trim()}
+      className={`${styles.button} ${styles[variant]} ${className}`.trim()}
     />
   );
 }
