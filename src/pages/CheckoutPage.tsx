@@ -1,16 +1,26 @@
 import { Heading, Text } from "@primer/react";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatCurrency } from "../shared/lib/currency";
-import { getOrderHistory, getLatestOrderSummary } from "../features/cart/cartService";
-import { subscribeVoiceEvent, VOICE_EVENT } from "../features/voice/services/voiceEvents";
+import {
+  getOrderHistory,
+  getLatestOrderSummary,
+} from "../features/cart/cartService";
+import {
+  subscribeVoiceEvent,
+  VOICE_EVENT,
+} from "../features/voice/services/voiceEvents";
+import type { Order } from "../types";
 
 export function CheckoutPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const orderSummary = useMemo(() => {
-    return location.state?.orderSummary ?? getLatestOrderSummary();
+  const orderSummary = useMemo<Order | null>(() => {
+    return (
+      (location.state as { orderSummary?: Order } | null)?.orderSummary ??
+      getLatestOrderSummary()
+    );
   }, [location.state]);
 
   const orderHistory = useMemo(() => getOrderHistory(), []);
@@ -21,7 +31,7 @@ export function CheckoutPage() {
     return Number.isFinite(value) && value > 0 ? value : null;
   }, [location.search]);
 
-  const ordersForMenu = useMemo(() => {
+  const ordersForMenu = useMemo<Order[]>(() => {
     const normalizedHistory = Array.isArray(orderHistory) ? orderHistory : [];
 
     if (!orderSummary) {
@@ -37,7 +47,7 @@ export function CheckoutPage() {
       : [orderSummary, ...normalizedHistory];
   }, [orderHistory, orderSummary]);
 
-  const displayedOrder = useMemo(() => {
+  const displayedOrder = useMemo<Order | null>(() => {
     if (requestedOrderId) {
       const selected = ordersForMenu.find(
         (item) => Number(item.id) === requestedOrderId,
@@ -51,7 +61,7 @@ export function CheckoutPage() {
     return orderSummary ?? ordersForMenu[0] ?? null;
   }, [orderSummary, ordersForMenu, requestedOrderId]);
 
-  const requestedOrder = useMemo(() => {
+  const requestedOrder = useMemo<Order | null>(() => {
     if (!requestedOrderId) {
       return null;
     }
@@ -62,38 +72,40 @@ export function CheckoutPage() {
   }, [ordersForMenu, requestedOrderId]);
 
   const shouldShowOrderModal = Boolean(requestedOrderId && requestedOrder);
-
   const requestedOrderNotFound = Boolean(requestedOrderId && !requestedOrder);
 
-  const closeOrderModal = () => {
+  const closeOrderModal = useCallback(() => {
     navigate("/checkout", { replace: true, state: location.state });
-  };
+  }, [navigate, location.state]);
 
   useEffect(() => {
-    function handleKeydown(event) {
+    function handleKeydown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         closeOrderModal();
       }
     }
 
     window.addEventListener("keydown", handleKeydown);
-    const unsubClose = subscribeVoiceEvent(VOICE_EVENT.MODAL_CLOSE, closeOrderModal);
+    const unsubClose = subscribeVoiceEvent(
+      VOICE_EVENT.MODAL_CLOSE,
+      closeOrderModal,
+    );
 
     return () => {
       window.removeEventListener("keydown", handleKeydown);
       unsubClose();
     };
-  }, [location.state, navigate]);
+  }, [closeOrderModal]);
 
   return (
     <section className="app-surface-card app-stack-sm">
-      <Heading as="h2" sx={{ mb: 2 }}>
+      <Heading as="h2" style={{ marginBottom: 8 }}>
         Pedidos
       </Heading>
 
       {requestedOrderNotFound ? (
         <div className="app-status-banner app-status-banner-critical">
-          <Text as="p" sx={{ color: "var(--color-danger)" }}>
+          <Text as="p" style={{ color: "var(--color-danger)" }}>
             Não encontrei o pedido #{requestedOrderId}. Verifique o número
             informado.
           </Text>
@@ -103,16 +115,16 @@ export function CheckoutPage() {
       {displayedOrder ? (
         <>
           <div className="app-status-banner app-status-banner-success">
-            <Text as="p" sx={{ fontWeight: "bold" }}>
+            <Text as="p" style={{ fontWeight: "bold" }}>
               Pedido #{displayedOrder.id} confirmado com sucesso.
             </Text>
-            <Text as="p" sx={{ color: "var(--color-muted)" }}>
+            <Text as="p" style={{ color: "var(--color-muted)" }}>
               Data: {new Date(displayedOrder.createdAt).toLocaleString("pt-BR")}
             </Text>
           </div>
 
           <div className="app-surface-card app-stack-sm">
-            <Heading as="h3" sx={{ fontSize: 2 }}>
+            <Heading as="h3" style={{ fontSize: 16 }}>
               Itens do pedido
             </Heading>
 
@@ -133,7 +145,7 @@ export function CheckoutPage() {
                 <Text as="p">
                   {item.title} x {item.quantity}
                 </Text>
-                <Text as="strong">{formatCurrency(item.subtotal)}</Text>
+                <strong>{formatCurrency(item.subtotal)}</strong>
               </div>
             ))}
 
@@ -143,9 +155,7 @@ export function CheckoutPage() {
                 paddingTop: 8,
               }}
             >
-              <Text as="strong">
-                Total pago: {formatCurrency(displayedOrder.total)}
-              </Text>
+              <strong>Total pago: {formatCurrency(displayedOrder.total)}</strong>
             </div>
           </div>
 
@@ -203,7 +213,7 @@ export function CheckoutPage() {
         </>
       ) : (
         <div className="app-surface-card app-surface-card-muted">
-          <Text as="p" sx={{ color: "var(--color-muted)" }}>
+          <Text as="p" style={{ color: "var(--color-muted)" }}>
             Nenhum pedido recente encontrado. Finalize uma compra no carrinho
             para ver o resumo aqui.
           </Text>
@@ -227,7 +237,7 @@ export function CheckoutPage() {
         </button>
       </div>
 
-      {shouldShowOrderModal ? (
+      {shouldShowOrderModal && requestedOrder ? (
         <div
           role="dialog"
           aria-modal="true"
@@ -241,11 +251,11 @@ export function CheckoutPage() {
             style={{ maxWidth: 560, gap: 10 }}
             onClick={(event) => event.stopPropagation()}
           >
-            <Heading as="h3" id="order-modal-title" sx={{ fontSize: 3 }}>
+            <Heading as="h3" id="order-modal-title" style={{ fontSize: 20 }}>
               Pedido #{requestedOrder.id}
             </Heading>
 
-            <Text as="p" sx={{ color: "var(--color-muted)" }}>
+            <Text as="p" style={{ color: "var(--color-muted)" }}>
               Data: {new Date(requestedOrder.createdAt).toLocaleString("pt-BR")}
             </Text>
 
@@ -275,14 +285,14 @@ export function CheckoutPage() {
                   <Text as="p">
                     {item.title} x {item.quantity}
                   </Text>
-                  <Text as="strong">{formatCurrency(item.subtotal)}</Text>
+                  <strong>{formatCurrency(item.subtotal)}</strong>
                 </div>
               ))}
             </div>
 
-            <Text as="strong">
+            <strong>
               Total do pedido: {formatCurrency(requestedOrder.total)}
-            </Text>
+            </strong>
 
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button

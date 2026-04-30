@@ -4,8 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { useCart } from "../app/providers/CartProvider";
 import { getSearchResultsSummaryMessage } from "../features/voice/searchResultsSpeech";
 import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
-import { BookCard } from "../features/books/BookCard.jsx";
+import { BookCard } from "../features/books/BookCard";
 import { getBooks } from "../features/books/bookService";
+import type { Book } from "../types";
 
 export function BooksPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,14 +15,14 @@ export function BooksPage() {
 
   const query = searchParams.get("q") ?? "";
   const [searchInput, setSearchInput] = useState(query);
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const announcedSearchSummaryRef = useRef("");
 
   const cartQuantitiesByBookId = useMemo(() => {
-    const quantityMap = new Map();
+    const quantityMap = new Map<number, number>();
 
     items.forEach((item) => {
       quantityMap.set(item.bookId, item.quantity);
@@ -48,7 +49,11 @@ export function BooksPage() {
         }
       } catch (loadError) {
         if (active) {
-          setError(loadError.message);
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Erro ao carregar livros.",
+          );
         }
       } finally {
         if (active) {
@@ -120,15 +125,6 @@ export function BooksPage() {
           className="app-button-primary"
           type="submit"
           variant="primary"
-          sx={{
-            backgroundColor: "var(--color-primary)",
-            color: "var(--color-bg)",
-            borderColor: "var(--color-primary)",
-            "&:hover:not(:disabled)": {
-              backgroundColor: "var(--color-primary-strong)",
-              borderColor: "var(--color-primary-strong)",
-            },
-          }}
         >
           Buscar
         </Button>
@@ -147,7 +143,7 @@ export function BooksPage() {
       {loading ? <Spinner size="large" srText="Carregando livros" /> : null}
       {error ? (
         <div className="app-stack-sm">
-          <Text sx={{ color: "var(--color-danger)" }}>{error}</Text>
+          <Text style={{ color: "var(--color-danger)" }}>{error}</Text>
           <Button
             className="app-button-secondary"
             onClick={() => setRetryCount((c) => c + 1)}
@@ -158,10 +154,10 @@ export function BooksPage() {
         </div>
       ) : null}
       {searchSummary ? (
-        <Text sx={{ color: "var(--color-muted)" }}>{searchSummary}</Text>
+        <Text style={{ color: "var(--color-muted)" }}>{searchSummary}</Text>
       ) : null}
       {!loading && !error && books.length === 0 ? (
-        <Text sx={{ color: "var(--color-muted)" }}>
+        <Text style={{ color: "var(--color-muted)" }}>
           Nenhum livro encontrado para a busca informada.
         </Text>
       ) : null}
