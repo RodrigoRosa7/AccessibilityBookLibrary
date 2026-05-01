@@ -1,4 +1,4 @@
-import { Button, Heading, Text } from "@primer/react";
+import { Heading, Text } from "@primer/react";
 import { AppButton } from "../shared/ui/AppButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../app/providers/AuthProvider";
@@ -175,11 +175,8 @@ export function VoiceOnboardingDialog() {
             {isSpeaking ? "Falando..." : "Ouvir novamente"}
           </AppButton>
           <AppButton variant="secondary" onClick={handleComplete}>
-            Concluir apresentação
+            Concluir
           </AppButton>
-          <Button onClick={handleSkip} variant="invisible">
-            Pular por agora
-          </Button>
         </div>
       </section>
     </div>

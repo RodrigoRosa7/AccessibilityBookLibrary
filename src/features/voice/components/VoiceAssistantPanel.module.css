@@ -8,9 +8,11 @@
   background: var(--color-surface);
   padding: 0;
   width: 320px;
+  max-width: calc(100vw - 32px);
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .header {
@@ -24,10 +26,12 @@
 
 .accordion {
   display: grid;
+  min-width: 0;
 }
 
 .accordion :global(.accordion-details) {
   display: grid;
+  min-width: 0;
 }
 
 .accordion :global(.accordion-details[open]) {
@@ -88,11 +92,13 @@
   padding: 0 12px 12px;
   display: grid;
   gap: 12px;
+  min-width: 0;
 }
 
 .content {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 /* ── Typed command fallback ── */

@@ -2,7 +2,7 @@
 
 ## Project Context
 
-- This repository is an academic demo of an accessible online Braille bookstore.
+- This repository is an academic demo of an accessible online Library bookstore.
 - Frontend only: React + Vite.
 - Main goals: accessibility, voice interaction (Web Speech API), mocked data with MSW.
 

@@ -6,19 +6,19 @@ export const usersMock: MockUser[] = [
   {
     id: 1,
     name: "Ana Silva",
-    email: "ana@braillebooks.com",
-    password: "123456",
+    email: "ana@librarybooks.com",
+    password: "f@cR9oPVAh",
   },
   {
     id: 2,
     name: "Carlos Souza",
-    email: "carlos@braillebooks.com",
-    password: "123456",
+    email: "carlos@librarybooks.com",
+    password: "f@cR9oPVAh",
   },
   {
     id: 3,
     name: "Marina Oliveira",
-    email: "marina@braillebooks.com",
-    password: "123456",
+    email: "marina@librarybooks.com",
+    password: "f@cR9oPVAh",
   },
 ];

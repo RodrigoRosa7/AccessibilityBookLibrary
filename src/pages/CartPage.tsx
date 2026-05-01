@@ -110,9 +110,6 @@ export function CartPage() {
 
       clearCart();
       setIsCheckoutDialogOpen(false);
-      const message = `Pedido #${order.id} confirmado com sucesso.`;
-      setOrderMessage(message);
-      speak(message);
 
       const orderSummary = {
         id: order.id,
@@ -128,7 +125,11 @@ export function CartPage() {
       saveLatestOrderSummary(orderSummary);
       saveOrderToHistory(orderSummary);
 
-      navigate("/checkout", { state: { orderSummary } });
+      const message = "Compra finalizada, redirecionando para a tela de pedidos.";
+      setOrderMessage(message);
+      speak(message, {
+        onEnd: () => navigate("/checkout", { state: { orderSummary } }),
+      });
     } catch (checkoutError) {
       const message =
         checkoutError instanceof Error

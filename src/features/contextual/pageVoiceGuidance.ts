@@ -31,10 +31,10 @@ function buildSpeechText(
 export function getPageVoiceGuidance(pathname: string): PageVoiceGuidance {
   if (/^\/books\/\d+$/.test(pathname)) {
     const commands = [
-      "adicionar ao carrinho",
       "ler título",
-      "ler detalhes",
       "ler descrição",
+      "preço",
+      "adicionar ao carrinho",
     ];
     return {
       title: "Dicas para detalhes do livro",
@@ -51,12 +51,9 @@ export function getPageVoiceGuidance(pathname: string): PageVoiceGuidance {
 
   if (pathname === "/checkout") {
     const commands = [
+      "ler pedido",
       "continuar comprando",
-      "voltar ao carrinho",
-      "abrir pedido 3",
-      "ler dados do pedido",
-      "próximo pedido",
-      "pedido anterior",
+      "ler próximo pedido",
     ];
     return {
       title: "Dicas para pedidos",
@@ -73,20 +70,14 @@ export function getPageVoiceGuidance(pathname: string): PageVoiceGuidance {
 
   if (pathname === "/books") {
     const commands = [
-      '"buscar livro"',
-      '"nome do livro"',
       "ler livros disponíveis",
-      "ler resultados da busca",
-      "ler próximos resultados",
-      "ler resultados anteriores",
-      "repetir resultados",
-      'selecionar "nome do livro"',
+      'buscar livro "nome do livro"',
       'abrir detalhes de "nome do livro"',
     ];
     return {
-      title: "Dicas para catálogo",
+      title: "Comandos do catálogo",
       description:
-        "Você está no catálogo de livros. Aqui pode buscar títulos, ouvir resultados e selecionar um livro para abrir os detalhes.",
+        "Você está no catálogo de livros. Aqui pode buscar títulos, ouvir resultados e abrir os detalhes de um livro.",
       commands,
       speechText: buildSpeechText(
         "Comandos do catálogo",
@@ -97,15 +88,7 @@ export function getPageVoiceGuidance(pathname: string): PageVoiceGuidance {
   }
 
   if (pathname === "/cart") {
-    const commands = [
-      "ler itens",
-      "ler itens do carrinho",
-      "total do carrinho",
-      "finalizar compra",
-      "confirmar",
-      "cancelar",
-      "continuar comprando",
-    ];
+    const commands = ["ler itens", "total do carrinho", "finalizar compra"];
     return {
       title: "Dicas para carrinho",
       description:

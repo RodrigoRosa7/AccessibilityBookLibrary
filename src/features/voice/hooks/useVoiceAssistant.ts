@@ -143,8 +143,10 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
         try {
           const results = await getBooks(term);
           if (results.length === 1) {
-            speakMessage(`A busca retornou um livro. Abrindo detalhes de ${results[0].title}.`);
-            navigate(`/books/${results[0].id}`);
+            const { id: bookId, title: bookTitle } = results[0];
+            const msg = `A busca retornou um livro. Abrindo detalhes de ${bookTitle}.`;
+            setFeedback(msg);
+            speak(msg, { onEnd: () => navigate(`/books/${bookId}`) });
             return;
           }
         } catch {
@@ -229,6 +231,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           routeGuidance.speechText,
           `Comandos essenciais: ${essentialCommands.join(", ")}.`,
           `Comandos de sessão e modais: ${sessionCommands.join(", ")}.`,
+          "Para fechar esta ajuda, diga 'Fechar modal'.",
         ].join(" ");
         emitVoiceEvent(VOICE_EVENT.HELP_OPEN);
         setFeedback("Abrindo ajuda de comandos de voz.");
@@ -250,9 +253,10 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
         speakMessage("Fechando modal aberta.");
       },
       logout: () => {
-        logout();
-        speakMessage("Saindo do sistema.");
-        navigate("/login");
+        setFeedback("Saindo do sistema.");
+        speak("Saindo do sistema.", {
+          onEnd: () => { logout(); navigate("/login"); },
+        });
       },
       clearCartItems: () => {
         if (items.length === 0) {
@@ -403,7 +407,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
           (order) => Number(order.id) === Number(normalizedOrderId),
         );
         if (foundOrder) {
-          speakMessage(`Pedido ${normalizedOrderId} encontrado. Abrindo detalhes.`);
+          speakMessage(`Pedido ${normalizedOrderId} encontrado. Abrindo detalhes. Para fechar, diga 'Fechar modal'.`);
           navigate(`/checkout?orderId=${encodeURIComponent(normalizedOrderId)}`);
           return;
         }
@@ -458,6 +462,10 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
                 setFeedback("Lendo descrição do livro.");
                 speak(currentDetailBook.description);
               }
+            },
+            readPrice: () => {
+              setFeedback("Lendo preço do livro.");
+              speak(`O preço é ${formatMoneyForSpeech(currentDetailBook.price)}.`);
             },
           }
         : {}),

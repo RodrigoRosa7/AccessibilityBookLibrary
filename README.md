@@ -1,4 +1,4 @@
-# Braille Bookstore — Protótipo Web Speech API
+# Library Bookstore — Protótipo Web Speech API
 
 Aplicação web de livraria com foco em acessibilidade, navegação por voz e interação por teclado. Desenvolvida como projeto acadêmico na Unisinos (Projeto Final II).
 

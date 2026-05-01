@@ -152,20 +152,20 @@ export function useVoicePagination({
       const targetIndex = fallbackIndex + offset;
 
       if (targetIndex < 0) {
-        speakMessage("Este é o pedido mais recente do histórico.");
+        speakMessage("Este é o pedido mais recente do histórico. Para fechar, diga 'Fechar modal'.");
         navigate(`/checkout?orderId=${orderHistory[0].id}`);
         return;
       }
 
       if (targetIndex >= orderHistory.length) {
-        speakMessage("Este é o pedido mais antigo do histórico.");
+        speakMessage("Este é o pedido mais antigo do histórico. Para fechar, diga 'Fechar modal'.");
         navigate(`/checkout?orderId=${orderHistory[orderHistory.length - 1].id}`);
         return;
       }
 
       const targetOrder = orderHistory[targetIndex];
       setFeedback(`Abrindo pedido ${targetOrder.id} e lendo os dados.`);
-      speak(buildOrderDetailsSpeech(targetOrder));
+      speak(buildOrderDetailsSpeech(targetOrder) + " Para fechar, diga 'Fechar modal'.");
       navigate(`/checkout?orderId=${targetOrder.id}`);
     },
     [search, navigate, setFeedback, speak, speakMessage],

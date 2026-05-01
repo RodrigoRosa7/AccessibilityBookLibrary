@@ -31,7 +31,7 @@ export const helpMatchers: IntentMatcher[] = [
       /^(fechar|fechar modal|fechar ajuda|fechar pedido|cancelar)$/.test(
         normalized,
       ) ||
-      /(fechar|cancelar).*(modal|janela|ajuda|pedido)/.test(normalized)
+      /(fechar|cancelar).*(modal|modao|janela|ajuda|pedido)/.test(normalized)
     ) {
       return {
         intent: VOICE_INTENTS.CLOSE_MODAL,
@@ -85,6 +85,21 @@ export const helpMatchers: IntentMatcher[] = [
     ) {
       return {
         intent: VOICE_INTENTS.READ_DESCRIPTION,
+        entity: null,
+        confidence: 0.92,
+        transcript: normalized,
+      };
+    }
+    return null;
+  },
+
+  ({ normalized }) => {
+    if (
+      /(ler|leia|ouvir|qual|falar).*(preco|custo)/.test(normalized) ||
+      /^preco$/.test(normalized)
+    ) {
+      return {
+        intent: VOICE_INTENTS.READ_PRICE,
         entity: null,
         confidence: 0.92,
         transcript: normalized,

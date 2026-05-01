@@ -7,7 +7,7 @@ describe("getPageVoiceGuidance", () => {
 
     expect(guidance.title).toContain("catálogo");
     expect(guidance.commands).toContain("ler livros disponíveis");
-    expect(guidance.commands).toContain("ler resultados da busca");
+    expect(guidance.commands).toContain('abrir detalhes de "nome do livro"');
     expect(guidance.speechText).toContain("repetir instruções");
   });
 
@@ -23,7 +23,7 @@ describe("getPageVoiceGuidance", () => {
     const guidance = getPageVoiceGuidance("/checkout");
 
     expect(guidance.title).toContain("pedidos");
-    expect(guidance.commands).toContain("ler dados do pedido");
+    expect(guidance.commands).toContain("ler pedido");
     expect(guidance.speechText).toContain("Você está na área de pedidos");
     expect(guidance.speechText).toContain("repetir instruções");
   });

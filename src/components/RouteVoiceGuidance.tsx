@@ -11,7 +11,8 @@ import {
 } from "../features/voice/services/voiceEvents";
 
 function getSessionKey(pathname: string): string {
-  return `voice-guidance-played:${pathname}`;
+  const key = /^\/books\/\d+$/.test(pathname) ? "/books/:id" : pathname;
+  return `voice-guidance-played:${key}`;
 }
 
 export function RouteVoiceGuidance() {
