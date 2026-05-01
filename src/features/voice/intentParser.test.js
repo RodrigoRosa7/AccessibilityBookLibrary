@@ -209,6 +209,26 @@ describe("parseVoiceIntent core commands", () => {
     });
   });
 
+  it("recognizes read price commands", () => {
+    const cases = ["preço", "ler preço", "qual o preço", "falar custo"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, {
+        currentRoute: "/books/1",
+      });
+      expect(result.intent).toBe(VOICE_INTENTS.READ_PRICE);
+    });
+  });
+
+  it("does not classify cart value phrases as read price", () => {
+    const cartPhrases = ["qual o valor do carrinho", "valor do carrinho"];
+
+    cartPhrases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).not.toBe(VOICE_INTENTS.READ_PRICE);
+    });
+  });
+
   it("recognizes read search results commands on books route", () => {
     const cases = [
       "ler resultados da busca",

@@ -171,6 +171,26 @@ describe("pedidos voice navigation flow", () => {
     expect(message).toBe("");
   });
 
+  it("dispatches read price action when available on book details route", () => {
+    const readPrice = vi.fn();
+    const intent = parseVoiceIntent("ler preço", { currentRoute: "/books/1" });
+
+    const message = handleVoiceCommand(intent, { readPrice });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.READ_PRICE);
+    expect(readPrice).toHaveBeenCalledTimes(1);
+    expect(message).toBe("");
+  });
+
+  it("returns feedback message when read price is unavailable", () => {
+    const message = handleVoiceCommand(
+      { intent: VOICE_INTENTS.READ_PRICE, entity: null },
+      {},
+    );
+
+    expect(message).toBe("Não foi possível ler o preço nesta tela.");
+  });
+
   it("dispatches voice help action when user asks for help", () => {
     const openVoiceHelp = vi.fn();
     const intent = parseVoiceIntent("me ajuda", {

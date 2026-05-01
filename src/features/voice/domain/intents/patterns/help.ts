@@ -95,8 +95,8 @@ export const helpMatchers: IntentMatcher[] = [
 
   ({ normalized }) => {
     if (
-      /(ler|leia|ouvir|qual|falar).*(preco|valor|custo)/.test(normalized) ||
-      /^(preco|valor)$/.test(normalized)
+      /(ler|leia|ouvir|qual|falar).*(preco|custo)/.test(normalized) ||
+      /^preco$/.test(normalized)
     ) {
       return {
         intent: VOICE_INTENTS.READ_PRICE,

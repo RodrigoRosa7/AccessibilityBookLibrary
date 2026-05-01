@@ -152,8 +152,11 @@ export function handleVoiceCommand(
       return "";
 
     case VOICE_INTENTS.READ_PRICE:
-      actions.readPrice?.();
-      return "";
+      if (actions.readPrice) {
+        actions.readPrice();
+        return "";
+      }
+      return "Não foi possível ler o preço nesta tela.";
 
     case VOICE_INTENTS.SELECT_BOOK:
       if (!entity) {
