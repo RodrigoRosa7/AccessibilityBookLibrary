@@ -1,6 +1,7 @@
 import { ActionList, Heading, Text } from "@primer/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../app/providers/AuthProvider";
+import { useSpeechSynthesis } from "../features/voice/useSpeechSynthesis";
 
 interface NavItem {
   to: string;
@@ -19,6 +20,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { speak } = useSpeechSynthesis();
 
   return (
     <nav
@@ -66,8 +68,9 @@ export function Navbar() {
           type="button"
           className="interactive-button cart-indicator-button"
           onClick={() => {
-            logout();
-            navigate("/login");
+            speak("Saindo do sistema.", {
+              onEnd: () => { logout(); navigate("/login"); },
+            });
           }}
         >
           Sair

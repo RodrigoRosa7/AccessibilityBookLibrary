@@ -6,6 +6,7 @@ export type SpeechSeverity = "info" | "critical";
 
 export interface SpeakMetadata {
   severity?: SpeechSeverity;
+  onEnd?: () => void;
 }
 
 export interface UseSpeechSynthesisOptions {
@@ -82,6 +83,7 @@ export function useSpeechSynthesis(
           severity,
           isSpeaking: false,
         });
+        metadata.onEnd?.();
       };
       utterance.onerror = () => {
         setIsSpeaking(false);

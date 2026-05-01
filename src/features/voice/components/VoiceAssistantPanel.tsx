@@ -97,8 +97,8 @@ export function VoiceAssistantPanel({
               value={typedCommand}
               onChange={(event) => onTypedCommandChange(event.target.value)}
             />
-            <AppButton type="submit" variant="primary">
-              Executar
+            <AppButton type="submit" variant="primary" aria-label="Executar comando">
+              →
             </AppButton>
           </div>
         </form>

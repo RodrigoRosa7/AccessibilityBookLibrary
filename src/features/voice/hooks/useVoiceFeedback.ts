@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useSpeechSynthesis } from "../useSpeechSynthesis";
-import type { SpeechSeverity } from "../useSpeechSynthesis";
+import type { SpeakMetadata, SpeechSeverity } from "../useSpeechSynthesis";
 
 export type { SpeechSeverity };
 
@@ -12,7 +12,7 @@ export interface UseVoiceFeedbackReturn {
   setFeedback: (message: string, severity?: SpeechSeverity) => void;
   setVoiceError: (error: string) => void;
   speakMessage: (message: string, severity?: SpeechSeverity) => void;
-  speak: (text: string) => void;
+  speak: (text: string, metadata?: SpeakMetadata) => void;
   cancel: () => void;
 }
 
@@ -44,8 +44,8 @@ export function useVoiceFeedback(): UseVoiceFeedbackReturn {
   );
 
   const speak = useCallback(
-    (text: string) => {
-      synthSpeak(text);
+    (text: string, metadata?: SpeakMetadata) => {
+      synthSpeak(text, metadata);
     },
     [synthSpeak],
   );

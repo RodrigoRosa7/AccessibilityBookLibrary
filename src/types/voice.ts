@@ -30,6 +30,7 @@ export const VOICE_INTENTS = {
   GO_BACK: "GO_BACK",
   READ_TITLE: "READ_TITLE",
   READ_DESCRIPTION: "READ_DESCRIPTION",
+  READ_PRICE: "READ_PRICE",
   OPEN_HOME: "OPEN_HOME",
   SELECT_BOOK: "SELECT_BOOK",
   UNKNOWN: "UNKNOWN",
@@ -82,6 +83,7 @@ export interface VoiceActions {
   onDescriptionUnavailable?: () => void;
   readTitle?: () => void;
   onTitleUnavailable?: () => void;
+  readPrice?: () => void;
   selectBook?: (entity: string) => void;
   openHome?: () => void;
   onUnknown?: (intentResult: ParsedIntent) => void;

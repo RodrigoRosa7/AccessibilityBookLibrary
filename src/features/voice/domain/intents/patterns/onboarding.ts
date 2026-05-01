@@ -15,7 +15,7 @@ export const onboardingMatchers: IntentMatcher[] = [
   },
 
   ({ normalized }) => {
-    if (/^concluir(\s+a)?\s+apresentacao$/.test(normalized)) {
+    if (/^concluir(\s+(a\s+)?apresentacao)?$/.test(normalized)) {
       return {
         intent: VOICE_INTENTS.COMPLETE_VOICE_ONBOARDING,
         entity: null,

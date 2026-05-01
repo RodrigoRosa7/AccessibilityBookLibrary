@@ -158,6 +158,18 @@ export const searchMatchers: IntentMatcher[] = [
     return null;
   },
 
+  ({ normalized }) => {
+    const entity = extractBookDetailsEntity(normalized);
+    if (!entity) return null;
+
+    return {
+      intent: VOICE_INTENTS.OPEN_BOOK_DETAILS,
+      entity,
+      confidence: 0.9,
+      transcript: normalized,
+    };
+  },
+
   ({ normalized }, ctx) => {
     if (ctx.currentRoute !== "/books") return null;
 
@@ -172,18 +184,6 @@ export const searchMatchers: IntentMatcher[] = [
 
     return {
       intent: VOICE_INTENTS.SELECT_BOOK,
-      entity,
-      confidence: 0.9,
-      transcript: normalized,
-    };
-  },
-
-  ({ normalized }) => {
-    const entity = extractBookDetailsEntity(normalized);
-    if (!entity) return null;
-
-    return {
-      intent: VOICE_INTENTS.OPEN_BOOK_DETAILS,
       entity,
       confidence: 0.9,
       transcript: normalized,

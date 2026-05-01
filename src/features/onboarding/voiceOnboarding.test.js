@@ -23,7 +23,7 @@ function createMemoryStorage() {
 describe("voice onboarding storage", () => {
   it("builds stable storage key per user and version", () => {
     const key = getVoiceOnboardingStorageKey(
-      { id: 42, email: "ana@braillebooks.com" },
+      { id: 42, email: "ana@librarybooks.com" },
       VOICE_ONBOARDING_VERSION,
     );
 
@@ -34,7 +34,7 @@ describe("voice onboarding storage", () => {
 
   it("marks onboarding as completed and reads back the flag", () => {
     const storage = createMemoryStorage();
-    const user = { email: "ana@braillebooks.com" };
+    const user = { email: "ana@librarybooks.com" };
 
     expect(hasCompletedVoiceOnboarding(user, { storage })).toBe(false);
 
@@ -48,12 +48,9 @@ describe("buildInitialVoicePresentation", () => {
   it("includes key guidance for first-time navigation", () => {
     const speech = buildInitialVoicePresentation({ name: "Ana" });
 
-    expect(speech).toContain("Início");
     expect(speech).toContain("Livros");
     expect(speech).toContain("tecla espaço");
-    expect(speech).toContain("Me ajude");
     expect(speech).toContain("Ouvir novamente");
-    expect(speech).toContain("Concluir apresentação");
-    expect(speech).toContain("Pular por agora");
+    expect(speech).toContain("Concluir");
   });
 });

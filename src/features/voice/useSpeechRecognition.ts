@@ -51,7 +51,7 @@ export function useSpeechRecognition(
     interimResults = true,
     currentRoute = "/",
     retryOnNetworkError = true,
-    maxNetworkRetries = 1,
+    maxNetworkRetries = 3,
     onIntent,
     onTranscript,
     onError,
@@ -110,6 +110,7 @@ export function useSpeechRecognition(
         shouldListenRef.current &&
         networkRetryCountRef.current < maxNetworkRetries
       ) {
+        const retryCount = networkRetryCountRef.current;
         networkRetryCountRef.current += 1;
         recognition.stop();
         window.setTimeout(() => {
@@ -120,7 +121,7 @@ export function useSpeechRecognition(
           } catch {
             // If start fails, the browser will emit another onerror event.
           }
-        }, 350);
+        }, 350 * Math.pow(2, retryCount));
         return;
       }
 

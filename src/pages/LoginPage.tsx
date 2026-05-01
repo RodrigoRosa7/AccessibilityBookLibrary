@@ -9,8 +9,8 @@ export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState("ana@braillebooks.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("ana@librarybooks.com");
+  const [password, setPassword] = useState("f@cR9oPVAh");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -66,14 +66,17 @@ export function LoginPage() {
               margin: 0,
             }}
           >
-            Braille Bookstore
+            Livraria de Voz
           </h1>
           <Text as="p" style={{ color: "var(--color-muted)", margin: 0 }}>
             Use um usuário de teste para acessar o catálogo com comandos de voz.
           </Text>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: "grid", gap: "var(--space-3)" }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "grid", gap: "var(--space-3)" }}
+        >
           <div style={{ display: "grid", gap: "var(--space-1)" }}>
             <label
               htmlFor="email-input"
@@ -127,7 +130,11 @@ export function LoginPage() {
             type="submit"
             variant="primary"
             disabled={loading}
-            style={{ width: "100%", justifyContent: "center", marginTop: "var(--space-1)" }}
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              marginTop: "var(--space-1)",
+            }}
           >
             {loading ? "Entrando..." : "Entrar"}
           </AppButton>

@@ -151,6 +151,10 @@ export function handleVoiceCommand(
       }
       return "";
 
+    case VOICE_INTENTS.READ_PRICE:
+      actions.readPrice?.();
+      return "";
+
     case VOICE_INTENTS.SELECT_BOOK:
       if (!entity) {
         return "Não entendi qual livro você quer selecionar.";
