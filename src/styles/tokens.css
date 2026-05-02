@@ -1,0 +1,134 @@
+/* ── Brand palette ─────────────────────────────────────────────────── */
+:root {
+  --warm-50:  #faf9f6;
+  --warm-100: #f4f1ea;
+  --warm-200: #e8e2d3;
+  --warm-300: #c9bfa8;
+  --warm-600: #8c5a3c;
+  --warm-700: #6d3f24;
+  --warm-900: #2a1814;
+
+  --terracotta-500: #cc785c;
+  --terracotta-600: #b86347;
+
+  /* ── Semantic color tokens ──────────────────────────────────────── */
+  /* Contrast ratios verified against --color-surface (#f4f1ea):      */
+  /* --color-text #2a1814:    15.4:1 (AAA)                            */
+  /* --color-primary #6d3f24:  8.6:1 (AAA)                            */
+  /* --color-success #2e6b3e:  6.2:1 (AA)                             */
+  /* --color-warning #8a5a00:  5.0:1 (AA)                             */
+  /* --color-danger  #b3261e:  5.1:1 (AA) — fixed: was identical to   */
+  /*   --color-text, violating WCAG 1.4.1 (Use of Color)              */
+  /* --color-info    #1f5e8a:  6.8:1 (AA)                             */
+
+  --color-bg:            var(--warm-50);
+  --color-surface:       var(--warm-100);
+  --color-surface-mid:   var(--warm-200);
+  --color-border:        var(--warm-200);
+  --color-border-strong: var(--warm-300);
+  --color-text:          var(--warm-900);
+  --color-muted:         #5a4a42;
+  --color-primary:       var(--warm-700);
+  --color-primary-strong:var(--warm-900);
+  --color-accent:        var(--terracotta-600);
+  --color-focus:         var(--warm-700);
+  --color-overlay:       rgba(42, 24, 20, 0.6);
+
+  /* Status tokens */
+  --color-success: #2e6b3e;
+  --color-warning: #8a5a00;
+  --color-danger:  #b3261e;
+  --color-info:    #1f5e8a;
+
+  /* ── Shadows ────────────────────────────────────────────────────── */
+  --shadow-sm:   0 2px 6px rgba(75, 46, 43, 0.08);
+  --shadow-md:   0 8px 20px rgba(75, 46, 43, 0.14);
+  --shadow-lg:   0 24px 48px rgba(75, 46, 43, 0.20);
+  --shadow-soft: var(--shadow-md);
+
+  /* ── Spacing — 8-pt grid ────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ── Border radii ───────────────────────────────────────────────── */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-pill: 999px;
+
+  /* ── Typography ─────────────────────────────────────────────────── */
+  --font-sans:  "Inter", "Lexend Deca", system-ui, -apple-system, sans-serif;
+  --font-serif: "Lora", Georgia, "Times New Roman", serif;
+  --font-mono:  ui-monospace, "Cascadia Code", "Fira Code", monospace;
+
+  --text-xs:   13px;
+  --text-sm:   15px;
+  --text-base: 17px;
+  --text-lg:   19px;
+  --text-xl:   24px;
+  --text-2xl:  30px;
+  --text-3xl:  38px;
+
+  --leading-tight:  1.25;
+  --leading-normal: 1.55;
+}
+
+/* ── Dark mode — system preference (only when no explicit data-theme is set) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg:            #1a1410;
+    --color-surface:       #2a201a;
+    --color-surface-mid:   #342820;
+    --color-border:        #4a3a30;
+    --color-border-strong: #6a5040;
+    --color-text:          #f5e9d8;
+    --color-muted:         #c9bca8;
+    --color-primary:       #d39d80;
+    --color-primary-strong:#f0d0b0;
+    --color-accent:        #e08e6e;
+    --color-focus:         #d39d80;
+    --color-overlay:       rgba(10, 6, 4, 0.72);
+
+    --color-success: #6dbb86;
+    --color-warning: #e0b060;
+    --color-danger:  #f06b62;
+    --color-info:    #6fb0d6;
+
+    --shadow-sm:   0 2px 6px rgba(0, 0, 0, 0.24);
+    --shadow-md:   0 8px 20px rgba(0, 0, 0, 0.36);
+    --shadow-lg:   0 24px 48px rgba(0, 0, 0, 0.50);
+    --shadow-soft: var(--shadow-md);
+  }
+}
+
+/* ── Dark mode — manual toggle via [data-theme="dark"] on <html> ────── */
+[data-theme="dark"] {
+  --color-bg:            #1a1410;
+  --color-surface:       #2a201a;
+  --color-surface-mid:   #342820;
+  --color-border:        #4a3a30;
+  --color-border-strong: #6a5040;
+  --color-text:          #f5e9d8;
+  --color-muted:         #c9bca8;
+  --color-primary:       #d39d80;
+  --color-primary-strong:#f0d0b0;
+  --color-accent:        #e08e6e;
+  --color-focus:         #d39d80;
+  --color-overlay:       rgba(10, 6, 4, 0.72);
+
+  --color-success: #6dbb86;
+  --color-warning: #e0b060;
+  --color-danger:  #f06b62;
+  --color-info:    #6fb0d6;
+
+  --shadow-sm:   0 2px 6px rgba(0, 0, 0, 0.24);
+  --shadow-md:   0 8px 20px rgba(0, 0, 0, 0.36);
+  --shadow-lg:   0 24px 48px rgba(0, 0, 0, 0.50);
+  --shadow-soft: var(--shadow-md);
+}

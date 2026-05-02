@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getPageVoiceGuidance } from "./pageVoiceGuidance.js";
+import { getPageVoiceGuidance } from "./pageVoiceGuidance";
 
 describe("getPageVoiceGuidance", () => {
   it("returns catalog guidance for books route", () => {
@@ -7,7 +7,7 @@ describe("getPageVoiceGuidance", () => {
 
     expect(guidance.title).toContain("catálogo");
     expect(guidance.commands).toContain("ler livros disponíveis");
-    expect(guidance.commands).toContain("ler resultados da busca");
+    expect(guidance.commands).toContain('abrir detalhes de "nome do livro"');
     expect(guidance.speechText).toContain("repetir instruções");
   });
 
@@ -23,7 +23,7 @@ describe("getPageVoiceGuidance", () => {
     const guidance = getPageVoiceGuidance("/checkout");
 
     expect(guidance.title).toContain("pedidos");
-    expect(guidance.commands).toContain("ler dados do pedido");
+    expect(guidance.commands).toContain("ler pedido");
     expect(guidance.speechText).toContain("Você está na área de pedidos");
     expect(guidance.speechText).toContain("repetir instruções");
   });

@@ -1,0 +1,130 @@
+import type { PageVoiceGuidance } from "../../types";
+
+const GLOBAL_UI_COMMANDS = [
+  "abrir livros",
+  "abrir carrinho",
+  "abrir pedidos",
+  "voltar para início",
+  "me ajude",
+  "voltar",
+];
+
+const SESSION_MODAL_COMMANDS = [
+  "fechar modal",
+  "fechar ajuda",
+  "deslogar",
+  "saia do sistema",
+];
+
+function buildSpeechText(
+  title: string,
+  commands: string[],
+  description: string,
+): string {
+  return [
+    description,
+    `${title}: ${commands.join(", ")}.`,
+    'Você pode dizer "repetir instruções" para ouvir este resumo novamente.',
+  ].join(" ");
+}
+
+export function getPageVoiceGuidance(pathname: string): PageVoiceGuidance {
+  if (/^\/books\/\d+$/.test(pathname)) {
+    const commands = [
+      "ler título",
+      "ler descrição",
+      "preço",
+      "adicionar ao carrinho",
+    ];
+    return {
+      title: "Dicas para detalhes do livro",
+      description:
+        "Você está na página de detalhes do livro. Aqui pode ouvir a descrição completa e adicionar o item ao carrinho.",
+      commands,
+      speechText: buildSpeechText(
+        "Comandos da página de detalhes",
+        commands,
+        "Você está na página de detalhes do livro.",
+      ),
+    };
+  }
+
+  if (pathname === "/checkout") {
+    const commands = [
+      "ler pedido",
+      "continuar comprando",
+      "ler próximo pedido",
+    ];
+    return {
+      title: "Dicas para pedidos",
+      description:
+        "Você está na área de pedidos. Aqui pode revisar pedidos recentes e navegar entre eles por voz.",
+      commands,
+      speechText: buildSpeechText(
+        "Comandos da página de pedidos",
+        commands,
+        "Você está na área de pedidos.",
+      ),
+    };
+  }
+
+  if (pathname === "/books") {
+    const commands = [
+      "ler livros disponíveis",
+      'buscar livro "nome do livro"',
+      'abrir detalhes de "nome do livro"',
+    ];
+    return {
+      title: "Comandos do catálogo",
+      description:
+        "Você está no catálogo de livros. Aqui pode buscar títulos, ouvir resultados e abrir os detalhes de um livro.",
+      commands,
+      speechText: buildSpeechText(
+        "Comandos do catálogo",
+        commands,
+        "Você está no catálogo de livros.",
+      ),
+    };
+  }
+
+  if (pathname === "/cart") {
+    const commands = ["ler itens", "total do carrinho", "finalizar compra"];
+    return {
+      title: "Dicas para carrinho",
+      description:
+        "Você está no carrinho. Aqui pode revisar itens, ouvir o total e concluir a compra com confirmação por voz.",
+      commands,
+      speechText: buildSpeechText(
+        "Comandos do carrinho",
+        commands,
+        "Você está no carrinho.",
+      ),
+    };
+  }
+
+  const commands = [
+    "abrir livros",
+    "abrir carrinho",
+    "abrir pedidos",
+    "voltar para início",
+  ];
+  return {
+    title: "Dicas gerais",
+    description:
+      "Você está na página inicial. A partir daqui pode navegar para livros, carrinho e pedidos usando voz ou teclado.",
+    commands,
+    speechText: buildSpeechText(
+      "Comandos da página inicial",
+      commands,
+      "Você está na página inicial.",
+    ),
+  };
+}
+
+export function getGlobalVoiceCommands(): string[] {
+  return GLOBAL_UI_COMMANDS;
+}
+
+export function getSessionModalCommands(): string[] {
+  return SESSION_MODAL_COMMANDS;
+}

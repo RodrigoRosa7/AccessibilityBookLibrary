@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser.js";
+import { parseVoiceIntent, VOICE_INTENTS } from "./intentParser";
 
 describe("parseVoiceIntent core commands", () => {
   it("recognizes onboarding presentation voice commands", () => {
@@ -206,6 +206,26 @@ describe("parseVoiceIntent core commands", () => {
     cases.forEach((transcript) => {
       const result = parseVoiceIntent(transcript);
       expect(result.intent).toBe(VOICE_INTENTS.READ_TITLE);
+    });
+  });
+
+  it("recognizes read price commands", () => {
+    const cases = ["preço", "ler preço", "qual o preço", "falar custo"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript, {
+        currentRoute: "/books/1",
+      });
+      expect(result.intent).toBe(VOICE_INTENTS.READ_PRICE);
+    });
+  });
+
+  it("does not classify cart value phrases as read price", () => {
+    const cartPhrases = ["qual o valor do carrinho", "valor do carrinho"];
+
+    cartPhrases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).not.toBe(VOICE_INTENTS.READ_PRICE);
     });
   });
 

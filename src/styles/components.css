@@ -1,0 +1,403 @@
+/* ── Cart indicator ─────────────────────────────────────────────────── */
+.cart-indicator-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  gap: 8px;
+  border: 1px solid var(--color-primary);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cart-indicator-button:hover,
+.cart-indicator-button:focus-visible {
+  background: var(--color-primary-strong);
+  border-color: var(--color-primary-strong);
+}
+
+.cart-indicator-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-indicator-count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  background: var(--color-primary-strong);
+  color: var(--color-bg);
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* ── Dark mode toggle ───────────────────────────────────────────────── */
+.dark-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.dark-mode-toggle:hover {
+  background: var(--color-surface-mid);
+  border-color: var(--color-border-strong);
+}
+
+/* ── Voice help panel ───────────────────────────────────────────────── */
+.voice-help-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1300;
+}
+
+.voice-help-modal {
+  width: 100%;
+  max-width: 620px;
+  max-height: calc(100vh - 32px);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.voice-help-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.voice-help-section {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+/* ── Voice button ───────────────────────────────────────────────────── */
+.voice-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.voice-button-listening {
+  animation: voice-pulse 1.2s ease-in-out infinite;
+}
+
+.voice-button-speaking {
+  box-shadow: inset 0 0 0 1px rgba(192, 133, 82, 0.4);
+}
+
+.voice-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.voice-button-label {
+  line-height: 1;
+  vertical-align: text-top;
+  white-space: nowrap;
+}
+
+.voice-button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@keyframes voice-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(192, 133, 82, 0.14);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(192, 133, 82, 0.24);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-button-listening {
+    animation: none;
+    box-shadow: inset 0 0 0 2px rgba(192, 133, 82, 0.5);
+  }
+}
+
+/* ── Voice onboarding ───────────────────────────────────────────────── */
+.voice-onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 1400;
+}
+
+.voice-onboarding-card {
+  width: min(640px, 100%);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.voice-onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Route voice guidance ───────────────────────────────────────────── */
+.route-voice-guidance {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 92%,
+    var(--color-primary) 8%
+  );
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.route-voice-guidance-accordion {
+  display: grid;
+}
+
+.route-voice-guidance-accordion .accordion-details {
+  display: grid;
+}
+
+.route-voice-guidance-accordion .accordion-details[open] {
+  gap: 12px;
+}
+
+.route-voice-guidance-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 52px 16px 16px;
+  position: relative;
+}
+
+.route-voice-guidance-summary::-webkit-details-marker {
+  display: none;
+}
+
+.route-voice-guidance-summary::after {
+  content: none;
+}
+
+.route-voice-guidance-chevron {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 40%, var(--color-bg) 60%);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 70%,
+    var(--color-primary) 30%
+  );
+  color: var(--color-primary-strong);
+}
+
+.route-voice-guidance-chevron svg {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.route-voice-guidance-accordion
+  .accordion-details[open]
+  .route-voice-guidance-chevron
+  svg {
+  transform: rotate(0deg);
+}
+
+.route-voice-guidance-body {
+  padding: 0 16px 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.route-voice-guidance-content {
+  display: grid;
+  gap: 8px;
+}
+
+.route-voice-guidance-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* ── Command chips ──────────────────────────────────────────────────── */
+.command-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 60%,
+    var(--color-primary) 40%
+  );
+  color: var(--color-primary-strong);
+  white-space: nowrap;
+}
+
+/* ── App layout primitives ──────────────────────────────────────────── */
+.app-surface-card {
+  border: 1px solid
+    color-mix(in srgb, var(--color-border) 70%, var(--color-primary) 30%);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  padding: 16px;
+}
+
+
+.app-surface-card-muted {
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg) 12%);
+}
+
+.app-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.app-stack-sm {
+  display: grid;
+  gap: 8px;
+}
+
+.app-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.app-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.app-books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* ── App dialogs ────────────────────────────────────────────────────── */
+.app-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.app-dialog-card {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+/* ── Status banners ─────────────────────────────────────────────────── */
+.app-status-banner {
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.app-status-banner-success {
+  border-color: color-mix(
+    in srgb,
+    var(--color-success) 55%,
+    var(--color-border) 45%
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 86%,
+    var(--color-success) 14%
+  );
+}
+
+.app-status-banner-critical {
+  border-color: color-mix(
+    in srgb,
+    var(--color-danger) 70%,
+    var(--color-border) 30%
+  );
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 88%,
+    var(--color-danger) 12%
+  );
+}

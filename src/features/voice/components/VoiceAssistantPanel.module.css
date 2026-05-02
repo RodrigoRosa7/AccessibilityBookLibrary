@@ -1,0 +1,143 @@
+.panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 200;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  padding: 0;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.accordion {
+  display: grid;
+  min-width: 0;
+}
+
+.accordion :global(.accordion-details) {
+  display: grid;
+  min-width: 0;
+}
+
+.accordion :global(.accordion-details[open]) {
+  gap: 12px;
+}
+
+.summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary::after {
+  content: none;
+}
+
+
+.chevron {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 40%, var(--color-bg) 60%);
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 70%,
+    var(--color-primary) 30%
+  );
+  color: var(--color-primary-strong);
+  flex-shrink: 0;
+}
+
+.chevron svg {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+.accordion :global(.accordion-details[open]) .chevron svg {
+  transform: rotate(0deg);
+}
+
+.body {
+  padding: 0 12px 12px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.content {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* ── Typed command fallback ── */
+.commandFallback {
+  display: grid;
+  gap: 6px;
+}
+
+.commandLabel {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.commandRow {
+  display: flex;
+  gap: 8px;
+}
+
+.submitButton {
+  padding: 0;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.commandInput {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+
+.commandInput:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
