@@ -11,6 +11,7 @@ import {
   markVoiceOnboardingCompleted,
 } from "../../features/onboarding/voiceOnboarding";
 import type { User } from "../../types";
+import { AUTH_DISABLED, GUEST_USER } from "../config/featureFlags";
 
 const AUTH_STORAGE_KEY = "webspeech-auth-user";
 
@@ -27,6 +28,10 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 function getInitialUser(): User | null {
+  if (AUTH_DISABLED) {
+    return GUEST_USER;
+  }
+
   try {
     const savedUser = localStorage.getItem(AUTH_STORAGE_KEY);
     return savedUser ? (JSON.parse(savedUser) as User) : null;

@@ -7,16 +7,28 @@ import { BookDetailsPage } from "../../pages/BookDetailsPage.jsx";
 import { CartPage } from "../../pages/CartPage.jsx";
 import { CheckoutPage } from "../../pages/CheckoutPage.jsx";
 import { useAuth } from "../providers/AuthProvider";
+import { AUTH_DISABLED } from "../config/featureFlags";
 
 // eslint-disable-next-line react-refresh/only-export-components
 function RequireAuth() {
   const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  if (AUTH_DISABLED || isAuthenticated) {
+    return <Outlet />;
   }
 
-  return <Outlet />;
+  return <Navigate to="/login" replace />;
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function LoginRoute() {
+  const { isAuthenticated } = useAuth();
+
+  if (isAuthenticated) {
+    return <Navigate to="/home" replace />;
+  }
+
+  return <LoginPage />;
 }
 
 export const appRouter = createBrowserRouter(
@@ -27,7 +39,7 @@ export const appRouter = createBrowserRouter(
     },
     {
       path: "/login",
-      element: <LoginPage />,
+      element: <LoginRoute />,
     },
     {
       element: <RequireAuth />,

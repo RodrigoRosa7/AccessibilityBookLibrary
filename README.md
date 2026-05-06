@@ -80,6 +80,32 @@ Comunicação entre componentes via `voiceEvents.ts` (barramento tipado, substit
 
 Documentados em [docs/voice-commands.md](docs/voice-commands.md): comandos globais, por rota, exemplos de frases e variações.
 
+## Modo de testes sem login
+
+Para sessões de teste com usuários com deficiência visual, é possível desativar a tela de login para reduzir fricção (ditar e-mail/senha por voz adiciona dificuldade desnecessária ao avaliar acessibilidade do fluxo principal).
+
+A flag é controlada pela variável de ambiente do Vite `VITE_DISABLE_AUTH`:
+
+1. Crie um arquivo `.env.local` na raiz do projeto com o conteúdo:
+
+   ```
+   VITE_DISABLE_AUTH=true
+   ```
+
+2. Reinicie o dev server (`npm run dev`) — o Vite só lê variáveis de ambiente na inicialização.
+
+Com a flag ligada:
+
+- A aplicação abre direto em `/home`, autenticada como um usuário convidado mockado (Ana Silva).
+- A rota `/login` redireciona automaticamente para `/home` em qualquer carga inicial.
+- O botão **Sair** (e o comando de voz "Sair") permanecem funcionais — após executar, o usuário é levado à tela de login para que a UX completa de logout possa ser testada.
+- Pressionar **F5** na tela de login recarrega o app e a flag re-injeta o convidado, retornando para `/home`.
+- Carrinho, checkout, comandos de voz e onboarding versionado de voz continuam funcionando normalmente.
+
+Para desativar, remova a variável (ou defina `VITE_DISABLE_AUTH=false`) e reinicie o dev server. O fluxo padrão de login com `ana@librarybooks.com` / `f@cR9oPVAh` volta a ser exigido.
+
+**Aviso**: este modo é exclusivo para a fase de testes locais. Não usar em build de produção destinado a deploy público.
+
 ## Observações
 
 - A aplicação usa dados mockados via MSW; não há backend real.
