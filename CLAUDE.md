@@ -95,10 +95,11 @@ src/
 - **Cart**: `src/app/providers/CartProvider.tsx` — context + `useCart()` hook. In-memory item list; persistence/checkout delegated to `src/features/cart/cartService.ts`.
 - **Voice onboarding**: persisted to `localStorage` with versioned key `webspeech-voice-onboarding:<version>:<userId>`. Version in `src/features/onboarding/voiceOnboarding.ts`.
 - **Dark mode**: `src/app/hooks/useDarkMode.ts` — persisted to `localStorage`; reads `prefers-color-scheme` on first load. Sets `data-theme="light"|"dark"` on `<html>`. CSS tokens use `:root:not([data-theme])` for the media query so the manual toggle always wins.
+- **Auth bypass flag (testes)**: `src/app/config/featureFlags.ts` exports `AUTH_DISABLED` (read from `import.meta.env.VITE_DISABLE_AUTH === "true"`) and `GUEST_USER`. When enabled (`VITE_DISABLE_AUTH=true` in `.env.local`), `AuthProvider.getInitialUser` returns the guest user and `RequireAuth` lets the request through unconditionally. The `/login` path is wrapped in `LoginRoute`, which redirects to `/home` whenever the user is authenticated — this enables the "F5 on the login screen returns to home" flow during accessibility testing. Default: disabled (normal login flow). See README "Modo de testes sem login".
 
 ## Routing
 
-All authenticated routes are wrapped in `RequireAuth` (redirects to `/login`). Router is defined in `src/app/router/router.tsx` with `basename: import.meta.env.BASE_URL`. Routes: `/home`, `/books`, `/books/:id`, `/cart`, `/checkout`. Unknown paths redirect to `/home`.
+All authenticated routes are wrapped in `RequireAuth` (redirects to `/login` unless `AUTH_DISABLED`). Router is defined in `src/app/router/router.tsx` with `basename: import.meta.env.BASE_URL`. Routes: `/home`, `/books`, `/books/:id`, `/cart`, `/checkout`. Unknown paths redirect to `/home`. The `/login` route uses a `LoginRoute` wrapper that redirects authenticated users to `/home`.
 
 ## Styling
 
