@@ -17,7 +17,10 @@ function playTone(freq: number, durationMs: number, gain = 0.12): void {
   const ctx = getContext();
   if (!ctx) return;
   if (ctx.state === "suspended") {
-    void ctx.resume();
+    ctx.resume().catch(() => {
+      // Autoplay policy may reject resume() before a user gesture.
+      // The next gesture-driven call will succeed; silently ignore.
+    });
   }
   const osc = ctx.createOscillator();
   const g = ctx.createGain();

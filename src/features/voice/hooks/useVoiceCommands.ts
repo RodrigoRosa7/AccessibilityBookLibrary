@@ -155,6 +155,14 @@ export function useVoiceCommands({
       const matches =
         VOICE_TOGGLE_KEYS.f2(event) || VOICE_TOGGLE_KEYS.ctrlM(event);
       if (!matches) return;
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      const isTypingField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        target?.isContentEditable === true;
+      if (isTypingField) return;
       event.preventDefault();
       if (isListening) {
         cancelVoiceCommand();
