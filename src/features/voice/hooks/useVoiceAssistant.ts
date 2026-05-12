@@ -13,6 +13,10 @@ import type { Book, VoiceActions } from "../../../types";
 import { formatMoneyForSpeech, buildOrderDetailsSpeech } from "../domain/speechUtils";
 import { emitVoiceEvent, VOICE_EVENT } from "../services/voiceEvents";
 import { playListenStop } from "../services/earcons";
+import {
+  isVoiceFeedbackMuted,
+  setVoiceFeedbackMuted,
+} from "../services/voiceMute";
 import { getOrderHistory, getLatestOrderSummary } from "../../cart/cartService";
 import { useVoiceFeedback } from "./useVoiceFeedback";
 import type { SpeechSeverity } from "./useVoiceFeedback";
@@ -475,6 +479,22 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
       openHome: () => navigate("/home"),
       setSpeechRate,
       cycleSpeechRate,
+      muteFeedback: () => {
+        if (isVoiceFeedbackMuted()) {
+          speakMessage("Feedback já está silenciado.");
+          return;
+        }
+        setVoiceFeedbackMuted(true);
+        playListenStop();
+      },
+      unmuteFeedback: () => {
+        if (!isVoiceFeedbackMuted()) {
+          speakMessage("Feedback já está ativo.");
+          return;
+        }
+        setVoiceFeedbackMuted(false);
+        speakMessage("Feedback ativado.");
+      },
       ...(isBookDetailsRoute && currentDetailBook
         ? {
             addCurrentBookToCart: () => {

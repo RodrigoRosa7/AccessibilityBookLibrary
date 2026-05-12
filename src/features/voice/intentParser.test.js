@@ -492,6 +492,43 @@ describe("parseVoiceIntent core commands", () => {
       expect(result.entity).toBe(null);
     });
   });
+
+  it("recognizes mute feedback commands", () => {
+    const cases = [
+      "silenciar",
+      "silenciar feedback",
+      "silenciar a fala",
+      "silenciar o assistente",
+      "calar",
+      "calar assistente",
+      "mutar feedback",
+      "desativar feedback",
+      "desligar fala",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.MUTE_FEEDBACK);
+    });
+  });
+
+  it("recognizes unmute feedback commands", () => {
+    const cases = [
+      "ativar feedback",
+      "ligar feedback",
+      "reativar feedback",
+      "ativar fala",
+      "ativar a fala",
+      "ligar voz",
+      "habilitar fala",
+      "voltar a falar",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.UNMUTE_FEEDBACK);
+    });
+  });
 });
 
 describe("parseVoiceIntent order navigation", () => {

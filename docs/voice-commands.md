@@ -41,6 +41,8 @@ Este documento centraliza os comandos de voz disponíveis no projeto.
 | Ir para início              | "abrir início", "mostrar home", "voltar para início", "voltar para página inicial"    |
 | Alterar velocidade da fala  | "velocidade 2 vezes", "velocidade 2x", "aumentar velocidade 3", "velocidade para 1"   |
 | Ciclar velocidade (1→2→3→1) | "alterar velocidade", "mudar velocidade", "aumentar velocidade", "trocar velocidade"  |
+| Silenciar feedback falado   | "silenciar", "silenciar feedback", "calar", "desativar feedback", "mutar feedback"    |
+| Ativar feedback falado      | "ativar feedback", "ativar fala", "ligar feedback", "reativar feedback", "voltar a falar" |
 
 ### Rota /home (Página de Início)
 
@@ -112,6 +114,21 @@ A velocidade do feedback falado pode ser ajustada pelo usuário a qualquer momen
 - O valor é mantido apenas durante a sessão atual — ao recarregar a página, volta para 1x.
 - Verbos aceitos como prefixo do comando: "aumentar", "alterar", "mudar", "definir", "colocar", "ajustar". Conectores opcionais: "para", "em", "de".
 - Verbos aceitos para o ciclo (sem número): "aumentar", "alterar", "mudar", "trocar", "ajustar", "ciclar".
+
+## Silenciar / ativar o feedback falado
+
+Quando o leitor de tela já está lendo os banners, o Web Speech API pode ficar redundante. É possível desligar a fala do app sem perder as mensagens.
+
+| Forma          | Comportamento                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------ |
+| Botão (UI)     | Botão "Mudo / Falando" no painel do assistente alterna o estado e persiste em `localStorage`. |
+| Voz — silenciar | "silenciar", "silenciar feedback", "calar", "calar assistente", "desativar fala", "mutar feedback" |
+| Voz — ativar    | "ativar feedback", "ativar fala", "ligar feedback", "ligar fala", "reativar feedback", "habilitar fala", "voltar a falar" |
+
+- Quando o feedback é silenciado pelo comando de voz, o assistente toca um bip grave de confirmação (não fala, pois acabou de silenciar). O leitor de tela anuncia a mudança via `aria-pressed`.
+- Quando o feedback é reativado, o app fala "Feedback ativado." como confirmação.
+- Se você pedir para silenciar quando já está silenciado (ou ativar quando já está ativo), o assistente responde com "Feedback já está silenciado." / "Feedback já está ativo." e não muda o estado.
+- A preferência persiste entre recargas (chave `webspeech-feedback-muted` no `localStorage`).
 
 ## Comandos recomendados para UI
 

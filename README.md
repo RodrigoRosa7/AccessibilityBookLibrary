@@ -112,7 +112,7 @@ Para desativar, remova a variável (ou defina `VITE_DISABLE_AUTH=false`) e reini
 - **Ctrl** (sozinho) — interrompe a fala em andamento do assistente, sem encerrar a sessão de escuta.
 - **Velocidade da fala** — botão **1x / 2x / 3x** ao lado do microfone cicla entre os valores; por voz, diga `velocidade 2 vezes`, `aumentar velocidade 3` ou `velocidade 1x`. A faixa aceita é 1 a 3, e o valor é mantido apenas durante a sessão (reset ao recarregar).
 - Ao ativar ou desativar o microfone, um bip curto (agudo na ativação, mais grave na desativação) confirma a mudança sem depender de fala.
-- **Silenciar feedback falado** — botão "Mudo / Falando" no painel do assistente desativa apenas a fala via Web Speech API. Banners de feedback continuam aparecendo e o leitor de tela (NVDA, JAWS) continua lendo o conteúdo normalmente — útil quando o leitor de tela já está lendo os banners e a fala do app vira eco. Preferência persiste em `localStorage` (`webspeech-feedback-muted`).
+- **Silenciar feedback falado** — botão "Mudo / Falando" no painel do assistente desativa apenas a fala via Web Speech API. Banners de feedback continuam aparecendo e o leitor de tela (NVDA, JAWS) continua lendo o conteúdo normalmente — útil quando o leitor de tela já está lendo os banners e a fala do app vira eco. Preferência persiste em `localStorage` (`webspeech-feedback-muted`). Também é possível alternar por voz: `silenciar feedback` / `silenciar fala` / `ativar feedback` / `ativar fala`.
 
 ## Saída de áudio com fone de ouvido (P2/USB)
 
