@@ -106,6 +106,23 @@ Para desativar, remova a variável (ou defina `VITE_DISABLE_AUTH=false`) e reini
 
 **Aviso**: este modo é exclusivo para a fase de testes locais. Não usar em build de produção destinado a deploy público.
 
+## Atalhos do assistente de voz
+
+- **F2** ou **Ctrl+M** — liga/desliga o microfone do assistente. Os dois atalhos estão ativos em paralelo para permitir testes com leitores de tela; ajuste se algum conflitar com o leitor em uso.
+- **Ctrl** (sozinho) — interrompe a fala em andamento do assistente, sem encerrar a sessão de escuta.
+- **Velocidade da fala** — botão **1x / 2x / 3x** ao lado do microfone cicla entre os valores; por voz, diga `velocidade 2 vezes`, `aumentar velocidade 3` ou `velocidade 1x`. A faixa aceita é 1 a 3, e o valor é mantido apenas durante a sessão (reset ao recarregar).
+- Ao ativar ou desativar o microfone, um bip curto (agudo na ativação, mais grave na desativação) confirma a mudança sem depender de fala.
+
+## Saída de áudio com fone de ouvido (P2/USB)
+
+A Web Speech API (`SpeechSynthesisUtterance`) **não** permite escolher o dispositivo de saída — o áudio segue o dispositivo padrão do sistema operacional no momento em que a aba foi aberta. Se conectar um fone após carregar a página, a fala pode continuar no alto-falante do notebook.
+
+Workarounds:
+
+1. Conecte o fone **antes** de abrir a aplicação no navegador, ou recarregue a página após conectar.
+2. Confira o dispositivo padrão do sistema operacional (Windows: Configurações → Sistema → Som).
+3. Quando o NVDA estiver ativo, confira separadamente a saída configurada nele (`NVDA + Ctrl + S` → Audio Output Device) — leitor de tela e Web Speech API podem usar dispositivos diferentes.
+
 ## Observações
 
 - A aplicação usa dados mockados via MSW; não há backend real.

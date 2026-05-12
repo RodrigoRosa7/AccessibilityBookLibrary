@@ -16,10 +16,12 @@ const defaultProps = {
   lastCommand: "",
   transcript: "",
   typedCommand: "",
+  speechRate: 1,
   onTypedCommandChange: noop,
   onTypedCommandSubmit: noop,
   onStart: noop,
   onStop: noop,
+  onCycleSpeechRate: noop,
 };
 
 describe("VoiceAssistantPanel accessibility", () => {

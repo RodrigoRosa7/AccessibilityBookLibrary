@@ -33,6 +33,8 @@ export const VOICE_INTENTS = {
   READ_PRICE: "READ_PRICE",
   OPEN_HOME: "OPEN_HOME",
   SELECT_BOOK: "SELECT_BOOK",
+  SET_SPEECH_RATE: "SET_SPEECH_RATE",
+  CYCLE_SPEECH_RATE: "CYCLE_SPEECH_RATE",
   UNKNOWN: "UNKNOWN",
 } as const;
 
@@ -86,6 +88,8 @@ export interface VoiceActions {
   readPrice?: () => void;
   selectBook?: (entity: string) => void;
   openHome?: () => void;
+  setSpeechRate?: (rate: number) => void;
+  cycleSpeechRate?: () => void;
   onUnknown?: (intentResult: ParsedIntent) => void;
 }
 

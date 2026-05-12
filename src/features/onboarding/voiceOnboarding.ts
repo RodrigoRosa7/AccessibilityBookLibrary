@@ -84,8 +84,8 @@ export function buildInitialVoicePresentation(user: UserLike): string {
   return [
     `${greeting} Bem-vindo à livraria online com assistente por voz.`,
     "No menu principal, você pode executar os comandos: 'Abrir Livros', 'Abrir Carrinho' e 'Abrir Pedidos'.",
-    "Para falar com o assistente, pressione a tecla espaço.",
-    "Se pressionar espaço novamente, o comando de voz é cancelado.",
+    "Para falar com o assistente, pressione F2 ou Ctrl+M no teclado.",
+    "Se pressionar o mesmo atalho novamente, o comando de voz é cancelado.",
     "Quando precisar, diga 'Ouvir instruções' para ouvir os comandos disponíveis na tela em que se encontra.",
     "Chegamos ao final da apresentação, você pode pedir para 'Ouvir novamente' ou 'Concluir' para continuar.",
   ].join(" ");

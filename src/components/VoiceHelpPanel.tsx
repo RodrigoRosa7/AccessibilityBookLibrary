@@ -133,7 +133,19 @@ export function VoiceHelpPanel() {
               as="p"
               style={{ color: "var(--color-muted)", fontSize: "12px" }}
             >
-              Atalhos: ? para abrir e Esc para fechar a modal atual.
+              Atalhos: F2 ou Ctrl+M ligam e desligam o microfone do
+              assistente; Ctrl sozinho interrompe a fala; ? abre esta ajuda e
+              Esc fecha a modal atual.
+            </Text>
+
+            <Text
+              as="p"
+              style={{ color: "var(--color-muted)", fontSize: "12px" }}
+            >
+              Saída de áudio (fone P2): a Web Speech API usa sempre o
+              dispositivo padrão do sistema. Conecte o fone antes de abrir a
+              página ou recarregue após plugar; confira também a saída do
+              NVDA em NVDA+Ctrl+S → Audio.
             </Text>
 
             <section className="voice-help-section">

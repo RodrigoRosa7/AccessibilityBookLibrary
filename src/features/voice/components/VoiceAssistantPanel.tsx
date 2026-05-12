@@ -2,6 +2,7 @@ import type React from "react";
 import type { ReactNode } from "react";
 import { Accordion } from "../../../shared/ui/Accordion";
 import { VoiceButton } from "../../../components/VoiceButton";
+import { SpeechRateButton } from "../../../components/SpeechRateButton";
 import { AppButton } from "../../../shared/ui/AppButton";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 import styles from "./VoiceAssistantPanel.module.css";
@@ -17,10 +18,12 @@ interface VoiceAssistantPanelProps {
   lastCommand: string;
   transcript: string;
   typedCommand: string;
+  speechRate: number;
   onTypedCommandChange: (value: string) => void;
   onTypedCommandSubmit: (event: React.FormEvent) => void;
   onStart: () => void;
   onStop: () => void;
+  onCycleSpeechRate: () => void;
 }
 
 export function VoiceAssistantPanel({
@@ -34,22 +37,30 @@ export function VoiceAssistantPanel({
   lastCommand,
   transcript,
   typedCommand,
+  speechRate,
   onTypedCommandChange,
   onTypedCommandSubmit,
   onStart,
   onStop,
+  onCycleSpeechRate,
 }: VoiceAssistantPanelProps) {
   return (
     <div className={styles.panel} aria-label="Assistente de voz global">
       <div className={styles.header}>
         <h3 style={{ fontSize: "13px", margin: 0 }}>Assistente de voz</h3>
-        <VoiceButton
-          isListening={isListening}
-          isSpeaking={isSpeaking}
-          isSupported={isSupported}
-          onStart={onStart}
-          onStop={onStop}
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <VoiceButton
+            isListening={isListening}
+            isSpeaking={isSpeaking}
+            isSupported={isSupported}
+            onStart={onStart}
+            onStop={onStop}
+          />
+          <SpeechRateButton
+            speechRate={speechRate}
+            onCycle={onCycleSpeechRate}
+          />
+        </div>
       </div>
 
       <Accordion

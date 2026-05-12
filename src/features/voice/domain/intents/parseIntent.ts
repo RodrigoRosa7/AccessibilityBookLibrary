@@ -8,19 +8,22 @@ import { helpMatchers } from "./patterns/help";
 import { navigationMatchers } from "./patterns/navigation";
 import { onboardingMatchers } from "./patterns/onboarding";
 import { searchMatchers } from "./patterns/search";
+import { speechControlMatchers } from "./patterns/speechControl";
 import type { IntentMatcher, VoiceContext } from "./types";
 
 const ALL_MATCHERS: IntentMatcher[] = [
   // Order is critical — see comments:
   // 1. Onboarding has exact-match commands, must be first.
-  // 2. Cart intents before help/checkout to catch add/remove/clear early.
-  // 3. Help (CLOSE_MODAL first) before checkout: "fechar pedido" = close, not checkout.
-  // 4. Checkout after close modal.
-  // 5. Navigation (open cart/books/home/logout) before search:
+  // 2. Speech control (rate) is a global modal-agnostic command, runs early.
+  // 3. Cart intents before help/checkout to catch add/remove/clear early.
+  // 4. Help (CLOSE_MODAL first) before checkout: "fechar pedido" = close, not checkout.
+  // 5. Checkout after close modal.
+  // 6. Navigation (open cart/books/home/logout) before search:
   //    "mostrar carrinho" is navigation, not search.
-  // 6. Search matchers (read results, select book, open details, search).
-  // 7. GO_BACK last among nav: "voltar resultados" → READ_PREVIOUS, not GO_BACK.
+  // 7. Search matchers (read results, select book, open details, search).
+  // 8. GO_BACK last among nav: "voltar resultados" → READ_PREVIOUS, not GO_BACK.
   ...onboardingMatchers,
+  ...speechControlMatchers,
   ...cartMatchers,
   ...helpMatchers,
   ...checkoutMatchers,
