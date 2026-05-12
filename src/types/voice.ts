@@ -35,6 +35,8 @@ export const VOICE_INTENTS = {
   SELECT_BOOK: "SELECT_BOOK",
   SET_SPEECH_RATE: "SET_SPEECH_RATE",
   CYCLE_SPEECH_RATE: "CYCLE_SPEECH_RATE",
+  MUTE_FEEDBACK: "MUTE_FEEDBACK",
+  UNMUTE_FEEDBACK: "UNMUTE_FEEDBACK",
   UNKNOWN: "UNKNOWN",
 } as const;
 
@@ -90,6 +92,8 @@ export interface VoiceActions {
   openHome?: () => void;
   setSpeechRate?: (rate: number) => void;
   cycleSpeechRate?: () => void;
+  muteFeedback?: () => void;
+  unmuteFeedback?: () => void;
   onUnknown?: (intentResult: ParsedIntent) => void;
 }
 

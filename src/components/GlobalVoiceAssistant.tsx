@@ -13,11 +13,13 @@ export function GlobalVoiceAssistant() {
     transcript,
     typedCommand,
     speechRate,
+    muted,
     setTypedCommand,
     startVoiceCommand,
     cancelVoiceCommand,
     runTypedCommand,
     cycleSpeechRate,
+    toggleMute,
     pathname,
   } = useVoiceAssistant();
 
@@ -34,11 +36,13 @@ export function GlobalVoiceAssistant() {
       transcript={transcript}
       typedCommand={typedCommand}
       speechRate={speechRate}
+      muted={muted}
       onTypedCommandChange={setTypedCommand}
       onTypedCommandSubmit={runTypedCommand}
       onStart={startVoiceCommand}
       onStop={cancelVoiceCommand}
       onCycleSpeechRate={cycleSpeechRate}
+      onToggleMute={toggleMute}
     />
   );
 }

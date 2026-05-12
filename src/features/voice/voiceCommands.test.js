@@ -237,4 +237,26 @@ describe("pedidos voice navigation flow", () => {
     expect(cycleSpeechRate).toHaveBeenCalledTimes(1);
     expect(message).toBe("");
   });
+
+  it("dispatches mute feedback action when user says 'silenciar feedback'", () => {
+    const muteFeedback = vi.fn();
+    const intent = parseVoiceIntent("silenciar feedback");
+
+    const message = handleVoiceCommand(intent, { muteFeedback });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.MUTE_FEEDBACK);
+    expect(muteFeedback).toHaveBeenCalledTimes(1);
+    expect(message).toBe("");
+  });
+
+  it("dispatches unmute feedback action when user says 'ativar feedback'", () => {
+    const unmuteFeedback = vi.fn();
+    const intent = parseVoiceIntent("ativar feedback");
+
+    const message = handleVoiceCommand(intent, { unmuteFeedback });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.UNMUTE_FEEDBACK);
+    expect(unmuteFeedback).toHaveBeenCalledTimes(1);
+    expect(message).toBe("");
+  });
 });

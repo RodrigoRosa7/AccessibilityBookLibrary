@@ -9,6 +9,8 @@ const GLOBAL_UI_COMMANDS = [
   "voltar",
   'velocidade "N" vezes (1 a 3)',
   "alterar velocidade",
+  "silenciar feedback",
+  "ativar feedback",
 ];
 
 const SESSION_MODAL_COMMANDS = [

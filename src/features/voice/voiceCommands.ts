@@ -183,6 +183,14 @@ export function handleVoiceCommand(
       actions.cycleSpeechRate?.();
       return "";
 
+    case VOICE_INTENTS.MUTE_FEEDBACK:
+      actions.muteFeedback?.();
+      return "";
+
+    case VOICE_INTENTS.UNMUTE_FEEDBACK:
+      actions.unmuteFeedback?.();
+      return "";
+
     default:
       actions.onUnknown?.(intentResult);
       return "Comando de voz não reconhecido.";

@@ -17,11 +17,13 @@ const defaultProps = {
   transcript: "",
   typedCommand: "",
   speechRate: 1,
+  muted: false,
   onTypedCommandChange: noop,
   onTypedCommandSubmit: noop,
   onStart: noop,
   onStop: noop,
   onCycleSpeechRate: noop,
+  onToggleMute: noop,
 };
 
 describe("VoiceAssistantPanel accessibility", () => {
@@ -56,6 +58,14 @@ describe("VoiceAssistantPanel accessibility", () => {
   it("has no axe violations when voice is unsupported", async () => {
     const { container } = render(
       <VoiceAssistantPanel {...defaultProps} isSupported={false} />,
+    );
+    const results = await axe.run(container);
+    expect(results.violations).toHaveLength(0);
+  });
+
+  it("has no axe violations while muted", async () => {
+    const { container } = render(
+      <VoiceAssistantPanel {...defaultProps} muted={true} />,
     );
     const results = await axe.run(container);
     expect(results.violations).toHaveLength(0);

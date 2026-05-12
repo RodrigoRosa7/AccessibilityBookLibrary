@@ -135,7 +135,11 @@ export function VoiceHelpPanel() {
             >
               Atalhos: F2 ou Ctrl+M ligam e desligam o microfone do
               assistente; Ctrl sozinho interrompe a fala; ? abre esta ajuda e
-              Esc fecha a modal atual.
+              Esc fecha a modal atual. O botão "Mudo / Falando" no painel
+              silencia a fala do app sem afetar os banners — útil quando o
+              leitor de tela já está lendo o conteúdo. Também é possível
+              alternar por voz com "silenciar feedback" / "silenciar fala"
+              e "ativar feedback" / "ativar fala".
             </Text>
 
             <Text
