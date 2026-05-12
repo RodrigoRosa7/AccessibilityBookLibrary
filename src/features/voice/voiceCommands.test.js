@@ -226,4 +226,15 @@ describe("pedidos voice navigation flow", () => {
     expect(setSpeechRate).not.toHaveBeenCalled();
     expect(message).toBe("Velocidade aceita entre 1 e 3 vezes.");
   });
+
+  it("dispatches cycle speech rate action when user says 'alterar velocidade'", () => {
+    const cycleSpeechRate = vi.fn();
+    const intent = parseVoiceIntent("alterar velocidade");
+
+    const message = handleVoiceCommand(intent, { cycleSpeechRate });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.CYCLE_SPEECH_RATE);
+    expect(cycleSpeechRate).toHaveBeenCalledTimes(1);
+    expect(message).toBe("");
+  });
 });

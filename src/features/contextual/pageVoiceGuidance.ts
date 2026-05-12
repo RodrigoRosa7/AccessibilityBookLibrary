@@ -8,6 +8,7 @@ const GLOBAL_UI_COMMANDS = [
   "me ajude",
   "voltar",
   'velocidade "N" vezes (1 a 3)',
+  "alterar velocidade",
 ];
 
 const SESSION_MODAL_COMMANDS = [

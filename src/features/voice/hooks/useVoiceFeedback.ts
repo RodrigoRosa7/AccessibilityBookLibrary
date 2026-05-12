@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useSpeechSynthesis } from "../useSpeechSynthesis";
 import type { SpeakMetadata, SpeechSeverity } from "../useSpeechSynthesis";
 
@@ -29,6 +29,7 @@ export interface UseVoiceFeedbackReturn {
 
 export function useVoiceFeedback(): UseVoiceFeedbackReturn {
   const [speechRate, setSpeechRateState] = useState<number>(MIN_SPEECH_RATE);
+  const speechRateRef = useRef<number>(MIN_SPEECH_RATE);
   const { speak: synthSpeak, cancel, isSpeaking } = useSpeechSynthesis({
     rate: speechRate,
   });
@@ -37,15 +38,17 @@ export function useVoiceFeedback(): UseVoiceFeedbackReturn {
   const [voiceError, setVoiceErrorState] = useState("");
 
   const setSpeechRate = useCallback((rate: number) => {
-    setSpeechRateState(clampRate(rate));
+    const clamped = clampRate(rate);
+    speechRateRef.current = clamped;
+    setSpeechRateState(clamped);
   }, []);
 
   const cycleSpeechRate = useCallback((): number => {
-    let next = MIN_SPEECH_RATE;
-    setSpeechRateState((current) => {
-      next = current >= MAX_SPEECH_RATE ? MIN_SPEECH_RATE : current + 1;
-      return next;
-    });
+    const current = speechRateRef.current;
+    const next =
+      current >= MAX_SPEECH_RATE ? MIN_SPEECH_RATE : current + 1;
+    speechRateRef.current = next;
+    setSpeechRateState(next);
     return next;
   }, []);
 

@@ -179,6 +179,10 @@ export function handleVoiceCommand(
       return `Velocidade ajustada para ${requested} vezes.`;
     }
 
+    case VOICE_INTENTS.CYCLE_SPEECH_RATE:
+      actions.cycleSpeechRate?.();
+      return "";
+
     default:
       actions.onUnknown?.(intentResult);
       return "Comando de voz não reconhecido.";

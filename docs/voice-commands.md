@@ -39,6 +39,7 @@ Este documento centraliza os comandos de voz disponíveis no projeto.
 | Voltar página               | "voltar", "página anterior", "retornar"                                               |
 | Ir para início              | "abrir início", "mostrar home", "voltar para início", "voltar para página inicial"    |
 | Alterar velocidade da fala  | "velocidade 2 vezes", "velocidade 2x", "aumentar velocidade 3", "velocidade para 1"   |
+| Ciclar velocidade (1→2→3→1) | "alterar velocidade", "mudar velocidade", "aumentar velocidade", "trocar velocidade"  |
 
 ### Rota /home (Página de Início)
 
@@ -100,14 +101,16 @@ Quando a busca tiver mais de 3 livros, o assistente lê somente um bloco de 3 po
 
 A velocidade do feedback falado pode ser ajustada pelo usuário a qualquer momento.
 
-| Forma         | Comportamento                                                                                            |
-| ------------- | -------------------------------------------------------------------------------------------------------- |
-| Botão (UI)    | Cicla entre 1x → 2x → 3x → 1x; o rótulo do botão mostra a velocidade atual e o assistente confirma falando |
-| Comando de voz | "velocidade N vezes", "velocidade Nx", "aumentar velocidade N", "alterar velocidade para N" (N: 1 a 3)  |
+| Forma                        | Comportamento                                                                                            |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Botão (UI)                   | Cicla entre 1x → 2x → 3x → 1x; o rótulo mostra a velocidade atual e o assistente confirma falando         |
+| Comando de voz com número    | "velocidade N vezes", "velocidade Nx", "aumentar velocidade N", "alterar velocidade para N" (N: 1 a 3)   |
+| Comando de voz para ciclar   | "alterar velocidade", "mudar velocidade", "aumentar velocidade", "trocar velocidade" (cicla 1 → 2 → 3 → 1) |
 
 - A faixa aceita é **1 a 3**. Valores fora dessa faixa por voz retornam "Velocidade aceita entre 1 e 3 vezes." sem alterar o estado.
 - O valor é mantido apenas durante a sessão atual — ao recarregar a página, volta para 1x.
 - Verbos aceitos como prefixo do comando: "aumentar", "alterar", "mudar", "definir", "colocar", "ajustar". Conectores opcionais: "para", "em", "de".
+- Verbos aceitos para o ciclo (sem número): "aumentar", "alterar", "mudar", "trocar", "ajustar", "ciclar".
 
 ## Comandos recomendados para UI
 
@@ -117,7 +120,7 @@ Use esta seção para tooltip, modal de ajuda ou onboarding rápido. São frases
 | --------------------------- | ----------------------------------------------------------------------------------------------------- |
 | Navegação global            | "abrir livros", "ir para carrinho", "finalizar compra", "voltar"                                      |
 | Voltar para início          | "abrir início", "voltar para início", "voltar para página inicial"                                    |
-| Velocidade da fala          | "velocidade 2 vezes", "velocidade 3x", "aumentar velocidade 2"                                        |
+| Velocidade da fala          | "velocidade 2 vezes", "velocidade 3x", "aumentar velocidade 2", "alterar velocidade" (ciclo)          |
 | Carrinho por voz            | "limpar carrinho", "remover", "remover livro interfaces acessíveis"                                   |
 | Leitura do carrinho         | "ler itens do carrinho", "listar itens do carrinho"                                                   |
 | Total do carrinho           | "informe o total do carrinho", "total do carrinho", "qual o total"                                    |

@@ -457,6 +457,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
       goBack: () => navigate(-1),
       openHome: () => navigate("/home"),
       setSpeechRate,
+      cycleSpeechRate,
       ...(isBookDetailsRoute && currentDetailBook
         ? {
             addCurrentBookToCart: () => {
@@ -494,6 +495,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
       addToCart,
       clearCart,
       currentDetailBook,
+      cycleSpeechRate,
       decreaseFromCart,
       isBookDetailsRoute,
       items,

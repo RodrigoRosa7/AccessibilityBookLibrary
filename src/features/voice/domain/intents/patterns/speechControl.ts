@@ -4,6 +4,9 @@ import type { IntentMatcher } from "../types";
 const SPEECH_RATE_RE =
   /^(?:(?:aumentar|alterar|mudar|definir|colocar|ajustar)\s+)?velocidade(?:\s+(?:para|em|de))?\s+(\d+)(?:\s*(?:vezes?|x))?$/;
 
+const SPEECH_RATE_CYCLE_RE =
+  /^(?:aumentar|alterar|mudar|trocar|ajustar|ciclar)\s+(?:a\s+)?velocidade(?:\s+(?:da|de)\s+fala)?$/;
+
 export const speechControlMatchers: IntentMatcher[] = [
   ({ normalized }) => {
     const match = normalized.match(SPEECH_RATE_RE);
@@ -14,6 +17,17 @@ export const speechControlMatchers: IntentMatcher[] = [
       intent: VOICE_INTENTS.SET_SPEECH_RATE,
       entity: captured,
       confidence: 0.93,
+      transcript: normalized,
+    };
+  },
+
+  ({ normalized }) => {
+    if (!SPEECH_RATE_CYCLE_RE.test(normalized)) return null;
+
+    return {
+      intent: VOICE_INTENTS.CYCLE_SPEECH_RATE,
+      entity: null,
+      confidence: 0.92,
       transcript: normalized,
     };
   },

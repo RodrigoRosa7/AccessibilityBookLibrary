@@ -474,6 +474,24 @@ describe("parseVoiceIntent core commands", () => {
       expect(result.intent).not.toBe(VOICE_INTENTS.SET_SPEECH_RATE);
     });
   });
+
+  it("recognizes cycle speech rate commands (no explicit number)", () => {
+    const cases = [
+      "alterar velocidade",
+      "mudar velocidade",
+      "aumentar velocidade",
+      "trocar velocidade",
+      "alterar a velocidade",
+      "alterar velocidade da fala",
+      "ciclar velocidade",
+    ];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.CYCLE_SPEECH_RATE);
+      expect(result.entity).toBe(null);
+    });
+  });
 });
 
 describe("parseVoiceIntent order navigation", () => {
