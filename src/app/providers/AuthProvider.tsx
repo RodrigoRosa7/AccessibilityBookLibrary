@@ -7,7 +7,6 @@ import {
 } from "react";
 import {
   VOICE_ONBOARDING_VERSION,
-  hasCompletedVoiceOnboarding,
   markVoiceOnboardingCompleted,
 } from "../../features/onboarding/voiceOnboarding";
 import type { User } from "../../types";
@@ -85,10 +84,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser((current) => (current ? { ...current } : current));
   };
 
-  const isVoiceOnboardingCompleted = hasCompletedVoiceOnboarding(user, {
-    version: VOICE_ONBOARDING_VERSION,
-  });
-
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -96,11 +91,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       completeVoiceOnboarding,
-      shouldPlayVoiceOnboarding: Boolean(user) && !isVoiceOnboardingCompleted,
+      shouldPlayVoiceOnboarding: false,
       voiceOnboardingVersion: VOICE_ONBOARDING_VERSION,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user, isVoiceOnboardingCompleted],
+    [user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
