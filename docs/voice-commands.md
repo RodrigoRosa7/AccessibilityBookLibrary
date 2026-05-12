@@ -4,13 +4,17 @@ Este documento centraliza os comandos de voz disponíveis no projeto.
 
 ## Como acionar
 
-| Ação                               | Comportamento                            |
-| ---------------------------------- | ---------------------------------------- |
-| Tecla Space (primeiro acionamento) | Inicia a escuta de voz                   |
-| Tecla Space (segundo acionamento)  | Cancela a escuta atual e informa por voz |
-| Tecla ?                            | Abre o painel de ajuda de voz            |
-| Tecla Esc                          | Fecha a modal aberta                     |
-| Botão do assistente global         | Alterna entre iniciar e cancelar         |
+| Ação                                       | Comportamento                                                  |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| Tecla F2 ou Ctrl+M (primeiro acionamento)  | Inicia a escuta de voz (bip agudo curto confirma)              |
+| Tecla F2 ou Ctrl+M (segundo acionamento)   | Cancela a escuta atual (bip grave curto) e informa por voz     |
+| Tecla Ctrl                                 | Interrompe a fala em andamento sem encerrar a escuta           |
+| Tecla ?                                    | Abre o painel de ajuda de voz                                  |
+| Tecla Esc                                  | Fecha a modal aberta                                           |
+| Botão do microfone (no painel)             | Alterna entre iniciar e cancelar                               |
+| Botão de velocidade (ao lado do microfone) | Cicla a velocidade da fala em 1x → 2x → 3x → 1x                |
+
+> Substituímos `Space` por `F2` / `Ctrl+M` porque o `Space` conflita com o NVDA (e com campos de formulário). Os dois atalhos novos ficam ativos em paralelo para que o usuário escolha o que funcionar melhor com o leitor de tela em uso.
 
 ## Comandos por rota
 
@@ -34,6 +38,7 @@ Este documento centraliza os comandos de voz disponíveis no projeto.
 | Ir para pedidos             | "finalizar compra", "concluir pedido", "pedidos"                                      |
 | Voltar página               | "voltar", "página anterior", "retornar"                                               |
 | Ir para início              | "abrir início", "mostrar home", "voltar para início", "voltar para página inicial"    |
+| Alterar velocidade da fala  | "velocidade 2 vezes", "velocidade 2x", "aumentar velocidade 3", "velocidade para 1"   |
 
 ### Rota /home (Página de Início)
 
@@ -91,6 +96,19 @@ Quando a busca tiver mais de 3 livros, o assistente lê somente um bloco de 3 po
 | Continuar comprando          | "continuar comprando", "vou continuar comprando"                   |
 | Voltar ao carrinho           | "voltar ao carrinho", "retornar para o carrinho"                   |
 
+## Controle da velocidade da fala
+
+A velocidade do feedback falado pode ser ajustada pelo usuário a qualquer momento.
+
+| Forma         | Comportamento                                                                                            |
+| ------------- | -------------------------------------------------------------------------------------------------------- |
+| Botão (UI)    | Cicla entre 1x → 2x → 3x → 1x; o rótulo do botão mostra a velocidade atual e o assistente confirma falando |
+| Comando de voz | "velocidade N vezes", "velocidade Nx", "aumentar velocidade N", "alterar velocidade para N" (N: 1 a 3)  |
+
+- A faixa aceita é **1 a 3**. Valores fora dessa faixa por voz retornam "Velocidade aceita entre 1 e 3 vezes." sem alterar o estado.
+- O valor é mantido apenas durante a sessão atual — ao recarregar a página, volta para 1x.
+- Verbos aceitos como prefixo do comando: "aumentar", "alterar", "mudar", "definir", "colocar", "ajustar". Conectores opcionais: "para", "em", "de".
+
 ## Comandos recomendados para UI
 
 Use esta seção para tooltip, modal de ajuda ou onboarding rápido. São frases curtas e de alta taxa de acerto.
@@ -99,6 +117,7 @@ Use esta seção para tooltip, modal de ajuda ou onboarding rápido. São frases
 | --------------------------- | ----------------------------------------------------------------------------------------------------- |
 | Navegação global            | "abrir livros", "ir para carrinho", "finalizar compra", "voltar"                                      |
 | Voltar para início          | "abrir início", "voltar para início", "voltar para página inicial"                                    |
+| Velocidade da fala          | "velocidade 2 vezes", "velocidade 3x", "aumentar velocidade 2"                                        |
 | Carrinho por voz            | "limpar carrinho", "remover", "remover livro interfaces acessíveis"                                   |
 | Leitura do carrinho         | "ler itens do carrinho", "listar itens do carrinho"                                                   |
 | Total do carrinho           | "informe o total do carrinho", "total do carrinho", "qual o total"                                    |
@@ -148,4 +167,6 @@ Sugestão para UX: priorizar os exemplos da tabela principal na interface e mant
 
 - Fale frases curtas, com pausa natural.
 - Em comando com número de pedido, prefira falar o número de forma clara, por exemplo: "abrir pedido 12".
-- Se o reconhecimento estiver ruidoso, cancele com Space e tente novamente.
+- Se o reconhecimento estiver ruidoso, cancele com F2 (ou Ctrl+M) e tente novamente.
+- Para interromper apenas a fala do assistente (sem encerrar a sessão), pressione Ctrl.
+- A saída de áudio do Web Speech API usa sempre o dispositivo padrão do sistema. Conecte o fone P2/USB antes de abrir a página (ou recarregue após plugar) e confira separadamente a saída do NVDA em `NVDA + Ctrl + S` → Audio.
