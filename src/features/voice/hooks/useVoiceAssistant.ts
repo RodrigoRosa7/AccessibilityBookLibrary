@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
@@ -28,10 +28,12 @@ export interface UseVoiceAssistantReturn {
   transcript: string;
   lastCommand: string;
   typedCommand: string;
+  speechRate: number;
   setTypedCommand: (value: string) => void;
   startVoiceCommand: () => void;
   cancelVoiceCommand: () => void;
   runTypedCommand: (event: React.FormEvent) => void;
+  cycleSpeechRate: () => void;
   pathname: string;
 }
 
@@ -57,12 +59,20 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
     feedbackSeverity,
     voiceError,
     isSpeaking,
+    speechRate,
     setFeedback,
     setVoiceError,
     speakMessage,
     speak,
     cancel,
+    setSpeechRate,
+    cycleSpeechRate: cycleSpeechRateState,
   } = useVoiceFeedback();
+
+  const cycleSpeechRate = useCallback(() => {
+    const next = cycleSpeechRateState();
+    speakMessage(`Velocidade ajustada para ${next} vezes.`);
+  }, [cycleSpeechRateState, speakMessage]);
 
   useEffect(() => {
     const match = location.pathname.match(/^\/books\/(\d+)$/);
@@ -446,6 +456,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
       },
       goBack: () => navigate(-1),
       openHome: () => navigate("/home"),
+      setSpeechRate,
       ...(isBookDetailsRoute && currentDetailBook
         ? {
             addCurrentBookToCart: () => {
@@ -494,6 +505,7 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
       readSearchResultsPage,
       removeFromCart,
       setFeedback,
+      setSpeechRate,
       speak,
       speakMessage,
     ],
@@ -514,6 +526,8 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
     feedbackSeverity,
     voiceError,
     isSpeaking,
+    speechRate,
+    cycleSpeechRate,
     ...commands,
     pathname: location.pathname,
   };

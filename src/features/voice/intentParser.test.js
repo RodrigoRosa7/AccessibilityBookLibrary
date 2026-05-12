@@ -447,6 +447,33 @@ describe("parseVoiceIntent core commands", () => {
     expect(result.intent).toBe(VOICE_INTENTS.UNKNOWN);
     expect(result.confidence).toBe(0);
   });
+
+  it("recognizes speech rate commands and extracts the multiplier", () => {
+    const cases = [
+      { transcript: "velocidade 2 vezes", entity: "2" },
+      { transcript: "velocidade 2x", entity: "2" },
+      { transcript: "aumentar velocidade 3 vezes", entity: "3" },
+      { transcript: "alterar velocidade para 1", entity: "1" },
+      { transcript: "mudar velocidade em 2", entity: "2" },
+      { transcript: "definir velocidade de 3", entity: "3" },
+      { transcript: "velocidade 5 vezes", entity: "5" },
+    ];
+
+    cases.forEach(({ transcript, entity }) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).toBe(VOICE_INTENTS.SET_SPEECH_RATE);
+      expect(result.entity).toBe(entity);
+    });
+  });
+
+  it("does not classify unrelated phrases as speech rate", () => {
+    const cases = ["velocidade", "velocidade alta", "muito rápido"];
+
+    cases.forEach((transcript) => {
+      const result = parseVoiceIntent(transcript);
+      expect(result.intent).not.toBe(VOICE_INTENTS.SET_SPEECH_RATE);
+    });
+  });
 });
 
 describe("parseVoiceIntent order navigation", () => {

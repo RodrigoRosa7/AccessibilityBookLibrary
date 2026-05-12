@@ -203,4 +203,27 @@ describe("pedidos voice navigation flow", () => {
     expect(openVoiceHelp).toHaveBeenCalledTimes(1);
     expect(message).toBe("");
   });
+
+  it("dispatches set speech rate action when value is in range", () => {
+    const setSpeechRate = vi.fn();
+    const intent = parseVoiceIntent("aumentar velocidade 2 vezes");
+
+    const message = handleVoiceCommand(intent, { setSpeechRate });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.SET_SPEECH_RATE);
+    expect(setSpeechRate).toHaveBeenCalledWith(2);
+    expect(setSpeechRate).toHaveBeenCalledTimes(1);
+    expect(message).toBe("Velocidade ajustada para 2 vezes.");
+  });
+
+  it("rejects speech rate out of range without calling the action", () => {
+    const setSpeechRate = vi.fn();
+    const intent = parseVoiceIntent("velocidade 5 vezes");
+
+    const message = handleVoiceCommand(intent, { setSpeechRate });
+
+    expect(intent.intent).toBe(VOICE_INTENTS.SET_SPEECH_RATE);
+    expect(setSpeechRate).not.toHaveBeenCalled();
+    expect(message).toBe("Velocidade aceita entre 1 e 3 vezes.");
+  });
 });

@@ -49,7 +49,8 @@ describe("buildInitialVoicePresentation", () => {
     const speech = buildInitialVoicePresentation({ name: "Ana" });
 
     expect(speech).toContain("Livros");
-    expect(speech).toContain("tecla espaço");
+    expect(speech).toContain("F2");
+    expect(speech).toContain("Ctrl+M");
     expect(speech).toContain("Ouvir novamente");
     expect(speech).toContain("Concluir");
   });

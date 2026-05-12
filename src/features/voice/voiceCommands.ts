@@ -170,6 +170,15 @@ export function handleVoiceCommand(
       actions.openHome?.();
       return "Voltando para a página inicial.";
 
+    case VOICE_INTENTS.SET_SPEECH_RATE: {
+      const requested = Number(entity);
+      if (!Number.isFinite(requested) || requested < 1 || requested > 3) {
+        return "Velocidade aceita entre 1 e 3 vezes.";
+      }
+      actions.setSpeechRate?.(requested);
+      return `Velocidade ajustada para ${requested} vezes.`;
+    }
+
     default:
       actions.onUnknown?.(intentResult);
       return "Comando de voz não reconhecido.";

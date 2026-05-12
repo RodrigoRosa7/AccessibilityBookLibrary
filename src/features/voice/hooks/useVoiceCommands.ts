@@ -3,8 +3,18 @@ import type React from "react";
 import { useSpeechRecognition } from "../useSpeechRecognition";
 import { parseVoiceIntent } from "../intentParser";
 import { handleVoiceCommand } from "../voiceCommands";
+import { playListenStart, playListenStop } from "../services/earcons";
 import type { ParsedIntent, VoiceActions } from "../../../types";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
+
+const VOICE_TOGGLE_KEYS = {
+  f2: (event: KeyboardEvent): boolean => event.key === "F2",
+  ctrlM: (event: KeyboardEvent): boolean =>
+    event.ctrlKey &&
+    !event.altKey &&
+    !event.shiftKey &&
+    event.key.toLowerCase() === "m",
+};
 
 interface UseVoiceCommandsOptions {
   pathname: string;
@@ -122,26 +132,29 @@ export function useVoiceCommands({
     cancelRequestedRef.current = true;
     stopListening();
     cancel();
-    speakMessage("Comando de voz cancelado. Pressione espaço para tentar novamente.");
+    playListenStop();
+    speakMessage(
+      "Comando de voz cancelado. Pressione Ctrl+M ou F2 para tentar novamente.",
+    );
   }, [cancel, speakMessage, stopListening]);
 
   const startVoiceCommand = useCallback(() => {
     cancel();
     setVoiceError("");
+    playListenStart();
     startListening();
   }, [cancel, setVoiceError, startListening]);
 
   useEffect(() => {
-    function handleSpaceToggle(event: KeyboardEvent) {
-      if (event.code !== "Space" || event.repeat) return;
-      const target = event.target as HTMLElement | null;
-      const tag = target?.tagName?.toLowerCase();
-      const isTypingField =
-        tag === "input" ||
-        tag === "textarea" ||
-        tag === "select" ||
-        target?.isContentEditable === true;
-      if (isTypingField) return;
+    function handleToggleShortcut(event: KeyboardEvent) {
+      if (event.repeat) return;
+      if (event.key === "Control") {
+        cancel();
+        return;
+      }
+      const matches =
+        VOICE_TOGGLE_KEYS.f2(event) || VOICE_TOGGLE_KEYS.ctrlM(event);
+      if (!matches) return;
       event.preventDefault();
       if (isListening) {
         cancelVoiceCommand();
@@ -150,9 +163,9 @@ export function useVoiceCommands({
       }
     }
 
-    window.addEventListener("keydown", handleSpaceToggle);
-    return () => window.removeEventListener("keydown", handleSpaceToggle);
-  }, [cancelVoiceCommand, isListening, startVoiceCommand]);
+    window.addEventListener("keydown", handleToggleShortcut);
+    return () => window.removeEventListener("keydown", handleToggleShortcut);
+  }, [cancel, cancelVoiceCommand, isListening, startVoiceCommand]);
 
   const runTypedCommand = useCallback(
     (event: React.FormEvent) => {
