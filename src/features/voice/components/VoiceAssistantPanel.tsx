@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Accordion } from "../../../shared/ui/Accordion";
 import { VoiceButton } from "../../../components/VoiceButton";
 import { SpeechRateButton } from "../../../components/SpeechRateButton";
+import { MuteFeedbackButton } from "../../../components/MuteFeedbackButton";
 import { AppButton } from "../../../shared/ui/AppButton";
 import type { SpeechSeverity } from "../useSpeechSynthesis";
 import styles from "./VoiceAssistantPanel.module.css";
@@ -19,11 +20,13 @@ interface VoiceAssistantPanelProps {
   transcript: string;
   typedCommand: string;
   speechRate: number;
+  muted: boolean;
   onTypedCommandChange: (value: string) => void;
   onTypedCommandSubmit: (event: React.FormEvent) => void;
   onStart: () => void;
   onStop: () => void;
   onCycleSpeechRate: () => void;
+  onToggleMute: () => void;
 }
 
 export function VoiceAssistantPanel({
@@ -38,17 +41,26 @@ export function VoiceAssistantPanel({
   transcript,
   typedCommand,
   speechRate,
+  muted,
   onTypedCommandChange,
   onTypedCommandSubmit,
   onStart,
   onStop,
   onCycleSpeechRate,
+  onToggleMute,
 }: VoiceAssistantPanelProps) {
   return (
     <div className={styles.panel} aria-label="Assistente de voz global">
       <div className={styles.header}>
         <h3 style={{ fontSize: "13px", margin: 0 }}>Assistente de voz</h3>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+          }}
+        >
           <VoiceButton
             isListening={isListening}
             isSpeaking={isSpeaking}
@@ -60,6 +72,7 @@ export function VoiceAssistantPanel({
             speechRate={speechRate}
             onCycle={onCycleSpeechRate}
           />
+          <MuteFeedbackButton muted={muted} onToggle={onToggleMute} />
         </div>
       </div>
 
@@ -135,8 +148,20 @@ export function VoiceAssistantPanel({
       </Accordion>
 
       <div
-        role={feedbackSeverity === "critical" ? "alert" : "status"}
-        aria-live={feedbackSeverity === "critical" ? "assertive" : "polite"}
+        role={
+          muted
+            ? undefined
+            : feedbackSeverity === "critical"
+              ? "alert"
+              : "status"
+        }
+        aria-live={
+          muted
+            ? "off"
+            : feedbackSeverity === "critical"
+              ? "assertive"
+              : "polite"
+        }
         aria-atomic="true"
         style={{
           position: "absolute",

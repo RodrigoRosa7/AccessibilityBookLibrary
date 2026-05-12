@@ -13,6 +13,7 @@ Este documento centraliza os comandos de voz disponíveis no projeto.
 | Tecla Esc                                  | Fecha a modal aberta                                           |
 | Botão do microfone (no painel)             | Alterna entre iniciar e cancelar                               |
 | Botão de velocidade (ao lado do microfone) | Cicla a velocidade da fala em 1x → 2x → 3x → 1x                |
+| Botão "Mudo / Falando" (ao lado da velocidade) | Silencia a fala do Web Speech API. Banners + leitor de tela continuam ativos. Preferência persiste no `localStorage`. |
 
 > Substituímos `Space` por `F2` / `Ctrl+M` porque o `Space` conflita com o NVDA (e com campos de formulário). Os dois atalhos novos ficam ativos em paralelo para que o usuário escolha o que funcionar melhor com o leitor de tela em uso.
 

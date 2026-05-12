@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { isVoiceFeedbackMuted } from "./services/voiceMute";
 
 const VOICE_FEEDBACK_EVENT = "voice-feedback:update";
 
@@ -65,6 +66,18 @@ export function useSpeechSynthesis(
 
       const normalizedText = String(text).trim();
       const severity = metadata.severity ?? "info";
+
+      if (isVoiceFeedbackMuted()) {
+        // Mute desliga só a Web Speech API. Banner aria-live ainda recebe
+        // a mensagem para o leitor de tela (NVDA) anunciar.
+        emitVoiceFeedback({
+          text: normalizedText,
+          severity,
+          isSpeaking: false,
+        });
+        metadata.onEnd?.();
+        return;
+      }
 
       const utterance = new SpeechSynthesisUtterance(normalizedText);
       utterance.lang = lang;

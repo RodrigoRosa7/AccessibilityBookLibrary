@@ -12,9 +12,11 @@ import {
 import type { Book, VoiceActions } from "../../../types";
 import { formatMoneyForSpeech, buildOrderDetailsSpeech } from "../domain/speechUtils";
 import { emitVoiceEvent, VOICE_EVENT } from "../services/voiceEvents";
+import { playListenStop } from "../services/earcons";
 import { getOrderHistory, getLatestOrderSummary } from "../../cart/cartService";
 import { useVoiceFeedback } from "./useVoiceFeedback";
 import type { SpeechSeverity } from "./useVoiceFeedback";
+import { useVoiceFeedbackMute } from "./useVoiceFeedbackMute";
 import { useVoicePagination } from "./useVoicePagination";
 import { useVoiceCommands } from "./useVoiceCommands";
 
@@ -29,11 +31,13 @@ export interface UseVoiceAssistantReturn {
   lastCommand: string;
   typedCommand: string;
   speechRate: number;
+  muted: boolean;
   setTypedCommand: (value: string) => void;
   startVoiceCommand: () => void;
   cancelVoiceCommand: () => void;
   runTypedCommand: (event: React.FormEvent) => void;
   cycleSpeechRate: () => void;
+  toggleMute: () => void;
   pathname: string;
 }
 
@@ -73,6 +77,19 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
     const next = cycleSpeechRateState();
     speakMessage(`Velocidade ajustada para ${next} vezes.`);
   }, [cycleSpeechRateState, speakMessage]);
+
+  const { muted, toggle: toggleMuteState } = useVoiceFeedbackMute();
+
+  const toggleMute = useCallback(() => {
+    const nowMuted = toggleMuteState();
+    if (nowMuted) {
+      // Mute just turned on: don't speak via WSA. Earcon serves as a
+      // non-verbal confirmation, NVDA announces aria-pressed change.
+      playListenStop();
+      return;
+    }
+    speakMessage("Feedback ativado.");
+  }, [speakMessage, toggleMuteState]);
 
   useEffect(() => {
     const match = location.pathname.match(/^\/books\/(\d+)$/);
@@ -529,7 +546,9 @@ export function useVoiceAssistant(): UseVoiceAssistantReturn {
     voiceError,
     isSpeaking,
     speechRate,
+    muted,
     cycleSpeechRate,
+    toggleMute,
     ...commands,
     pathname: location.pathname,
   };
